@@ -19,19 +19,6 @@ const DetailSong = () => {
     );
   }
 
-  //   const song = {
-  //     title: "Vết Mưa (AI Remastered)",
-  //     artist: "Cát Tường",
-  //     cover:
-  //       "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=800&q=80",
-  //     lyrics: [
-  //       "Cơn mưa đi ngang qua",
-  //       "Mang theo bao nỗi nhớ",
-  //       "Dòng thời gian lặng lẽ",
-  //       "Mình tôi với cơn mơ",
-  //     ],
-  //     aiScore: 95,
-  //   };
 
   return (
     <div className="detail-container">

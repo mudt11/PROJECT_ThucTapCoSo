@@ -42,8 +42,7 @@ def sync_and_save_data(df_mongo_final, df_mysql_final, csv_path):
                 # và file sẽ tự động nở ra theo lượng dữ liệu thật.
 
             updated_data.to_csv(csv_path, index=False)
-            print(f"✅ Đã cập nhật file train. Tổng số dòng: {len(updated_data)}")
+            print(f"Đã cập nhật file train. Tổng số dòng: {len(updated_data)}")
 
         else:
-            # Nếu file chưa tồn tại, lưu dữ liệu thật mới
             new_real_data.to_csv(csv_path, index=False)

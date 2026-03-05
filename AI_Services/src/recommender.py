@@ -4,12 +4,10 @@ import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 from scipy.sparse import csr_matrix
 
-# Lấy đường dẫn tuyệt đối đến thư mục LEARN
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# Kết nối chính xác đến file csv
 DATA_PATH = os.path.join(BASE_DIR, 'data', 'Trainning', 'final_training_data_v2.csv')
 
-# 1. Đọc dữ liệu
 train_data = pd.read_csv(DATA_PATH)
 
 # --- Xử lý Mean-Centering ---
