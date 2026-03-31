@@ -6,47 +6,17 @@ class Recommender:
         self.vector_gen = vector_gen
         self.popularity = popularity_gen
         self.ranker = HeuristicRanker()
-
-    # def recommend(self, user_id, liked_songs=None):
-    #     liked_songs = liked_songs or []
-
-    #     # 1. Thu thập ứng viên (Candidate Generation)
-    #     cf_list = self.cf.get_candidates(user_id)
-    #     vec_list = self.vector_gen.get_candidates(liked_songs)
-    #     pop_list = self.popularity.get_top()
-
-    #     # Xử lý Cold Start: Chỉ gọi vector_gen nếu có bài hát đã thích
-    #     vec_list = []
-    #     if liked_songs:
-    #         vec_list = self.vector_gen.get_candidates(liked_songs)
-
-    #     # 2. Hợp nhất và gán điểm (Ranking Stage)
-    #     all_candidates = list(set(cf_list + vec_list + pop_list))
-    #     scored_list = []
-        
-    #     for s_id in all_candidates:
-    #         # Tính điểm thành phần (binary presence hoặc lấy điểm thực tế)
-    #         s_cf = 1.0 if s_id in cf_list else 0.0
-    #         s_vec = 1.0 if s_id in vec_list else 0.0
-    #         s_pop = 1.0 if s_id in pop_list else 0.0
-
-    #         final_score = self.ranker.score(s_cf, s_vec, s_pop)
-
-    #         scored_list.append({"song_id": s_id, "score": final_score})
-
-    #     # 3. Sắp xếp và trả về Top 10
-    #     ranked = self.ranker.rank(scored_list)
-    #     return [item["song_id"] for item in ranked[:10]]
     
     def recommend(self, user_id, liked_songs=None, top_k=10):
         liked_songs = liked_songs or []
 
         # --- 1. Thu thập ứng viên (Candidate Generation) ---
         # Lấy candidates kèm theo điểm số gốc của chúng (Raw Scores)
-        cf_candidates = self.cf.get_candidates(user_id) # Trả về list of dict: {"song_id": id, "score": s}
+        cf_candidates = self.cf.get_candidates(user_id) 
         # --- THÊM DÒNG NÀY ĐỂ DEBUG ---
         if user_id == 1:
             print(f"🔍 DEBUG Vector candidates cho User 1 (Top 5): {cf_candidates[:5]}")
+        # ------------------------------
         
         vec_candidates = []
         if liked_songs:
@@ -56,12 +26,14 @@ class Recommender:
         # --- THÊM DÒNG NÀY ĐỂ DEBUG ---
         if user_id == 1:
             print(f"🔍 DEBUG Vector candidates cho User 1 (Top 5): {vec_candidates[:5]}")
+        # ------------------------------
 
         pop_candidates = self.popularity.get_top(num_candidates=20)
 
         # --- THÊM DÒNG NÀY ĐỂ DEBUG ---
         if user_id == 1:
             print(f"🔍 DEBUG Vector candidates cho User 1 (Top 5): {pop_candidates[:5]}")
+        # ------------------------------
 
         # --- 2. Hợp nhất và gán điểm (Ranking Stage) ---
         # Chuyển thành dictionary để tra cứu điểm nhanh

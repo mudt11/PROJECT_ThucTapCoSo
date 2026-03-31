@@ -22,13 +22,12 @@ class VectorCandidate:
         user_vec = np.mean(self.song_vectors[indices], axis=0).reshape(1, -1)
         
         # Tính độ tương đồng Cosine:
-        # Similarity = cos(theta) = (A . B) / (||A|| ||B||)
         sim = cosine_similarity(user_vec, self.song_vectors)[0]
         
         # Lấy danh sách index của các bài hát tương đồng nhất
-        top_indices = sim.argsort()[::-1]
-        
+        top_indices = sim.argsort()[::-1] 
         candidates = []
+        
         for i in top_indices:
             song_id = self.reverse_map[i]
             # Không lấy lại bài đã nghe và chỉ lấy đúng số lượng yêu cầu

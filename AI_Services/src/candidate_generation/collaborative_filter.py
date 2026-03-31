@@ -26,7 +26,7 @@ class CFModel:
             pickle.dump((self.user_similarity, self.user_item_matrix), f)
 
     def get_candidates(self, user_id, k = 50):
-        if user_id not in self.user_similarity.index:
+        if self.user_item_matrix is None or user_id not in self.user_item_matrix.index:
             return [] # Cold Start
         
         # Tìm 5 người dùng giống nhất, lấy trung bình điểm của họ cho từng bài hát

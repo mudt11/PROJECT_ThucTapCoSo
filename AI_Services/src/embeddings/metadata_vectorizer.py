@@ -2,9 +2,12 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MultiLabelBinarizer
 import ast
+import pickle
+import os
 
 class MetadataVectorizer:
-    def __init__(self):
+    def __init__(self, model_dir="models"):
+        self.model_dir = model_dir
         self.genre_mlb = MultiLabelBinarizer()
         self.artist_mlb = MultiLabelBinarizer()
         self.mood_columns = None
@@ -23,16 +26,8 @@ class MetadataVectorizer:
         artist_vec = self.artist_mlb.fit_transform(artists)
         
         mood_df = pd.get_dummies(moods)
-        self.mood_columns = mood_df.columns # Ghi nhớ thứ tự cột mood
+        self.mood_columns = mood_df.columns 
         mood_vec = mood_df.values
-
-        # genre_mlb = MultiLabelBinarizer()
-        # artist_mlb = MultiLabelBinarizer()
-
-        # genre_vec = genre_mlb.fit_transform(genres)
-        # artist_vec = artist_mlb.fit_transform(artists)
-
-        # mood_vec = pd.get_dummies(moods).values
 
         vectors = np.hstack([
             genre_vec,
@@ -41,4 +36,12 @@ class MetadataVectorizer:
         ])
 
         return vectors
+    def save_models(self):
+        os.makedirs(self.model_dir, exist_ok=True)
+        with open(os.path.join(self.model_dir, "genre_mlb.pkl"), "wb") as f:
+            pickle.dump(self.genre_mlb, f)
+        with open(os.path.join(self.model_dir, "artist_mlb.pkl"), "wb") as f:
+            pickle.dump(self.artist_mlb, f)
+        with open(os.path.join(self.model_dir, "mood_cols.pkl"), "wb") as f:
+            pickle.dump(self.mood_columns, f)
     
