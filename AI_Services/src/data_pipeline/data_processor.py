@@ -56,3 +56,27 @@ class DataProcessor:
         final_df = combined.groupby(['user_id', 'song_id'])['rating'].max().reset_index()
 
         return final_df
+
+
+# data nạp vào NCF
+def prepare_data_for_ncf(self, final_df):
+    """
+    final_df là cái dataframe [user_id, song_id, rating] sau khi bạn đã merge xong
+    """
+    # 1. Ép kiểu user_id và song_id thành các số nguyên liên tục từ 0
+    final_df['user_index'] = pd.factorize(final_df['user_id'])[0]
+    final_df['song_index'] = pd.factorize(final_df['song_id'])[0]
+    
+    # 2. Lưu lại từ điển ánh xạ (Mapping dictionary) để sau này còn biết đường mà trả về web
+    # Ví dụ: Keras bảo user_index 0 thích song_index 5 -> Phải map ngược lại ra song_id thật
+    user_mapping = dict(zip(final_df['user_index'], final_df['user_id']))
+    song_mapping = dict(zip(final_df['song_index'], final_df['song_id']))
+    
+    # 3. Lấy số lượng User và Song thực tế để cấu hình cho Keras Embedding Layer
+    num_users = final_df['user_index'].nunique()
+    num_songs = final_df['song_index'].nunique()
+    
+    # Đầu ra cuối cùng sẵn sàng nạp vào NCF:
+    ncf_input_df = final_df[['user_index', 'song_index', 'rating']]
+    
+    return ncf_input_df, num_users, num_songs, user_mapping, song_mapping
