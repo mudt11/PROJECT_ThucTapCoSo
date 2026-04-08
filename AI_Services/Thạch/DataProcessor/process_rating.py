@@ -6,7 +6,7 @@ print("============================================================")
 
 # 1. Đọc dữ liệu
 print("\n1. Đang đọc dữ liệu từ user_artists.dat...")
-input_path = r"D:\code\TTCS\PROJECT_ThucTapCoSo\AI_Services\data\MockData\user_artists.dat"
+input_path = '../../data/MockData/user_artists.dat'
 df = pd.read_csv(input_path, sep='\t')
 
 # 2. Sử dụng qcut để chia dữ liệu thành 5 nhóm (mỗi nhóm ~20%) và gán nhãn 1-5
@@ -17,7 +17,7 @@ df['rating'] = pd.qcut(df['weight'], q=5, labels=[1, 2, 3, 4, 5])
 df_clean = df[['userID', 'artistID', 'rating']]
 
 # 4. Xuất ra file CSV vào cùng thư mục MockData
-output_path = r"D:\code\TTCS\PROJECT_ThucTapCoSo\AI_Services\data\MockData\lastfm_clean.csv"
+output_path = '../BànGiao/lastfm_clean.csv'
 df_clean.to_csv(output_path, index=False)
 
 print(f"3. Hoàn tất! Đã lưu file: {output_path}")
