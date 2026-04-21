@@ -17,14 +17,15 @@ const User = sequelize.define(
     },
     email: {
       type: DataTypes.STRING(100),
-      allowNull: true,
-      unique: false,
+      allowNull: false,
+      unique: true,
       validate: { isEmail: true },
     },
     password: {
       type: DataTypes.STRING(255),
       allowNull: false,
     },
+
     first_name: {
       type: DataTypes.STRING(100),
       allowNull: true,
@@ -40,15 +41,6 @@ const User = sequelize.define(
         isDate: true,
       },
     },
-    gender: {
-      type: DataTypes.ENUM("male", "female", "other"),
-      allowNull: true,
-    },
-    role: {
-      type: DataTypes.ENUM("user", "admin", "super_admin"),
-      allowNull: false,
-      defaultValue: "user",
-    },
     phone_number: {
       type: DataTypes.STRING(20),
       allowNull: true,
@@ -56,28 +48,43 @@ const User = sequelize.define(
         is: /^[0-9+\-()\s]*$/i,
       },
     },
-    avatar: {
-      type: DataTypes.STRING(500),
-      field: "avatar_url",
-      allowNull: true
-    },
     address: {
       type: DataTypes.STRING(255),
       allowNull: true,
     },
-    created_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
+    gender: {
+      type: DataTypes.ENUM("male", "female", "other"),
+      allowNull: true,
+    },
+    avatar: {
+      type: DataTypes.STRING(500),
+      field: "avatar_url",
+      allowNull: true,
+    },
+
+    role: {
+      type: DataTypes.ENUM("user", "admin", "super_admin"),
+      allowNull: false,
+      defaultValue: "user",
+    },
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
     activity_status: {
       type: DataTypes.ENUM("online", "offline"),
       allowNull: false,
       defaultValue: "offline",
     },
-    is_active: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
+
+    created_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
     },
   },
   {
@@ -92,7 +99,7 @@ const User = sequelize.define(
         }
       },
     },
-  }
+  },
 );
 
 module.exports = User;
