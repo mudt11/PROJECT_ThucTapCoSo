@@ -12,7 +12,7 @@ const RefreshToken = sequelize.define(
     },
 
     token: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING(255),
       allowNull: false,
       comment: "Hashed refresh token (SHA-256)",
     },
