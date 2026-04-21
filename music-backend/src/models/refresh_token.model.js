@@ -14,6 +14,7 @@ const RefreshToken = sequelize.define(
     token: {
       type: DataTypes.TEXT,
       allowNull: false,
+      comment: "Hashed refresh token (SHA-256)",
     },
 
     expires_at: {
@@ -38,8 +39,14 @@ const RefreshToken = sequelize.define(
   },
   {
     tableName: "refresh_tokens",
-    timestamps: false,
-  }
+    timestamps: true,
+    createdAt: "created_at",
+    indexes: [
+      { unique: true, fields: ["token"] },
+      { fields: ["user_id"] },
+      { fields: ["expires_at"] },
+    ],
+  },
 );
 
 module.exports = RefreshToken;
