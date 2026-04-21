@@ -10,16 +10,16 @@ const Song = sequelize.define(
       primaryKey: true,
     },
     title: {
-      type: DataTypes.STRING(255), 
+      type: DataTypes.STRING(255),
       allowNull: false,
     },
     duration: {
       type: DataTypes.INTEGER,
-      defaultValue: 0, 
+      defaultValue: 0,
     },
     audio_url: {
       type: DataTypes.STRING(500),
-      allowNull: false, 
+      allowNull: false,
     },
     image_url: {
       type: DataTypes.STRING(500),
@@ -28,6 +28,7 @@ const Song = sequelize.define(
     view_count: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
+      comment: "Valid views after >=20s",
     },
     created_at: {
       type: DataTypes.DATE,
@@ -36,9 +37,9 @@ const Song = sequelize.define(
   },
   {
     tableName: "songs",
-    timestamps: true, 
-    createdAt: "created_at", 
-  }
+    timestamps: true,
+    createdAt: "created_at",
+  },
 );
 
 module.exports = Song;
