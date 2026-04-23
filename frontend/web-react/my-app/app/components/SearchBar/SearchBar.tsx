@@ -13,6 +13,7 @@ interface SearchBarProps {
 
 const SearchBar = ({ setResults, setSearchTerm }: SearchBarProps) => {
   const [input, setInput] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -21,14 +22,24 @@ const SearchBar = ({ setResults, setSearchTerm }: SearchBarProps) => {
 
       if (!value) {
         setResults([]);
+        setError(null);
         return;
       }
 
       try {
+        setError(null);
         const tracks = await searchSongs(value, 10);
-        setResults(tracks);
+        
+        if (!tracks || tracks.length === 0) {
+          setError("Không tìm thấy bài hát nào");
+        }
+        
+        setResults(tracks || []);
       } catch (err) {
         console.error("Search error:", err);
+        const errorMessage = err instanceof Error ? err.message : "Lỗi tìm kiếm";
+        setError(errorMessage);
+        setResults([]);
       }
     }, 300);
 

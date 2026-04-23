@@ -8,7 +8,7 @@ const {
   PlaylistSongs,
   sequelize,
 } = require("../models");
-const { Op } = require("sequelize");
+const { Op, where, col } = require("sequelize");
 const cloudinary = require("cloudinary").v2;
 const { Sequelize } = require("sequelize");
 const { v4: uuidv4 } = require("uuid");
@@ -421,22 +421,23 @@ const searchSongs = async (keyword, limit) => {
   return Song.findAll({
     where: {
       is_visible: true,
-      [Op.or]: [
-        { title: { [Op.like]: `%${keyword}%` } },
-        { artist_name: { [Op.like]: `%${keyword}%` } },
-        { album_name: { [Op.like]: `%${keyword}%` } },
-      ],
+      title: { [Op.like]: `%${keyword}%` },
     },
-    attributes: [
-      ["song_id", "trackId"],
-      "title",
-      ["audio_url", "audioUrl"],
-      ["image_url", "imageUrl"],
-      "artist_name",
-      "duration",
+    include: [
+      {
+        model: Artist,
+        as: "artists",
+        attributes: ["name"],
+        through: { attributes: [] },
+        required: false,
+        where: {
+          name: { [Op.like]: `%${keyword}%` },
+        },
+      },
     ],
     order: [["view_count", "DESC"]],
     limit,
+    distinct: true,
   });
 };
 

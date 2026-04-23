@@ -19,20 +19,15 @@ export async function fetchDailySongs(limit = 20, page = 1): Promise<Track[]> {
   return data.songs.map(
     (song: any): Track => ({
       trackId: song.song_id,
-      jamendoId: song.jamendo_id,
       title: song.title,
       duration: song.duration,
-      imageUrl: song.image_url,
       audioUrl: song.audio_url,
+      imageUrl: song.image_url,
       artistName:
-        song.artist_name ??
-        song.artists?.map((a: any) => a.name).join(", ") ??
-        "Unknown Artist",
-      albumName: song.album_name ?? null,
+        song.artists?.map((a: any) => a.name).join(", ") ?? "Unknown Artist",
       genre: song.genre ?? "Other",
       viewCount: song.view_count ?? 0,
-      isVisible: song.is_visible,
-      fetched_at: song.fetched_at,
+      isVisible: song.is_visible ?? true,
     }),
   );
 }
@@ -174,7 +169,30 @@ export async function searchSongs(
   }
 
   const json = await res.json();
-  return json.data;
+
+  if (!json.data || !Array.isArray(json.data)) {
+    return [];
+  }
+
+  return json.data.map(
+    (song: any): Track => ({
+      trackId: song.trackId || song.song_id,
+      title: song.title,
+      duration: song.duration || 0,
+      imageUrl: song.imageUrl || song.image_url || "",
+      audioUrl: song.audioUrl || song.audio_url || "",
+      artistName:
+        song.artists?.map((a: any) => a.name).join(", ") || "Unknown Artist",
+      genre: song.genre ?? "Other",
+      viewCount: song.viewCount || song.view_count || 0,
+      isVisible:
+        song.isVisible !== undefined
+          ? song.isVisible
+          : song.is_visible !== undefined
+            ? song.is_visible
+            : true,
+    }),
+  );
 }
 
 export async function createSong(formData: FormData) {

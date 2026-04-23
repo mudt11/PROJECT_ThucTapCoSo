@@ -26,3 +26,10 @@
 .results-list::-webkit-scrollbar-thumb:hover {
   background: #bfc4cb;
 }
+
+.no-results {
+  padding: 16px 20px;
+  color: #e5e7eb;
+  font-size: 0.95rem;
+  text-align: center;
+}

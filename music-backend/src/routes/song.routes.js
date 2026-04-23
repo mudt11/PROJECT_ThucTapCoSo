@@ -9,7 +9,7 @@ const {
 } = require("../midlewares/auth.midleware");
 const upload = require("../midlewares/upload.midleware");
 
-
+// tìm kiếm bài hát 
 router.get("/search", songController.searchSongs);
 
 /* --- ROUTES FOR USER --- */

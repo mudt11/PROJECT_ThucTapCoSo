@@ -11,15 +11,23 @@ interface SearchResultsListProps {
 }
 
 const SearchResultsList = ({ results, searchTerm }: SearchResultsListProps) => {
+  if (!searchTerm) {
+    return null;
+  }
+
   return (
     <div className="results-list">
-      {results.map((track) => (
-        <SearchResult
-          key={track.trackId}
-          result={track}
-          searchTerm={searchTerm}
-        />
-      ))}
+      {results.length === 0 ? (
+        <div className="no-results">Không tìm thấy bài hát phù hợp</div>
+      ) : (
+        results.map((track) => (
+          <SearchResult
+            key={track.trackId || `${track.title}-${track.audioUrl}`}
+            result={track}
+            searchTerm={searchTerm}
+          />
+        ))
+      )}
     </div>
   );
 };
