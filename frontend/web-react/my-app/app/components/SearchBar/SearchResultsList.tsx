@@ -8,10 +8,15 @@ import { Track } from "@/app/types/music";
 interface SearchResultsListProps {
   results: Track[];
   searchTerm: string;
+  isSearchFocused: boolean;
 }
 
-const SearchResultsList = ({ results, searchTerm }: SearchResultsListProps) => {
-  if (!searchTerm) {
+const SearchResultsList = ({
+  results,
+  searchTerm,
+  isSearchFocused,
+}: SearchResultsListProps) => {
+  if (!searchTerm || !isSearchFocused) {
     return null;
   }
 
