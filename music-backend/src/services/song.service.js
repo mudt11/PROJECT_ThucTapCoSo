@@ -152,7 +152,15 @@ async function getSongs({ page = 1, limit = 20 }) {
 
   const { rows: songs, count } = await Song.findAndCountAll({
     where: { is_visible: true },
-    order: [["fetched_at", "DESC"]],
+    include: [
+      {
+        model: Artist,
+        as: "artists",
+        attributes: ["name"],
+        through: { attributes: [] },
+      },
+    ],
+    order: [["created_at", "DESC"]],
     limit: Number(limit),
     offset,
   });

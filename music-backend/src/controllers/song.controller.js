@@ -121,16 +121,17 @@ const getSongById = async (req, res, next) => {
 
 async function getSongList(req, res) {
   try {
-    const page = req.query.page || 1;
-    const limit = req.query.limit || 20;
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 20;
 
     const result = await songService.getSongs({ page, limit });
 
     res.json(result);
   } catch (error) {
-    console.error(error);
+    console.error("FULL ERROR:", error);
     res.status(500).json({
-      message: "Failed to fetch songs",
+      message: error.message,
+      stack: error.stack,
     });
   }
 }

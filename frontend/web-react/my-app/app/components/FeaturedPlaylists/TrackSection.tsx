@@ -38,7 +38,8 @@ const TrackSection = () => {
     loadSongs();
   }, []);
 
-  if (!tracks.length) return null;
+  if (!tracks.length && loading) return <div>Loading...</div>;
+  if (!tracks.length) return <div>No songs found</div>;
 
   return (
     <HorizontalScroll onReachEnd={hasMore ? loadSongs : undefined}>

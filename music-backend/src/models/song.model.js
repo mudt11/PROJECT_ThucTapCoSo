@@ -30,15 +30,24 @@ const Song = sequelize.define(
       defaultValue: 0,
       comment: "Valid views after >=20s",
     },
+    is_visible: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
     created_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
     },
   },
   {
     tableName: "songs",
     timestamps: true,
     createdAt: "created_at",
+    updatedAt: "updatedAt",
   },
 );
 

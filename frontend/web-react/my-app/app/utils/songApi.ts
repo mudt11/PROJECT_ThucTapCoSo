@@ -3,7 +3,9 @@ import { Track } from "../types/music";
 import { adminFetch, userFetch } from "./refreshToken";
 
 export async function fetchDailySongs(limit = 20, page = 1): Promise<Track[]> {
-  const res = await fetch(`${URL}/songs?limit=${limit}&page=${page}`);
+  const res = await fetch(`${URL}/songs?limit=${limit}&page=${page}`, {
+    credentials: "include",
+  });
   if (!res.ok) {
     throw new Error("Failed to fetch songs");
   }
@@ -22,13 +24,16 @@ export async function fetchDailySongs(limit = 20, page = 1): Promise<Track[]> {
       duration: song.duration,
       imageUrl: song.image_url,
       audioUrl: song.audio_url,
-      artistName: song.artist_name ?? song.artists?.name ?? "Unknown Artist",
+      artistName:
+        song.artist_name ??
+        song.artists?.map((a: any) => a.name).join(", ") ??
+        "Unknown Artist",
       albumName: song.album_name ?? null,
       genre: song.genre ?? "Other",
       viewCount: song.view_count ?? 0,
       isVisible: song.is_visible,
       fetched_at: song.fetched_at,
-    })
+    }),
   );
 }
 
@@ -155,13 +160,13 @@ export async function increaseSongView(songId: number) {
 // tìm kiếm
 export async function searchSongs(
   keyword: string,
-  limit = 10
+  limit = 10,
 ): Promise<Track[]> {
   const res = await fetch(
     `${URL}/songs/search?q=${encodeURIComponent(keyword)}&limit=${limit}`,
     {
       credentials: "include",
-    }
+    },
   );
 
   if (!res.ok) {
