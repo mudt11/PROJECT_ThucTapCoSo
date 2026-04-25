@@ -28,12 +28,22 @@ const SearchResult = ({ result, searchTerm }: SearchResultProps) => {
         </span>
       ) : (
         part
-      )
+      ),
     );
   };
   return (
     <div className="search-result" onClick={() => setPlaylist([result], 0)}>
-      {highlight(result.title, searchTerm)}
+      <img
+        src={result.imageUrl || "/images/default-song.jpg"}
+        className="result-img"
+      />
+
+      <div className="result-info">
+        <div className="result-title">
+          {highlight(result.title, searchTerm)}
+        </div>
+        <div className="result-artist">Song • {result.artistName}</div>
+      </div>
     </div>
   );
 };

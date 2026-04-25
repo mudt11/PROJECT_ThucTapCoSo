@@ -33,6 +33,7 @@ const SearchBar = ({
         const tracks = await searchSongs(value, 10);
 
         setResults(tracks || []);
+        
       } catch (err) {
         console.error("Search error:", err);
         const errorMessage =

@@ -176,15 +176,17 @@ export async function searchSongs(
 
   return json.data.map(
     (song: any): Track => ({
-      trackId: song.trackId || song.song_id,
+      trackId: song.song_id,
       title: song.title,
       duration: song.duration || 0,
-      imageUrl: song.imageUrl || song.image_url || "",
-      audioUrl: song.audioUrl || song.audio_url || "",
+      imageUrl: song.image_url,
       artistName:
-        song.artists?.map((a: any) => a.name).join(", ") || "Unknown Artist",
+        song.artists?.length > 0
+          ? song.artists.map((a: any) => a.name).join(", ")
+          : "Unknown",
+      audioUrl: song.audio_url,
       genre: song.genre ?? "Other",
-      viewCount: song.viewCount || song.view_count || 0,
+      viewCount: 0,
       isVisible:
         song.isVisible !== undefined
           ? song.isVisible

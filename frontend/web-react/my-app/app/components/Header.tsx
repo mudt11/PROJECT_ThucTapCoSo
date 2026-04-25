@@ -30,9 +30,6 @@ export default function Header() {
         <SearchBarComponent />
       </div>
 
-      {/* Side bar */}
-      <Sidebar />
-
       <div className="right">
         {/* Upload icon */}
         {/* <HiOutlineUpload id="upload-icon" /> */}
@@ -40,15 +37,21 @@ export default function Header() {
           {loading ? null : user ? (
             <div className="user-greeting">
               <button
-                className="profile-btn"
+                className={`profile-btn ${showUserMenu ? "active" : ""}`}
                 onClick={() => setShowUserMenu(!showUserMenu)}
               >
-                <span>Hi, {user?.username || "..."}</span>
                 <img
                   src="/images/Avatar/avt01.png"
                   alt="Avatar"
                   className="avatar"
                 />
+
+                <div className="user-meta">
+                  <span className="username">{user?.username}</span>
+                  <span className="plan">Premium</span>
+                </div>
+
+                <i className="fa-solid fa-chevron-down arrow"></i>
               </button>
               {showUserMenu && (
                 <PopUp
@@ -56,13 +59,13 @@ export default function Header() {
                   onClose={() => setShowUserMenu(false)}
                 >
                   <div className="user-popup">
-                    <div className="user-info">
+                    {/* <div className="user-info">
                       <img src="/images/Avatar/avt01.png" className="avatar" />
                       <div>
                         <strong>{user.username}</strong>
-                        <p>Thành viên Miễn phí</p>
+                        <p>Premium</p>
                       </div>
-                    </div>
+                    </div> */}
 
                     <button
                       className="logout-btn"

@@ -44,6 +44,7 @@ function MainLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       {/* <Sidebar /> */}
+      <Sidebar />
       <div className="main">
         <Header />
         <div id="content" className="content">

@@ -42,23 +42,33 @@ const TrackSection = () => {
   if (!tracks.length) return <div>No songs found</div>;
 
   return (
-    <HorizontalScroll onReachEnd={hasMore ? loadSongs : undefined}>
-      <section>
-        <div className="scroll-row">
-          {tracks.map((song: Track, index) => (
-            <div
-              key={song.trackId}
-              className="card"
-              onClick={() => setPlaylist(tracks, index)}
-            >
-              <img src={song.imageUrl} alt={song.title} />
-              <h3>{song.title}</h3>
-              <p>{song.artistName}</p>
-            </div>
-          ))}
+    <div
+      className="list-container"
+      onScroll={(e) => {
+        const target = e.currentTarget;
+        if (
+          target.scrollTop + target.clientHeight >=
+          target.scrollHeight - 50
+        ) {
+          if (hasMore) loadSongs();
+        }
+      }}
+    >
+      {tracks.map((song: Track, index) => (
+        <div
+          key={song.trackId}
+          className="list-item"
+          onClick={() => setPlaylist(tracks, index)}
+        >
+          <img src={song.imageUrl} alt={song.title} />
+
+          <div className="track-info">
+            <h3>{song.title}</h3>
+            <p>{song.artistName}</p>
+          </div>
         </div>
-      </section>
-    </HorizontalScroll>
+      ))}
+    </div>
   );
 };
 

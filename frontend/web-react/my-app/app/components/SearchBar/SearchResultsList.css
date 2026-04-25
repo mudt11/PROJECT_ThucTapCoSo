@@ -1,8 +1,8 @@
 .results-list {
   position: absolute;
   width: 100%;
-  color: #bdbdbd;
-  background-color: #303030;
+  color: var(--tt-text-primary);
+  background-color: var(--tt-text-muted);
   display: flex;
   flex-direction: column;
   border-radius: 10px;

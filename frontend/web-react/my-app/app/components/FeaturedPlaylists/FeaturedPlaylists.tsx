@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import "@/app/styles/feature-playlists.css";
 import "@/app/styles/library.css";
 import { useUser } from "@/app/context/UserContext";
@@ -19,6 +20,7 @@ interface Props {
 
 const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
   const { user } = useUser();
+  const [activeTab, setActiveTab] = useState("tracks");
 
   return (
     <div className="explore-container">
@@ -29,14 +31,45 @@ const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
         </button>
       </div>
 
-      <h2 className="title">Mới cập nhật</h2>
+      {/* <h2 className="title">Mới cập nhật</h2>
       <TrackSection />
 
       <h2 className="title">Daily Mix</h2>
       <PlaylistSection onSelect={onSelect} />
 
       <h2 className="title">Top Artists</h2>
-      <ArtistSection onSelect={onSelect} />
+      <ArtistSection onSelect={onSelect} /> */}
+
+      {/* TAB */}
+      <div className="tabs">
+        <button
+          className={activeTab === "tracks" ? "active" : ""}
+          onClick={() => setActiveTab("tracks")}
+        >
+          Mới cập nhật
+        </button>
+
+        <button
+          className={activeTab === "playlist" ? "active" : ""}
+          onClick={() => setActiveTab("playlist")}
+        >
+          Daily Mix
+        </button>
+
+        <button
+          className={activeTab === "artist" ? "active" : ""}
+          onClick={() => setActiveTab("artist")}
+        >
+          Top Artists
+        </button>
+      </div>
+
+      {/* CONTENT */}
+      <div className="tab-content">
+        {activeTab === "tracks" && <TrackSection />}
+        {activeTab === "playlist" && <PlaylistSection onSelect={onSelect} />}
+        {activeTab === "artist" && <ArtistSection onSelect={onSelect} />}
+      </div>
     </div>
   );
 };

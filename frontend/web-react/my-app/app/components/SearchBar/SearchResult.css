@@ -1,13 +1,17 @@
 .search-result {
-  padding: 12px 20px;
-  font-size: 1.05rem;
-  transition: 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 10px 14px;
   border-radius: 10px;
-  margin: 3px 5px;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
 .search-result:hover {
-  background-color: #ffffff29;
+  background-color: #ffffff1a;
+  /* background-color: #ffffff29; */
   /* color: var(--button); */
   cursor: pointer;
 }
@@ -15,4 +19,36 @@
 .highlight {
   color: var(--button);
   font-weight: 600;
+}
+
+/* Ảnh */
+.result-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+/* Info */
+.result-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Title */
+.result-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Artist */
+.result-artist {
+  font-size: 12px;
+  color: #b3b3b3;
 }

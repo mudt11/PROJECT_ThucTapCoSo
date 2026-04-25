@@ -48,7 +48,7 @@ export default function ExplorePage() {
   /* LIST VIEW */
   return (
     <div id="home" className="home-menu">
-      <div
+      {/* <div
         className="header-hero-bg"
         style={{
           backgroundImage: `url(/images/Members/bg.png)`,
@@ -63,7 +63,7 @@ export default function ExplorePage() {
             </button>
           </div>
         </section>
-      </div>
+      </div> */}
       <div id="greeting" className="greeting-text">
         {greeting}
       </div>

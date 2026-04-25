@@ -1,24 +1,27 @@
 /* ========== SIDEBAR ========== */
 
 .menu {
-  position: relative;
-  background: transparent;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+
+  background: var(--tt-surface);
+  border-right: 1px solid var(--tt-border);
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  padding-top: 90px;
+  z-index: 999;
   transition: width 0.3s ease;
 }
 
 .menu nav {
   display: flex;
-}
-
-.menu nav a {
-  color: white;
-  font-size: 18px;
-  padding: 10px;
-  border-radius: 10px;
-  letter-spacing: 0.3px;
+  flex-direction: column;
+  /* align-items: flex-start; */
 }
 
 .menu nav a {
@@ -41,10 +44,11 @@
 }
 
 .menu nav a:hover {
-  color: var(--color-text-select);
+  background: var(--tt-surface-2);
 }
 
 .menu nav a.active {
-  color: var(--color-text-select);
+  background: var(--tt-orange-pale);
+  color: var(--tt-orange);
   box-shadow: 0 0 12px var(--color-text-select);
 }

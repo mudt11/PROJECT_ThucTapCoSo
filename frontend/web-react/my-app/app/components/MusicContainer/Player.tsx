@@ -198,31 +198,30 @@ const PlayerContent: React.FC = () => {
           />
         </Link>
 
-        <div className="info-song">
-          <a href="#" className="song-tittle">
-            {currentSong?.title || "No song"}
-          </a>
-          <a href="#" className="artist-name">
-            {currentSong?.artistName || "Unknown"}
-          </a>
+        <div className="song-row">
+          <div className="info-song">
+            <a className="song-tittle">{currentSong?.title}</a>
+            <a className="artist-name">{currentSong?.artistName}</a>
+          </div>
+
+          <div className="song-actions">
+            <button
+              className={`icon-btn like-icon ${liked ? "liked" : ""}`}
+              onClick={toggleLike}
+            >
+              <i
+                className={liked ? "fa-solid fa-heart" : "fa-regular fa-heart"}
+              />
+            </button>
+
+            <button
+              className="icon-btn expand-icon"
+              onClick={() => setShowUserMenu(!showUserMenu)}
+            >
+              <i className="fa-solid fa-ellipsis"></i>
+            </button>
+          </div>
         </div>
-
-        <button
-          className={`icon-btn like-icon ${liked ? "liked" : ""}`}
-          onClick={toggleLike}
-          disabled={likeLoading}
-        >
-          <i
-            className={liked ? "fa-solid fa-heart" : "fa-regular fa-heart"}
-          ></i>
-        </button>
-
-        <button
-          className="icon-btn expand-icon"
-          onClick={() => setShowUserMenu(!showUserMenu)}
-        >
-          <i className="fa-solid fa-ellipsis"></i>
-        </button>
         {showUserMenu && (
           <PopUp show={showUserMenu} onClose={() => setShowUserMenu(false)}>
             <div className="Other-options-popup">

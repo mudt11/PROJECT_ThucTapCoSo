@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   transition: 0.15s ease-in-out;
-  background-color: var(--color-blur);
+  background-color: var(--tt-border);
 }
 
 .input-container {
@@ -28,7 +28,7 @@
   height: 100%;
   font-size: 1rem;
   width: 100%;
-  color: white;
+  color: var(--tt-text-primary);
   flex: 1;
 }
 
@@ -38,7 +38,7 @@
 }
 
 #search-icon {
-  color: white;
+  color: var(--tt-orange);
   font-size: 1.25rem;
   cursor: pointer;
   flex-shrink: 0;
@@ -54,5 +54,5 @@
 }
 
 #clear-icon:hover {
-  color: #ccc;
+  color: var(--tt-text-primary);
 }

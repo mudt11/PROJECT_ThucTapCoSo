@@ -10,6 +10,93 @@
   color: var(--color-text);
 }
 
+.tabs {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.tabs button {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding-bottom: 6px;
+  position: relative;
+}
+
+.tabs button.active {
+  color: var(--tt-orange);
+  font-weight: 600;
+}
+
+.tabs button.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--tt-orange);
+  border-radius: 2px;
+}
+
+.list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.list-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.list-container::-webkit-scrollbar-thumb {
+  background: var(--tt-border);
+  border-radius: 10px;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  padding: 5px;
+  border-radius: 10px;
+  background: var(--tt-surface);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.list-item:hover {
+  background: var(--tt-surface-2);
+}
+
+.list-item img {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.track-info h3 {
+  color: var(--tt-text-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.track-info p {
+  font-size: 12px;
+  color: var(--tt-text-secondary);
+}
+
+/* =================================== */
+
 .scroll-row {
   display: flex;
   overflow-x: auto;
@@ -33,7 +120,12 @@
   border-radius: 8px;
   cursor: pointer;
   transition: transform 0.2s;
-  /* background-color: var(--background-color); */
+}
+
+.card {
+  background: var(--tt-surface);
+  box-shadow: var(--tt-shadow-sm);
+  border-radius: var(--tt-radius-md);
 }
 
 .card:hover {
@@ -116,19 +208,6 @@
   );
   backdrop-filter: blur(20px);
 }
-
-/* Lớp phủ mờ đen dần xuống */
-/* .playlist-detail .overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.5),
-    rgba(0, 0, 0, 0.8),
-    #000 100%
-  );
-  z-index: 0;
-} */
 
 /* Đảm bảo nội dung nổi lên trên overlay */
 .playlist-header,
