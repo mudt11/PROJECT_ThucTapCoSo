@@ -130,11 +130,29 @@ module.exports = {
       mix_date: { type: Sequelize.DATEONLY, allowNull: true },
     });
 
+    // 5. Bảng genres
+    await queryInterface.createTable("genres", {
+      genre_id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      name: {
+        type: Sequelize.STRING(100),
+        allowNull: false,
+      },
+      normalized_name: {
+        type: Sequelize.STRING(100),
+        allowNull: false,
+        unique: true,
+      },
+    });
+
     // ==========================================
     // PHẦN 2: TẠO CÁC BẢNG PHỤ THUỘC (Chứa FK)
     // ==========================================
 
-    // 5. Bảng refresh_tokens (Phụ thuộc users)
+    // 6. Bảng refresh_tokens (Phụ thuộc users)
     await queryInterface.createTable("refresh_tokens", {
       token_id: {
         type: Sequelize.INTEGER,
@@ -170,7 +188,7 @@ module.exports = {
     await queryInterface.addIndex("refresh_tokens", ["user_id"]);
     await queryInterface.addIndex("refresh_tokens", ["expires_at"]);
 
-    // 6. Bảng song_artists (Phụ thuộc songs, artists)
+    // 7. Bảng song_artists (Phụ thuộc songs, artists)
     await queryInterface.createTable("song_artists", {
       song_id: {
         type: Sequelize.INTEGER,
@@ -188,7 +206,7 @@ module.exports = {
       },
     });
 
-    // 7. Bảng favorites (Phụ thuộc users, songs)
+    // 8. Bảng favorites (Phụ thuộc users, songs)
     await queryInterface.createTable("favorites", {
       user_id: {
         type: Sequelize.INTEGER,
@@ -214,7 +232,7 @@ module.exports = {
       },
     });
 
-    // 8. Bảng ratings (Phụ thuộc users, songs)
+    // 9. Bảng ratings (Phụ thuộc users, songs)
     await queryInterface.createTable("ratings", {
       rating_id: {
         type: Sequelize.INTEGER,
@@ -249,6 +267,24 @@ module.exports = {
       unique: true,
     });
     await queryInterface.addIndex("ratings", ["song_id"]);
+
+    // 9. Bảng song_genres (Phụ thuộc songs, genres)
+    await queryInterface.createTable("song_genres", {
+      song_id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+        references: { model: "songs", key: "song_id" },
+        onDelete: "CASCADE",
+      },
+      genre_id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+        references: { model: "genres", key: "genre_id" },
+        onDelete: "CASCADE",
+      },
+    });
   },
 
   async down(queryInterface, Sequelize) {
@@ -262,9 +298,11 @@ module.exports = {
     // Khi Rollback (undo), phải XÓA NGƯỢC LẠI: Xóa bảng phụ trước, bảng chính sau để không vi phạm khóa ngoại
     await queryInterface.dropTable("ratings");
     await queryInterface.dropTable("favorites");
+    await queryInterface.dropTable("song_genres"); // thêm 1st
     await queryInterface.dropTable("song_artists");
     await queryInterface.dropTable("refresh_tokens");
     await queryInterface.dropTable("playlists");
+    await queryInterface.dropTable("genres"); // thêm 1st
     await queryInterface.dropTable("artists");
     await queryInterface.dropTable("songs");
     await queryInterface.dropTable("users");

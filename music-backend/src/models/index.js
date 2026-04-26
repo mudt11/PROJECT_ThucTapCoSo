@@ -8,6 +8,8 @@ const RefreshToken = require("./refresh_token.model");
 const Rating = require("./rating.model");
 const Favorite = require("./favorite.model");
 const SongArtist = require("./song_artist.model");
+const Genre = require("./genres.model");
+const SongGenre = require("./song_genres.model");
 // const Playlist = require("./playlist.model");
 // const PlaylistSong = require("./playlist_song.model");
 
@@ -54,6 +56,21 @@ Rating.belongsTo(User, { foreignKey: "user_id", as: "user" });
 Song.hasMany(Rating, { foreignKey: "song_id", as: "ratings" });
 Rating.belongsTo(Song, { foreignKey: "song_id", as: "song" });
 
+// 5. Song - Genre: Thể loại (Quan hệ N-N)
+Song.belongsToMany(Genre, {
+  through: SongGenre,
+  foreignKey: "song_id",
+  otherKey: "genre_id",
+  as: "genres",
+});
+
+Genre.belongsToMany(Song, {
+  through: SongGenre,
+  foreignKey: "genre_id",
+  otherKey: "song_id",
+  as: "songs",
+});
+
 // HÀM ĐỒNG BỘ DATABASE
 
 const syncDatabase = async () => {
@@ -71,6 +88,8 @@ module.exports = {
   User,
   Song,
   Artist,
+  Genre,
+  SongGenre,
   RefreshToken,
   Rating,
   Favorite,
