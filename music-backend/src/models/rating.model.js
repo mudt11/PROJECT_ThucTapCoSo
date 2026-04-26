@@ -28,16 +28,12 @@ const Rating = sequelize.define(
         max: 5, // Điểm cao nhất là 5
       },
     },
-
-    created_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
   },
   {
     tableName: "ratings",
     timestamps: true,
     createdAt: "created_at",
+    updatedAt: "updated_at",
     indexes: [
       {
         unique: true,

@@ -58,10 +58,10 @@ Rating.belongsTo(Song, { foreignKey: "song_id", as: "song" });
 
 const syncDatabase = async () => {
   try {
-    await sequelize.sync({ alter: true });
-    console.log(">>> DATABASE SYNCED SUCCESSFULLY! (All tables created) <<<");
+    await sequelize.authenticate();
+    console.log(">>> MYSQL CONNECTED! DATABASE IS MANAGED BY MIGRATIONS <<<");
   } catch (error) {
-    console.error(">>> SYNC ERROR:", error);
+    console.error(">>> MYSQL CONNECTION ERROR:", error);
   }
 };
 

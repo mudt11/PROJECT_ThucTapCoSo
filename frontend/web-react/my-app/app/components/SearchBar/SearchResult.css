@@ -2,6 +2,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  /* height: 80px; */
 
   padding: 10px 14px;
   border-radius: 10px;
@@ -11,8 +12,6 @@
 
 .search-result:hover {
   background-color: #ffffff1a;
-  /* background-color: #ffffff29; */
-  /* color: var(--button); */
   cursor: pointer;
 }
 
@@ -23,8 +22,8 @@
 
 /* Ảnh */
 .result-img {
-  width: 48px;
-  height: 48px;
+  width: 70px;
+  height: 70px;
   border-radius: 6px;
   object-fit: cover;
 }
@@ -38,7 +37,7 @@
 
 /* Title */
 .result-title {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: white;
 
@@ -50,5 +49,5 @@
 /* Artist */
 .result-artist {
   font-size: 12px;
-  color: #b3b3b3;
+  color: white;
 }

@@ -34,6 +34,8 @@ const PlayerContent: React.FC = () => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const viewedRef = useRef(false);
   const trackIdRef = useRef<number | null>(null);
+  const listenedTimeRef = useRef(0);
+  const lastTimeRef = useRef(0);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -45,7 +47,10 @@ const PlayerContent: React.FC = () => {
   useEffect(() => {
     if (!currentSong?.trackId) return;
 
+    // reset toàn bộ tracking
     viewedRef.current = false;
+    listenedTimeRef.current = 0;
+    lastTimeRef.current = 0;
     trackIdRef.current = currentSong.trackId;
 
     const params = new URLSearchParams(searchParams.toString());
@@ -91,18 +96,31 @@ const PlayerContent: React.FC = () => {
   // Theo dõi tiến trình phát
   useEffect(() => {
     const audio = (window as any)._audioRef as HTMLAudioElement;
-    console.log("DEBUG audio ref:", audio);
+    // console.log("DEBUG audio ref:", audio);
     if (!audio) return;
 
     const updateProgress = () => {
       if (!audio.duration) return;
 
-      setProgress((audio.currentTime / audio.duration) * 100);
-      setCurrentTime(audio.currentTime);
+      const current = audio.currentTime;
+      const delta = current - lastTimeRef.current;
+
+      setProgress((current / audio.duration) * 100);
+      setCurrentTime(current);
       setDuration(audio.duration);
 
-      //TĂNG VIEW SAU 20 GIÂY – CHỈ 1 LẦN
-      if (audio.currentTime >= 20 && !viewedRef.current && trackIdRef.current) {
+      // nếu user không tua (delta hợp lý)
+      if (delta > 0 && delta < 2) {
+        listenedTimeRef.current += delta;
+      }
+
+      lastTimeRef.current = current;
+
+      if (
+        listenedTimeRef.current >= 20 &&
+        !viewedRef.current &&
+        trackIdRef.current
+      ) {
         increaseSongView(trackIdRef.current);
         viewedRef.current = true;
       }

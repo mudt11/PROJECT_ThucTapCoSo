@@ -73,7 +73,7 @@ export default function ExplorePage() {
       <FeaturedPlaylists onSelect={setSelected} />
 
       {/* phần footer thông tin công ty */}
-      <div className="company-info">
+      {/* <div className="company-info">
         <div className="company-left">
           <img
             src="/images/Logo/nct-footer-logo.png"
@@ -117,7 +117,7 @@ export default function ExplorePage() {
         <a>Chính Sách Bảo Mật</a> • <a>Chính Sách SHTT</a> •{" "}
         <a>Thỏa Thuận Sử Dụng</a>
         <p>© NCT Corp. All rights reserved</p>
-      </div>
+      </div> */}
     </div>
   );
 }

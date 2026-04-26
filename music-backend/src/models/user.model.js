@@ -13,12 +13,10 @@ const User = sequelize.define(
     username: {
       type: DataTypes.STRING(100),
       allowNull: false,
-      unique: true,
     },
     email: {
       type: DataTypes.STRING(100),
       allowNull: false,
-      unique: true,
       validate: { isEmail: true },
     },
     password: {
@@ -77,19 +75,11 @@ const User = sequelize.define(
       allowNull: false,
       defaultValue: "offline",
     },
-
-    created_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
   },
   {
     tableName: "users",
     timestamps: true,
+    createdAt: "created_at",
     updatedAt: "updated_at",
     hooks: {
       beforeCreate: async (user) => {
@@ -99,6 +89,16 @@ const User = sequelize.define(
         }
       },
     },
+    indexes: [
+      {
+        unique: true,
+        fields: ["username"],
+      },
+      {
+        unique: true,
+        fields: ["email"],
+      },
+    ],
   },
 );
 

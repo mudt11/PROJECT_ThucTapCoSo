@@ -1,39 +1,38 @@
 import { URL } from "./authApi";
 import { Track } from "../types/music";
 import { adminFetch, userFetch } from "./refreshToken";
+import { mapSongToTrack } from "./song.mapper";
 
-export async function fetchDailySongs(limit = 20, page = 1): Promise<Track[]> {
-  const res = await fetch(`${URL}/songs?limit=${limit}&page=${page}`, {
-    credentials: "include",
-  });
+type PaginatedSongs = {
+  page: number;
+  limit: number;
+  total: number;
+  songs: Track[];
+};
+
+export async function fetchDailySongs(
+  limit = 20,
+  page = 1,
+): Promise<PaginatedSongs> {
+  const res = await fetch(
+    `http://localhost:5000/api/songs?page=${page}&limit=${limit}`,
+  );
+
   if (!res.ok) {
     throw new Error("Failed to fetch songs");
   }
 
   const data = await res.json();
 
-  if (!data.songs || !Array.isArray(data.songs)) {
-    return [];
-  }
-
-  return data.songs.map(
-    (song: any): Track => ({
-      trackId: song.song_id,
-      title: song.title,
-      duration: song.duration,
-      audioUrl: song.audio_url,
-      imageUrl: song.image_url,
-      artistName:
-        song.artists?.map((a: any) => a.name).join(", ") ?? "Unknown Artist",
-      genre: song.genre ?? "Other",
-      viewCount: song.view_count ?? 0,
-      isVisible: song.is_visible ?? true,
-    }),
-  );
+  return {
+    page: data.page,
+    limit: data.limit,
+    total: data.total,
+    songs: data.songs.map(mapSongToTrack),
+  };
 }
 
 // lấy tất cả bài hát có phân trang cho trang quản trị
-
 export async function fetchSongsForManage({
   page = 1,
   limit = 10,

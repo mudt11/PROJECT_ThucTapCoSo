@@ -17,11 +17,16 @@ const Artist = sequelize.define(
       type: DataTypes.STRING(500),
       allowNull: true,
     },
+    normalized_name: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      unique: true,
+    },
   },
   {
     tableName: "artists",
     timestamps: false,
-  }
+  },
 );
 
 module.exports = Artist;

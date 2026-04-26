@@ -42,7 +42,7 @@ const SearchResult = ({ result, searchTerm }: SearchResultProps) => {
         <div className="result-title">
           {highlight(result.title, searchTerm)}
         </div>
-        <div className="result-artist">Song • {result.artistName}</div>
+        <div className="result-artist">{result.artistName}</div>
       </div>
     </div>
   );

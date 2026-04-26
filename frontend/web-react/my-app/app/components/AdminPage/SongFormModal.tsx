@@ -17,6 +17,10 @@ export default function SongFormModal({
   const [artist, setArtist] = useState("");
   const [genre, setGenre] = useState("");
   const [audioFile, setAudioFile] = useState<File | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [duration, setDuration] = useState("");
+
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (song) {
@@ -27,36 +31,47 @@ export default function SongFormModal({
   }, [song]);
 
   const handleSubmit = async () => {
+    if (submitting) return;
+
     if (!title) {
       alert("Thiếu title");
       return;
     }
 
     // ADD → FormData (có file)
-    if (!isEdit) {
-      if (!audioFile) {
-        alert("Phải chọn file nhạc");
-        return;
+    try {
+      setSubmitting(true);
+
+      if (!isEdit) {
+        if (!audioFile) {
+          alert("Phải chọn file nhạc");
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("artist", artist);
+        formData.append("genre", genre);
+        formData.append("duration", duration);
+        formData.append("audioFile", audioFile);
+        if (imageFile) formData.append("imageFile", imageFile);
+
+        await onSave(formData);
       }
-
-      const formData = new FormData();
-      formData.append("title", title);
-      formData.append("artist", artist);
-      formData.append("genre", genre);
-      formData.append("audioFile", audioFile);
-
-      await onSave(formData);
+      // EDIT → JSON (không file)
+      else {
+        await onSave({
+          title,
+          artist,
+          genre,
+        });
+      }
+      closeModal();
+    } catch (err) {
+      console.error("Save song failed:", err);
+    } finally {
+      setSubmitting(false);
     }
-
-    // EDIT → JSON (không file)
-    else {
-      await onSave({
-        title,
-        artist,
-        genre,
-      });
-    }
-    closeModal();
   };
 
   return (
@@ -72,7 +87,7 @@ export default function SongFormModal({
 
       <input
         type="text"
-        placeholder="Artist"
+        placeholder="Artists (e.g. artist1, artist2, artist3)"
         value={artist}
         onChange={(e) => setArtist(e.target.value)}
       />
@@ -92,9 +107,26 @@ export default function SongFormModal({
         />
       )}
 
+      <input
+        type="number"
+        placeholder="Duration (seconds)"
+        value={duration}
+        onChange={(e) => setDuration(e.target.value)}
+      />
+
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => e.target.files && setImageFile(e.target.files[0])}
+      />
+
       <div className={styles.modalActions}>
-        <button className={styles.saveBtn} onClick={handleSubmit}>
-          Save
+        <button
+          className={styles.saveBtn}
+          onClick={handleSubmit}
+          disabled={submitting}
+        >
+          {submitting ? "Uploading..." : "Save"}
         </button>
         <button className={styles.cancelBtn} onClick={closeModal}>
           Cancel

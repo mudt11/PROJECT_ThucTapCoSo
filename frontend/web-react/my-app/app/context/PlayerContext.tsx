@@ -36,7 +36,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     const a = audioRef.current;
     const onEnded = () => {
       setCurrentIndex((idx) =>
-        playlist.length ? (idx + 1) % playlist.length : 0
+        playlist.length ? (idx + 1) % playlist.length : 0,
       );
     };
 

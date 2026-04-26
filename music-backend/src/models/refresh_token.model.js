@@ -31,16 +31,12 @@ const RefreshToken = sequelize.define(
       },
       onDelete: "CASCADE",
     },
-
-    created_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
   },
   {
     tableName: "refresh_tokens",
     timestamps: true,
     createdAt: "created_at",
+    updatedAt: "updated_at",
     indexes: [
       { unique: true, fields: ["token"] },
       { fields: ["user_id"] },

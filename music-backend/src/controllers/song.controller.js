@@ -40,47 +40,53 @@ cloudinary.config({
 
 const createSong = async (req, res, next) => {
   try {
-    // 1. Multer đã xử lý xong file
-    if (!req.file) {
-      return res.status(400).json({
-        message: "Bạn phải upload một file nhạc!",
-      });
-    }
-
-    const { title, artist, genre } = req.body;
+    const { title, artist, genre, duration } = req.body;
 
     if (!title) {
-      return res.status(400).json({
-        message: "Thiếu title",
-      });
+      return res.status(400).json({ message: "Thiếu title" });
     }
 
-    // 2. Upload Cloudinary
-    const uploadResult = await cloudinary.uploader.upload(req.file.path, {
-      folder: "music-app/songs",
+    const audioFile = req.files?.audioFile?.[0];
+    const imageFile = req.files?.imageFile?.[0];
+
+    if (!audioFile) {
+      return res.status(400).json({ message: "Thiếu file audio" });
+    }
+
+    // upload audio
+    const audioUpload = await cloudinary.uploader.upload(audioFile.path, {
+      folder: "music/audio",
       resource_type: "video",
     });
 
-    const audioUrl = uploadResult.secure_url;
+    // upload image (optional)
+    let imageUrl = null;
+    if (imageFile) {
+      const imageUpload = await cloudinary.uploader.upload(imageFile.path, {
+        folder: "music/image",
+      });
+      imageUrl = imageUpload.secure_url;
+    }
 
-    // 3. Xóa file tạm
-    await fs.unlink(req.file.path);
+    // xóa file local
+    await fs.unlink(audioFile.path);
+    if (imageFile) await fs.unlink(imageFile.path);
 
-    // 4. Lưu DB
     const newSong = await songService.createSong({
       title,
       artist,
       genre,
-      audio_url: audioUrl,
+      duration,
+      audio_url: audioUpload.secure_url,
+      image_url: imageUrl,
     });
 
     res.status(201).json({
-      message: "Upload THÀNH CÔNG!",
+      message: "Upload thành công",
       data: newSong,
     });
-  } catch (error) {
-    console.error("LỖI SONG CONTROLLER:", error);
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -128,11 +134,8 @@ async function getSongList(req, res) {
 
     res.json(result);
   } catch (error) {
-    console.error("FULL ERROR:", error);
-    res.status(500).json({
-      message: error.message,
-      stack: error.stack,
-    });
+    console.error("ERROR:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 }
 

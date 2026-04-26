@@ -35,19 +35,12 @@ const Song = sequelize.define(
       allowNull: false,
       defaultValue: true,
     },
-    created_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-    },
   },
   {
     tableName: "songs",
     timestamps: true,
     createdAt: "created_at",
-    updatedAt: "updatedAt",
+    updatedAt: "updated_at",
   },
 );
 

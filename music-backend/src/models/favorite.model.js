@@ -15,16 +15,12 @@ const Favorite = sequelize.define(
       primaryKey: true,
       allowNull: false,
     },
-
-    created_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
   },
   {
     tableName: "favorites",
     timestamps: true, // Bật lên để dùng tính năng ngày tháng
-    createdAt: "created_at", // Map đúng tên cột trong database
+    createdAt: "created_at",
+    updatedAt: "updated_at", 
   },
 );
 

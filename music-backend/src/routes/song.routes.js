@@ -9,7 +9,7 @@ const {
 } = require("../midlewares/auth.midleware");
 const upload = require("../midlewares/upload.midleware");
 
-// tìm kiếm bài hát 
+// tìm kiếm bài hát
 router.get("/search", songController.searchSongs);
 
 /* --- ROUTES FOR USER --- */
@@ -32,10 +32,12 @@ router.post("/:songId/view", songController.increaseView);
 // admin up nhạc
 router.post(
   "/",
-  protect,
-  // protectAdmin,
-  upload.single("audioFile"),
-  songController.createSong
+  protectAdmin,
+  upload.fields([
+    { name: "audioFile", maxCount: 1 },
+    { name: "imageFile", maxCount: 1 },
+  ]),
+  songController.createSong,
 );
 
 /* --- ROUTES FOR ADMIN --- */
@@ -53,7 +55,7 @@ router.delete("/:id", protectAdmin, songController.deleteSongById);
 router.patch(
   "/:id/toggle-invisibility",
   protectAdmin,
-  songController.toggleSongVisibility
+  songController.toggleSongVisibility,
 );
 
 // gọi 1 lần để lấy 200 bài

@@ -57,7 +57,7 @@ function SongManagement() {
           setSongs((prev) => [res.data, ...prev]);
         } catch (error: any) {
           alert(error.message || "Thêm bài hát thất bại");
-          throw error; 
+          throw error;
         }
       },
     });
@@ -70,7 +70,7 @@ function SongManagement() {
         const res = await updateSong(song.song_id, updatedData);
 
         setSongs((prev) =>
-          prev.map((s) => (s.song_id === song.song_id ? res.data : s))
+          prev.map((s) => (s.song_id === song.song_id ? res.data : s)),
         );
       },
     });
@@ -102,8 +102,8 @@ function SongManagement() {
 
       setSongs((prev) =>
         prev.map((s) =>
-          s.song_id === songId ? { ...s, is_visible: res.isVisible } : s
-        )
+          s.song_id === songId ? { ...s, is_visible: res.isVisible } : s,
+        ),
       );
     } catch (error: any) {
       alert(error.message || "Không thể thay đổi trạng thái bài hát");
@@ -111,7 +111,7 @@ function SongManagement() {
       setLoading(false);
     }
   };
-  console.log('songs: ', songs)
+  console.log("songs: ", songs);
 
   return (
     <div className={styles.container}>
@@ -149,7 +149,9 @@ function SongManagement() {
           {songs.map((song) => (
             <tr key={song.song_id}>
               <td>{song.title}</td>
-              <td>{song?.artists?.name}</td>
+              <td>
+                {song.artists?.map((a: any) => a.name).join(", ") || "Unknown"}
+              </td>
               <td>{song.genre}</td>
               <td>{song.view_count}</td>
               <td>{formatDate(song.fetched_at)}</td>

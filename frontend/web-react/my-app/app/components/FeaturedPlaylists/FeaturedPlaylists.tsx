@@ -41,34 +41,36 @@ const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
       <ArtistSection onSelect={onSelect} /> */}
 
       {/* TAB */}
-      <div className="tabs">
-        <button
-          className={activeTab === "tracks" ? "active" : ""}
-          onClick={() => setActiveTab("tracks")}
-        >
-          Mới cập nhật
-        </button>
+      <div className="explore-tabs">
+        <div className="tabs">
+          <button
+            className={activeTab === "tracks" ? "active" : ""}
+            onClick={() => setActiveTab("tracks")}
+          >
+            Mới cập nhật
+          </button>
 
-        <button
-          className={activeTab === "playlist" ? "active" : ""}
-          onClick={() => setActiveTab("playlist")}
-        >
-          Daily Mix
-        </button>
+          <button
+            className={activeTab === "playlist" ? "active" : ""}
+            onClick={() => setActiveTab("playlist")}
+          >
+            Daily Mix
+          </button>
 
-        <button
-          className={activeTab === "artist" ? "active" : ""}
-          onClick={() => setActiveTab("artist")}
-        >
-          Top Artists
-        </button>
-      </div>
+          <button
+            className={activeTab === "artist" ? "active" : ""}
+            onClick={() => setActiveTab("artist")}
+          >
+            Top Artists
+          </button>
+        </div>
 
-      {/* CONTENT */}
-      <div className="tab-content">
-        {activeTab === "tracks" && <TrackSection />}
-        {activeTab === "playlist" && <PlaylistSection onSelect={onSelect} />}
-        {activeTab === "artist" && <ArtistSection onSelect={onSelect} />}
+        {/* CONTENT */}
+        <div className="tab-content">
+          {activeTab === "tracks" && <TrackSection />}
+          {activeTab === "playlist" && <PlaylistSection onSelect={onSelect} />}
+          {activeTab === "artist" && <ArtistSection onSelect={onSelect} />}
+        </div>
       </div>
     </div>
   );

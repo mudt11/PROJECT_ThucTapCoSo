@@ -2,13 +2,14 @@ const {
   User,
   Song,
   Artist,
+  SongArtist,
   Album,
   Genre,
   Favorites,
   PlaylistSongs,
   sequelize,
 } = require("../models");
-const { Op, where, col } = require("sequelize");
+const { Op, fn, col, where } = require("sequelize");
 const cloudinary = require("cloudinary").v2;
 const { Sequelize } = require("sequelize");
 const { v4: uuidv4 } = require("uuid");
@@ -33,42 +34,132 @@ const { v4: uuidv4 } = require("uuid");
 
 // Lấy tất cả bài hát
 
-const createSong = async ({ title, artist, genre, audio_url }) => {
-  let artistRecord = null;
+const normalizeArtistName = (name) => {
+  return name
+    .toLowerCase()
+    .replace(/\s+/g, "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+};
 
-  // 1. Nếu có artist name → tìm hoặc tạo artist
-  if (artist) {
-    [artistRecord] = await Artist.findOrCreate({
-      where: { name: artist },
-      defaults: {
-        jamendo_id: `upload-${uuidv4()}`,
-        image_url: null,
+const createSong = async ({
+  title,
+  artist,
+  genre,
+  duration,
+  audio_url,
+  image_url,
+}) => {
+  const t = await sequelize.transaction();
+
+  try {
+    // 1. Tạo song
+    const newSong = await Song.create(
+      {
+        title,
+        duration: duration || 0,
+        audio_url,
+        image_url,
+        view_count: 0,
+        is_visible: true,
       },
+      { transaction: t },
+    );
+
+    // 2. Parse artist list
+    let artistList = [];
+
+    if (artist) {
+      artistList = [
+        ...new Set(
+          artist
+            .split(",")
+            .map((a) => a.trim())
+            .filter(Boolean),
+        ),
+      ];
+    }
+
+    if (artistList.length > 0) {
+      // 3. Normalize
+      const normalizedList = artistList.map((name) => ({
+        original: name,
+        normalized: normalizeArtistName(name),
+      }));
+
+      // 4. Tìm artist đã tồn tại (1 query duy nhất)
+      const existingArtists = await Artist.findAll({
+        where: {
+          normalized_name: {
+            [Op.in]: normalizedList.map((a) => a.normalized),
+          },
+        },
+        transaction: t,
+      });
+
+      const existingMap = new Map(
+        existingArtists.map((a) => [a.normalized_name, a]),
+      );
+
+      const artistsToCreate = [];
+
+      // 5. Xác định artist cần tạo mới
+      for (const a of normalizedList) {
+        if (!existingMap.has(a.normalized)) {
+          artistsToCreate.push({
+            name: a.original,
+            normalized_name: a.normalized,
+          });
+        }
+      }
+
+      // 6. Bulk create artist mới
+      let createdArtists = [];
+      if (artistsToCreate.length > 0) {
+        createdArtists = await Artist.bulkCreate(artistsToCreate, {
+          transaction: t,
+          ignoreDuplicates: true, // tránh race condition
+        });
+      }
+
+      // 7. Lấy lại toàn bộ artist (đảm bảo đủ)
+      const finalArtists = await Artist.findAll({
+        where: {
+          normalized_name: {
+            [Op.in]: normalizedList.map((a) => a.normalized),
+          },
+        },
+        transaction: t,
+      });
+
+      // 8. Insert bảng trung gian (bulk)
+      const songArtistData = finalArtists.map((artist) => ({
+        song_id: newSong.song_id,
+        artist_id: artist.artist_id,
+      }));
+
+      await SongArtist.bulkCreate(songArtistData, {
+        transaction: t,
+      });
+    }
+
+    await t.commit();
+
+    // 9. Return đầy đủ
+    return await Song.findByPk(newSong.song_id, {
+      include: [
+        {
+          model: Artist,
+          as: "artists",
+          attributes: ["artist_id", "name"],
+          through: { attributes: [] },
+        },
+      ],
     });
+  } catch (err) {
+    await t.rollback();
+    throw err;
   }
-
-  // 2. Tạo song
-  const newSong = await Song.create({
-    jamendo_id: `upload-${uuidv4()}`,
-    title,
-    artist_name: artist || null,
-    artist_id: artistRecord ? artistRecord.artist_id : null,
-    genre: genre || "Other",
-    audio_url,
-    duration: 0,
-    view_count: 0,
-    is_visible: true,
-  });
-
-  // fetch lại có include
-  const songWithArtist = await Song.findByPk(newSong.song_id, {
-    include: {
-      model: Artist,
-      as: "artists",
-    },
-  });
-
-  return songWithArtist;
 };
 
 const getAllSongs = async ({ page, limit, search }) => {
@@ -163,6 +254,7 @@ async function getSongs({ page = 1, limit = 20 }) {
     order: [["created_at", "DESC"]],
     limit: Number(limit),
     offset,
+    distinct: true,
   });
 
   return {
@@ -421,23 +513,26 @@ const searchSongs = async (keyword, limit) => {
   return Song.findAll({
     where: {
       is_visible: true,
-      title: { [Op.like]: `%${keyword}%` },
+      [Op.or]: [
+        { title: { [Op.like]: `%${keyword}%` } },
+        { "$artists.name$": { [Op.like]: `%${keyword}%` } },
+      ],
     },
+
     include: [
       {
         model: Artist,
         as: "artists",
-        attributes: ["name"],
+        attributes: ["artist_id", "name"],
         through: { attributes: [] },
         required: false,
-        where: {
-          name: { [Op.like]: `%${keyword}%` },
-        },
       },
     ],
+
     order: [["view_count", "DESC"]],
     limit,
     distinct: true,
+    subQuery: false,
   });
 };
 
