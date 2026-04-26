@@ -4,9 +4,10 @@ const {
   Artist,
   SongArtist,
   Album,
-  Genre,
   Favorites,
   PlaylistSongs,
+  Genre,
+  SongGenre,
   sequelize,
 } = require("../models");
 const { Op, fn, col, where } = require("sequelize");
@@ -34,12 +35,81 @@ const { v4: uuidv4 } = require("uuid");
 
 // Lấy tất cả bài hát
 
-const normalizeArtistName = (name) => {
-  return name
+const normalizeName = (name) =>
+  name
     .toLowerCase()
     .replace(/\s+/g, "")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
+
+const processManyToMany = async ({
+  rawInput,
+  Model,
+  joinModel,
+  foreignKey,
+  otherKey,
+  transaction,
+}) => {
+  if (!rawInput) return;
+
+  const list = [
+    ...new Set(
+      rawInput
+        .split(",")
+        .map((v) => v.trim())
+        .filter(Boolean),
+    ),
+  ];
+
+  if (list.length === 0) return;
+
+  const normalizedList = list.map((name) => ({
+    original: name,
+    normalized: normalizeName(name),
+  }));
+
+  // 1. Find existing
+  const existing = await Model.findAll({
+    where: {
+      normalized_name: normalizedList.map((x) => x.normalized),
+    },
+    transaction,
+  });
+
+  const existingMap = new Map(
+    existing.map((item) => [item.normalized_name, item]),
+  );
+
+  // 2. Create missing
+  const toCreate = normalizedList
+    .filter((x) => !existingMap.has(x.normalized))
+    .map((x) => ({
+      name: x.original,
+      normalized_name: x.normalized,
+    }));
+
+  if (toCreate.length > 0) {
+    await Model.bulkCreate(toCreate, {
+      transaction,
+      ignoreDuplicates: true,
+    });
+  }
+
+  // 3. Get final (no duplicate, safe)
+  const finalRecords = await Model.findAll({
+    where: {
+      normalized_name: normalizedList.map((x) => x.normalized),
+    },
+    transaction,
+  });
+
+  // 4. Insert join table
+  const joinData = finalRecords.map((item) => ({
+    [foreignKey]: null, // set later
+    [otherKey]: item[`${Model.name.toLowerCase()}_id`],
+  }));
+
+  return finalRecords;
 };
 
 const createSong = async ({
@@ -53,7 +123,7 @@ const createSong = async ({
   const t = await sequelize.transaction();
 
   try {
-    // 1. Tạo song
+    // 1. Create song
     const newSong = await Song.create(
       {
         title,
@@ -66,92 +136,137 @@ const createSong = async ({
       { transaction: t },
     );
 
-    // 2. Parse artist list
-    let artistList = [];
+    const songId = newSong.song_id;
 
+    // ======================
+    // 2. ARTISTS
+    // ======================
     if (artist) {
-      artistList = [
+      const list = [
         ...new Set(
           artist
             .split(",")
-            .map((a) => a.trim())
+            .map((v) => v.trim())
             .filter(Boolean),
         ),
       ];
-    }
 
-    if (artistList.length > 0) {
-      // 3. Normalize
-      const normalizedList = artistList.map((name) => ({
+      const normalized = list.map((name) => ({
         original: name,
-        normalized: normalizeArtistName(name),
+        normalized: normalizeName(name),
       }));
 
-      // 4. Tìm artist đã tồn tại (1 query duy nhất)
-      const existingArtists = await Artist.findAll({
+      const existing = await Artist.findAll({
         where: {
-          normalized_name: {
-            [Op.in]: normalizedList.map((a) => a.normalized),
-          },
+          normalized_name: normalized.map((x) => x.normalized),
         },
         transaction: t,
       });
 
-      const existingMap = new Map(
-        existingArtists.map((a) => [a.normalized_name, a]),
-      );
+      const map = new Map(existing.map((a) => [a.normalized_name, a]));
 
-      const artistsToCreate = [];
+      const toCreate = normalized
+        .filter((x) => !map.has(x.normalized))
+        .map((x) => ({
+          name: x.original,
+          normalized_name: x.normalized,
+        }));
 
-      // 5. Xác định artist cần tạo mới
-      for (const a of normalizedList) {
-        if (!existingMap.has(a.normalized)) {
-          artistsToCreate.push({
-            name: a.original,
-            normalized_name: a.normalized,
-          });
-        }
-      }
-
-      // 6. Bulk create artist mới
-      let createdArtists = [];
-      if (artistsToCreate.length > 0) {
-        createdArtists = await Artist.bulkCreate(artistsToCreate, {
+      if (toCreate.length) {
+        await Artist.bulkCreate(toCreate, {
           transaction: t,
-          ignoreDuplicates: true, // tránh race condition
+          ignoreDuplicates: true,
         });
       }
 
-      // 7. Lấy lại toàn bộ artist (đảm bảo đủ)
       const finalArtists = await Artist.findAll({
         where: {
-          normalized_name: {
-            [Op.in]: normalizedList.map((a) => a.normalized),
-          },
+          normalized_name: normalized.map((x) => x.normalized),
         },
         transaction: t,
       });
 
-      // 8. Insert bảng trung gian (bulk)
-      const songArtistData = finalArtists.map((artist) => ({
-        song_id: newSong.song_id,
-        artist_id: artist.artist_id,
+      await SongArtist.bulkCreate(
+        finalArtists.map((a) => ({
+          song_id: songId,
+          artist_id: a.artist_id,
+        })),
+        { transaction: t },
+      );
+    }
+
+    // ======================
+    // 3. GENRES
+    // ======================
+    if (genre) {
+      const list = [
+        ...new Set(
+          genre
+            .split(",")
+            .map((v) => v.trim())
+            .filter(Boolean),
+        ),
+      ];
+
+      const normalized = list.map((name) => ({
+        original: name,
+        normalized: normalizeName(name),
       }));
 
-      await SongArtist.bulkCreate(songArtistData, {
+      const existing = await Genre.findAll({
+        where: {
+          normalized_name: normalized.map((x) => x.normalized),
+        },
         transaction: t,
       });
+
+      const map = new Map(existing.map((g) => [g.normalized_name, g]));
+
+      const toCreate = normalized
+        .filter((x) => !map.has(x.normalized))
+        .map((x) => ({
+          name: x.original,
+          normalized_name: x.normalized,
+        }));
+
+      if (toCreate.length) {
+        await Genre.bulkCreate(toCreate, {
+          transaction: t,
+          ignoreDuplicates: true,
+        });
+      }
+
+      const finalGenres = await Genre.findAll({
+        where: {
+          normalized_name: normalized.map((x) => x.normalized),
+        },
+        transaction: t,
+      });
+
+      await SongGenre.bulkCreate(
+        finalGenres.map((g) => ({
+          song_id: songId,
+          genre_id: g.genre_id,
+        })),
+        { transaction: t },
+      );
     }
 
     await t.commit();
 
-    // 9. Return đầy đủ
-    return await Song.findByPk(newSong.song_id, {
+    // 4. Return full data
+    return await Song.findByPk(songId, {
       include: [
         {
           model: Artist,
           as: "artists",
           attributes: ["artist_id", "name"],
+          through: { attributes: [] },
+        },
+        {
+          model: Genre,
+          as: "genres",
+          attributes: ["genre_id", "name"],
           through: { attributes: [] },
         },
       ],

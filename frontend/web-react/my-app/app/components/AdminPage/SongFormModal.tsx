@@ -94,7 +94,7 @@ export default function SongFormModal({
 
       <input
         type="text"
-        placeholder="Genre"
+        placeholder="Genres (e.g. Pop, Rock, EDM)"
         value={genre}
         onChange={(e) => setGenre(e.target.value)}
       />
