@@ -1,18 +1,28 @@
 "use client";
+
+import { useEffect } from "react";
 import "@/app/styles/DetailSong.css";
 import { usePlayer } from "@/app/context/PlayerContext";
 import { BsSend } from "react-icons/bs";
 import { useState } from "react";
 import PopUp from "@/app/components/PopUp";
+import { useRating } from "@/app/features/rating/useRating";
 
 const DetailSong = () => {
   const { playlist, currentIndex } = usePlayer();
   const currentTrack = playlist[currentIndex];
-  const [rating, setRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
 
   const [liked, setLiked] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+
+  const [hoverRating, setHoverRating] = useState(0);
+  const { submitRating, fetchRatingData, userRating, summary } = useRating();
+
+  useEffect(() => {
+    if (currentTrack?.trackId) {
+      fetchRatingData(currentTrack.trackId);
+    }
+  }, [currentTrack?.trackId]);
 
   if (!currentTrack) {
     return (
@@ -68,19 +78,25 @@ const DetailSong = () => {
                 <i
                   key={star}
                   className={`fa-star ${
-                    (hoverRating || rating) >= star
+                    (hoverRating || userRating || 0) >= star
                       ? "fa-solid filled"
                       : "fa-regular"
                   }`}
-                  onClick={() => setRating(star)}
                   onMouseEnter={() => setHoverRating(star)}
                   onMouseLeave={() => setHoverRating(0)}
+                  onClick={() => submitRating(currentTrack.trackId, star)}
                 />
               ))}
             </div>
 
             <p className="rating-text">
-              {rating > 0 ? `${rating} / 5 sao` : "Chưa đánh giá"}
+              {userRating
+                ? `Bạn đã đánh giá ${userRating} / 5`
+                : "Chưa đánh giá"}
+            </p>
+
+            <p className="rating-summary">
+              {summary.averageRating.toFixed(1)} / 5 ({summary.totalRatings})
             </p>
           </div>
 

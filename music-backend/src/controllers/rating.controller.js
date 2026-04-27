@@ -1,3 +1,4 @@
+const { where } = require("sequelize");
 const ratingService = require("../services/rating.service"); // Gọi Service vào
 
 exports.rateSong = async (req, res) => {
@@ -47,6 +48,31 @@ exports.getSongRatingSummary = async (req, res) => {
     const data = await ratingService.getSongRatingSummary(songId);
 
     res.status(200).json(data);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Lỗi hệ thống",
+    });
+  }
+};
+
+exports.getMyRating = async (req, res) => {
+  try {
+    const userId = req.user?.user_id;
+
+    if (!userId) {
+      return res.status(401).json({
+        message: "Chưa đăng nhập",
+      });
+    }
+
+    const { songId } = req.params;
+
+    const rating = await ratingService.getUserRatingForSong(userId, songId);
+
+    return res.status(200).json({
+      rating,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({

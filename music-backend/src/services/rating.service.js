@@ -41,7 +41,18 @@ const getSongRatingSummary = async (songId) => {
   };
 };
 
+const getUserRatingForSong = async (userId, songId) => {
+  const rating = await Rating.findOne({
+    where: { user_id: userId, song_id: songId },
+    attributes: ["score"],
+    raw: true,
+  });
+
+  return rating ? rating.score : null;
+};
+
 module.exports = {
   rateSong,
   getSongRatingSummary,
+  getUserRatingForSong,
 };

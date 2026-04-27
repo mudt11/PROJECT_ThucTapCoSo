@@ -26,10 +26,6 @@ router.delete("/:id/like", protect, songController.unlikeSong);
 router.get("/", songController.getSongList);
 // tăng view
 router.post("/:songId/view", songController.increaseView);
-// User rating bài hát
-router.post("/rate", protect, ratingController.rateSong);
-// Lấy rating của bài hát
-router.get("/song/:song_id/summary", ratingController.getSongRatingSummary);
 
 /* --- ROUTES FOR ADMIN --- */
 
