@@ -2,6 +2,7 @@ const songService = require("../services/song.service");
 const jamendoService = require("../services/jamendo.service");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs-extra");
+const { Rating, Song, User } = require("../models");
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const songController = require("../controllers/song.controller");
-const jamendoController = require("../controllers/jamendo.controller");
+const ratingController = require("../controllers/rating.controller");
 const {
   protect,
   isAdmin,
@@ -22,23 +22,14 @@ router.get("/:id/like-status", protect, songController.getLikeStatus);
 router.post("/:id/like", protect, songController.likeSong);
 // Unlike
 router.delete("/:id/like", protect, songController.unlikeSong);
-
 // track list hằng ngày
 router.get("/", songController.getSongList);
-
 // tăng view
 router.post("/:songId/view", songController.increaseView);
-
-// admin up nhạc
-router.post(
-  "/",
-  protectAdmin,
-  upload.fields([
-    { name: "audioFile", maxCount: 1 },
-    { name: "imageFile", maxCount: 1 },
-  ]),
-  songController.createSong,
-);
+// User rating bài hát
+router.post("/rate", protect, ratingController.rateSong);
+// Lấy rating của bài hát
+router.get("/song/:song_id/summary", ratingController.getSongRatingSummary);
 
 /* --- ROUTES FOR ADMIN --- */
 
@@ -56,6 +47,17 @@ router.patch(
   "/:id/toggle-invisibility",
   protectAdmin,
   songController.toggleSongVisibility,
+);
+
+// admin up nhạc
+router.post(
+  "/",
+  protectAdmin,
+  upload.fields([
+    { name: "audioFile", maxCount: 1 },
+    { name: "imageFile", maxCount: 1 },
+  ]),
+  songController.createSong,
 );
 
 // gọi 1 lần để lấy 200 bài

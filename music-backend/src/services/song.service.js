@@ -17,24 +17,7 @@ const { v4: uuidv4 } = require("uuid");
 
 /* --- CHỨC NĂNG CHO USER --- */
 
-// const createSong = async (songData, audioUrl) => {
-//   const { title, artist_id, album_id, genre_id, duration } = songData;
-
-//   const newSong = await Song.create({
-//     title,
-//     artist_id,
-//     album_id,
-//     genre_id,
-//     duration: parseInt(duration) || 0,
-//     audio_url: audioUrl,
-//     view_count: 0,
-//   });
-
-//   return newSong;
-// };
-
 // Lấy tất cả bài hát
-
 const normalizeName = (name) =>
   name
     .toLowerCase()
