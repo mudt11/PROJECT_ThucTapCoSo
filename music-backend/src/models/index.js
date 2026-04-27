@@ -71,6 +71,16 @@ Genre.belongsToMany(Song, {
   as: "songs",
 });
 
+// Favorite -> Song (CẦN CHO API favorites)
+Favorite.belongsTo(Song, {
+  foreignKey: "song_id",
+  as: "song",
+});
+
+Song.hasMany(Favorite, {
+  foreignKey: "song_id",
+});
+
 // HÀM ĐỒNG BỘ DATABASE
 
 const syncDatabase = async () => {

@@ -1,4 +1,4 @@
-const { Favorite, Song } = require("../models");
+const { Favorite, Song, Artist } = require("../models");
 
 const toggleLikeSong = async (userId, songId) => {
   const song = await Song.findByPk(songId);
@@ -51,8 +51,46 @@ const countLikes = async (songId) => {
   return total;
 };
 
+const getMyFavoriteSongs = async (userId, page, limit) => {
+  const offset = (page - 1) * limit;
+
+  const { count, rows } = await Favorite.findAndCountAll({
+    where: { user_id: userId },
+    include: [
+      {
+        model: Song,
+        as: "song",
+        where: { is_visible: true },
+        required: true,
+        include: [
+          {
+            model: Artist,
+            as: "artists",
+            attributes: ["artist_id", "name"],
+            through: { attributes: [] },
+          },
+        ],
+      },
+    ],
+    order: [["created_at", "DESC"]],
+    offset,
+    limit,
+  });
+
+  return {
+    data: rows,
+    pagination: {
+      total: count,
+      page,
+      limit,
+      totalPages: Math.ceil(count / limit),
+    },
+  };
+};
+
 module.exports = {
   toggleLikeSong,
   getLikeStatus,
   countLikes,
+  getMyFavoriteSongs,
 };

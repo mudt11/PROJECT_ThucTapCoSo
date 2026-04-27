@@ -1,6 +1,6 @@
 h2 {
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 40px;
+  font-weight: 800;
   line-height: 32px;
   color: var(--button);
 }
@@ -10,7 +10,8 @@ h2 {
   flex-direction: column;
   width: 100%;
   margin-top: 20px;
-  font-family: Arial, sans-serif;
+  color: var(--tt-text-primary);
+  /* font-family: Arial, sans-serif; */
 }
 
 .table_header {
@@ -18,21 +19,23 @@ h2 {
   grid-template-columns: 50px 2fr 1.2fr 0.8fr;
   align-items: center;
   padding: 12px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid var(--tt-text-muted);
   text-transform: uppercase;
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 1px;
-  color: #aaa;
 }
 
 .row {
   display: grid;
-  grid-template-columns: 50px 2fr 1.2fr 0.8fr; /* 4 cột */
+  grid-template-columns: 50px 2fr 1.2fr 0.8fr; 
+  font-size: 14px;
   align-items: center;
   padding: 12px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  transition: background 0.2s, color 0.2s;
+  border-bottom: 1px solid rgba(59, 58, 58, 0.1);
+  transition:
+    background 0.2s,
+    color 0.2s;
   cursor: pointer;
 }
 
@@ -57,18 +60,18 @@ h2 {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 14px;
+  /* font-size: 14px; */
   overflow: hidden;
 }
 
 .col_artist,
 .col_duration {
-  font-size: 13px;
+  /* font-size: 13px; */
 }
 
 .col_title img {
-  width: 42px;
-  height: 42px;
-  border-radius: 4px;
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
   object-fit: cover;
 }

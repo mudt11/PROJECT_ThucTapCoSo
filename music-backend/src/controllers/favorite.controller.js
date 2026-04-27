@@ -39,3 +39,27 @@ exports.getLikeStatus = async (req, res) => {
     });
   }
 };
+
+exports.getMyFavoriteSongs = async (req, res) => {
+  try {
+    const userId = req.user.user_id;
+
+    // query params
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+
+    const result = await favoriteService.getMyFavoriteSongs(
+      userId,
+      page,
+      limit,
+    );
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("getMyFavoriteSongs error:", error);
+
+    res.status(500).json({
+      message: "Lỗi hệ thống",
+    });
+  }
+};

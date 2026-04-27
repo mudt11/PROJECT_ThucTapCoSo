@@ -1,27 +1,33 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import "@/app/styles/library.css";
-import { fetchLikedSongs } from "@/app/utils/songApi";
 import { formatDuration } from "@/app/utils/dateHelper";
-import type { Track } from "@/app/types/music";
 import { usePlayer } from "@/app/context/PlayerContext";
+import { useLikeContext } from "@/app/context/LikeContext";
+import type { Track } from "@/app/types/music";
 
 const LibraryTable: React.FC = () => {
-  const [songs, setSongs] = useState<Track[]>([]);
   const { setPlaylist, playlist, currentIndex } = usePlayer();
+  const { likedSongsList, fetchLikedSongsList } = useLikeContext();
 
   useEffect(() => {
-    fetchLikedSongs().then(setSongs).catch(console.error);
-  }, []);
+    fetchLikedSongsList();
+  }, [fetchLikedSongsList]);
 
   const handlePlay = (index: number) => {
-    setPlaylist(songs, index);
+    setPlaylist(likedSongsList, index);
   };
+
+  if (!likedSongsList.length) {
+    return <div className="empty">Bạn chưa thích bài hát nào</div>;
+  }
+
+  console.log("Liked songs list:", likedSongsList);
 
   return (
     <div id="table_row">
-      {songs.map((song, index) => {
+      {likedSongsList.map((song: Track, index: number) => {
         const isActive = playlist[currentIndex]?.trackId === song.trackId;
 
         return (
@@ -31,11 +37,14 @@ const LibraryTable: React.FC = () => {
             onClick={() => handlePlay(index)}
           >
             <div className="col_index">{index + 1}</div>
+
             <div className="col_title">
               <img src={song.imageUrl} />
               <span>{song.title}</span>
             </div>
+
             <div className="col_artist">{song.artistName}</div>
+
             <div className="col_duration">{formatDuration(song.duration)}</div>
           </div>
         );

@@ -13,14 +13,6 @@ router.get("/search", songController.searchSongs);
 
 /* --- ROUTES FOR USER --- */
 
-// lấy danh sách bài hát yêu thích
-// router.get("/me/favorites", protect, songController.getLikedSongs);
-
-// router.get("/:id/like-status", protect, songController.getLikeStatus);
-// Like
-// router.post("/:id/like", protect, songController.likeSong);
-// Unlike
-// router.delete("/:id/like", protect, songController.unlikeSong);
 // track list hằng ngày
 router.get("/", songController.getSongList);
 // tăng view
