@@ -25,7 +25,7 @@ const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
   return (
     <div className="explore-container">
       <div className="make-for">
-        <h2 className="title">Đề xuất cho {user ? user.username : "Guest"}</h2>
+        <h2 className="title">Recommendation</h2>
         <button id="refresh-recommendList">
           <RiResetRightLine /> Làm mới{" "}
         </button>

@@ -44,6 +44,7 @@
   /* Text */
   --color-text: var(--tt-text-primary);
   --color-text-secondary: var(--tt-text-secondary);
+  --color-text-third: white;
 
   /* Surface */
   --color-blur: var(--tt-surface-2);

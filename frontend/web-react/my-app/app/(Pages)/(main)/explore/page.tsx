@@ -13,12 +13,12 @@ export default function ExplorePage() {
 
   const router = useRouter();
 
-  const handleClick = async () => {
-    // setLoading(true);
-    // Cho hiệu ứng có thời gian hiển thị nhẹ
-    // await new Promise((resolve) => setTimeout(resolve, 600));
-    router.push("/explore");
-  };
+  // const handleClick = async () => {
+  // setLoading(true);
+  // Cho hiệu ứng có thời gian hiển thị nhẹ
+  // await new Promise((resolve) => setTimeout(resolve, 600));
+  // router.push("/explore");
+  // };
 
   useEffect(() => {
     function update() {
@@ -64,11 +64,12 @@ export default function ExplorePage() {
           </div>
         </section>
       </div> */}
-      <div id="greeting" className="greeting-text">
+      {/* <div id="greeting" className="greeting-text">
         {greeting}
-      </div>
+      </div> */}
+      <h2 className="main-title">Discovery</h2>
 
-      <Banner />
+      {/* <Banner /> */}
 
       <FeaturedPlaylists onSelect={setSelected} />
 

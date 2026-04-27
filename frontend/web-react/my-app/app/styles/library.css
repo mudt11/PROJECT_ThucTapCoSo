@@ -1,4 +1,4 @@
-h2 {
+.main-title {
   font-size: 40px;
   font-weight: 800;
   line-height: 32px;
@@ -28,7 +28,7 @@ h2 {
 
 .row {
   display: grid;
-  grid-template-columns: 50px 2fr 1.2fr 0.8fr; 
+  grid-template-columns: 50px 2fr 1.2fr 0.8fr;
   font-size: 14px;
   align-items: center;
   padding: 12px 20px;

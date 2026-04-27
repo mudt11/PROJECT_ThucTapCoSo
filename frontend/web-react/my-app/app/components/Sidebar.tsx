@@ -2,8 +2,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import "../styles/SideBar.css";
-import { IoLibraryOutline } from "react-icons/io5";
-import { PiPlaylistDuotone } from "react-icons/pi";
+
+import { RiHome5Fill } from "react-icons/ri";
+import { BsHeart } from "react-icons/bs";
+import { PiPlaylist } from "react-icons/pi";
+import { HiOutlineUser } from "react-icons/hi2";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -15,19 +18,26 @@ export default function Sidebar() {
           href="/explore"
           className={pathname === "/explore" ? "active" : ""}
         >
-          <i className="fa-regular fa-compass icon" /> Explore
+          <RiHome5Fill className="icon" /> Home
         </Link>
         <Link
           href="/library"
           className={pathname.startsWith("/library") ? "active" : ""}
         >
-          <IoLibraryOutline className="icon" /> Library
+          <BsHeart className="icon" /> Likes
         </Link>
         <Link
-          href="#"
+          href="/myplaylists"
           className={pathname.startsWith("/myplaylists") ? "active" : ""}
         >
-          <PiPlaylistDuotone className="icon" /> Playlist
+          <PiPlaylist className="icon" /> Playlist
+        </Link>
+
+        <Link
+          href="#"
+          className={pathname.startsWith("/following") ? "active" : ""}
+        >
+          <HiOutlineUser className="icon" /> Following
         </Link>
       </nav>
     </div>

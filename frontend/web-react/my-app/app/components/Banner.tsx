@@ -18,7 +18,7 @@ function Banner() {
     <div className="banner-section">
       {/* Banner chính */}
 
-      {/* <div className="banner-container">
+      <div className="banner-container">
         <HorizontalScroll>
           <div className="banner-row">
             <div className="banner-item">
@@ -41,10 +41,10 @@ function Banner() {
             </div>
           </div>
         </HorizontalScroll>
-      </div> */}
+      </div>
 
       {/* Category Section */}
-      {/* <div className="category-grid">
+      <div className="category-grid">
           <div className="category-card" style={{ backgroundColor: "#b87933" }}>
             <h3>Indie Việt</h3>
             <img src="/images/Banner/indieViet.png" alt="" />
@@ -94,7 +94,7 @@ function Banner() {
             <h3>Acoustic Việt</h3>
             <img src="/images/Banner/acousticViet.png" alt="" />
           </div>
-        </div> */}
+        </div>
     </div>
   );
 }
