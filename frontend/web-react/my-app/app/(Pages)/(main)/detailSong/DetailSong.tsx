@@ -2,10 +2,17 @@
 import "@/app/styles/DetailSong.css";
 import { usePlayer } from "@/app/context/PlayerContext";
 import { BsSend } from "react-icons/bs";
+import { useState } from "react";
+import PopUp from "@/app/components/PopUp";
 
 const DetailSong = () => {
   const { playlist, currentIndex } = usePlayer();
   const currentTrack = playlist[currentIndex];
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+
+  const [liked, setLiked] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   if (!currentTrack) {
     return (
@@ -18,7 +25,6 @@ const DetailSong = () => {
       </div>
     );
   }
-
 
   return (
     <div className="detail-container">
@@ -33,6 +39,71 @@ const DetailSong = () => {
             <img src={currentTrack.imageUrl} alt={currentTrack.title} />
             <div className="ai-badge">AI Match: 98%</div>
           </div>
+
+          <div className="song-actions-detail">
+            <button
+              className={`icon-btn like-icon ${liked ? "liked" : ""}`}
+              // onClick={toggleLike}
+            >
+              <i
+                className={liked ? "fa-solid fa-heart" : "fa-regular fa-heart"}
+              />{" "}
+              <p>Like</p>
+            </button>
+
+            <button
+              className="icon-btn expand-icon"
+              // onClick={() => setShowUserMenu(!showUserMenu)}
+            >
+              <i className="fa-solid fa-ellipsis"></i>
+              <p>More</p>
+            </button>
+          </div>
+
+          <div className="rating-section-inline">
+            <h2 className="rating-title">Đánh giá bài hát</h2>
+
+            <div className="stars">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <i
+                  key={star}
+                  className={`fa-star ${
+                    (hoverRating || rating) >= star
+                      ? "fa-solid filled"
+                      : "fa-regular"
+                  }`}
+                  onClick={() => setRating(star)}
+                  onMouseEnter={() => setHoverRating(star)}
+                  onMouseLeave={() => setHoverRating(0)}
+                />
+              ))}
+            </div>
+
+            <p className="rating-text">
+              {rating > 0 ? `${rating} / 5 sao` : "Chưa đánh giá"}
+            </p>
+          </div>
+
+          {showUserMenu && (
+            <PopUp show={showUserMenu} onClose={() => setShowUserMenu(false)}>
+              <div className="Other-options-popup">
+                <button>
+                  <i className="fa-regular fa-heart"></i>
+                  <span>Thêm vào yêu thích</span>
+                </button>
+
+                <button>
+                  <i className="fa-solid fa-circle-plus"></i>
+                  <span>Thêm vào playlist</span>
+                </button>
+
+                <button>
+                  <i className="fa-regular fa-flag"></i>
+                  <span>Báo cáo</span>
+                </button>
+              </div>
+            </PopUp>
+          )}
         </div>
         <div className="right-section">
           <div className="song-info">
@@ -51,6 +122,29 @@ const DetailSong = () => {
           </div>
         </div>
       </div>
+
+      {/* <div className="rating-section">
+        <h2>Đánh giá bài hát</h2>
+        <div className="star">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <i
+              key={star}
+              className={`fa-star ${
+                (hoverRating || rating) >= star
+                  ? "fa-solid filled"
+                  : "fa-regular"
+              }`}
+              onMouseEnter={() => setHoverRating(star)}
+              onMouseLeave={() => setHoverRating(0)}
+              onClick={() => setRating(star)}
+            ></i>
+          ))}
+        </div>
+        <p className="rating-text">
+          {rating > 0 ? `Bạn đã đánh giá ${rating}/5 sao` : "Chưa có đánh giá"}
+        </p>
+      </div> */}
+
       <div className="comment-section">
         <h2>Bình luận</h2>
         <div className="comment-input-wrapper">
