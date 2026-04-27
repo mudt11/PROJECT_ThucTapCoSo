@@ -1,17 +1,15 @@
 "use client";
 
+import "@/app/styles/PlayerBar.css";
 import React, { useEffect, useState, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+
 import { usePlayer } from "@/app/context/PlayerContext";
+import { useLikeContext } from "@/app/context/LikeContext";
+
 import PopUp from "../PopUp";
-import "@/app/styles/PlayerBar.css";
-import {
-  likeSong,
-  unlikeSong,
-  getLikeStatus,
-  increaseSongView,
-} from "@/app/utils/songApi";
+import { increaseSongView } from "@/app/utils/songApi";
 
 const PlayerContent: React.FC = () => {
   const {
@@ -24,8 +22,7 @@ const PlayerContent: React.FC = () => {
     setIndex,
   } = usePlayer();
 
-  const [liked, setLiked] = useState(false);
-  const [likeLoading, setLikeLoading] = useState(false);
+  const { likedMap, toggleLike, fetchLikeStatus } = useLikeContext();
   const [volume, setVolume] = useState(50);
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
@@ -44,6 +41,15 @@ const PlayerContent: React.FC = () => {
   // Lấy bài hiện tại
   const currentSong = playlist[currentIndex];
 
+  // Lấy trạng thái like của bài hát hiện tại
+  const liked = likedMap[currentSong?.trackId] || false;
+
+  useEffect(() => {
+    if (currentSong?.trackId) {
+      fetchLikeStatus(currentSong.trackId);
+    }
+  }, [currentSong?.trackId]);
+
   useEffect(() => {
     if (!currentSong?.trackId) return;
 
@@ -60,38 +66,6 @@ const PlayerContent: React.FC = () => {
       scroll: false,
     });
   }, [currentIndex]);
-
-  // Like button
-  const toggleLike = async () => {
-    console.log("curentsong: ", currentSong);
-    if (!currentSong?.trackId || likeLoading) return;
-
-    try {
-      setLikeLoading(true);
-
-      if (liked) {
-        await unlikeSong(currentSong.trackId);
-        setLiked(false);
-      } else {
-        await likeSong(currentSong.trackId);
-        setLiked(true);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLikeLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (!currentSong?.trackId) return;
-
-    setLiked(false);
-
-    getLikeStatus(currentSong.trackId)
-      .then((res) => setLiked(res.liked))
-      .catch(() => setLiked(false));
-  }, [currentSong?.trackId]);
 
   // Theo dõi tiến trình phát
   useEffect(() => {
@@ -225,7 +199,7 @@ const PlayerContent: React.FC = () => {
           <div className="song-actions">
             <button
               className={`icon-btn like-icon ${liked ? "liked" : ""}`}
-              onClick={toggleLike}
+              onClick={() => toggleLike(currentSong.trackId)}
             >
               <i
                 className={liked ? "fa-solid fa-heart" : "fa-regular fa-heart"}

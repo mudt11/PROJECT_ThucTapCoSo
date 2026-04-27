@@ -7,20 +7,26 @@ import { BsSend } from "react-icons/bs";
 import { useState } from "react";
 import PopUp from "@/app/components/PopUp";
 import { useRating } from "@/app/features/rating/useRating";
+import { useLikeContext } from "@/app/context/LikeContext";
 
 const DetailSong = () => {
   const { playlist, currentIndex } = usePlayer();
   const currentTrack = playlist[currentIndex];
 
-  const [liked, setLiked] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   const [hoverRating, setHoverRating] = useState(0);
   const { submitRating, fetchRatingData, userRating, summary } = useRating();
 
+  const { likedMap, toggleLike, fetchLikeStatus } = useLikeContext();
+
+  // Lấy trạng thái like của bài hát hiện tại
+  const liked = likedMap[currentTrack?.trackId] || false;
+
   useEffect(() => {
     if (currentTrack?.trackId) {
       fetchRatingData(currentTrack.trackId);
+      fetchLikeStatus(currentTrack.trackId);
     }
   }, [currentTrack?.trackId]);
 
@@ -53,7 +59,7 @@ const DetailSong = () => {
           <div className="song-actions-detail">
             <button
               className={`icon-btn like-icon ${liked ? "liked" : ""}`}
-              // onClick={toggleLike}
+              onClick={() => toggleLike(currentTrack.trackId)}
             >
               <i
                 className={liked ? "fa-solid fa-heart" : "fa-regular fa-heart"}

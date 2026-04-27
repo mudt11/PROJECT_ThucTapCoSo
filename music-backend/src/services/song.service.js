@@ -476,136 +476,136 @@ const toggleSongVisibility = async (songId, adminUser) => {
 };
 
 // LIKE SONG
-const likeSong = async (userId, songId) => {
-  // 1. Kiểm tra bài hát tồn tại
-  const song = await Song.findByPk(songId);
-  if (!song) {
-    throw new Error("Không tìm thấy bài hát.");
-  }
+// const likeSong = async (userId, songId) => {
+//   // 1. Kiểm tra bài hát tồn tại
+//   const song = await Song.findByPk(songId);
+//   if (!song) {
+//     throw new Error("Không tìm thấy bài hát.");
+//   }
 
-  // 2. Kiểm tra đã like chưa
-  const existed = await Favorites.findOne({
-    where: {
-      user_id: userId,
-      song_id: songId,
-    },
-  });
+//   // 2. Kiểm tra đã like chưa
+//   const existed = await Favorites.findOne({
+//     where: {
+//       user_id: userId,
+//       song_id: songId,
+//     },
+//   });
 
-  if (existed) {
-    throw new Error("Bạn đã thích bài hát này rồi.");
-  }
+//   if (existed) {
+//     throw new Error("Bạn đã thích bài hát này rồi.");
+//   }
 
-  // 3. Tạo like
-  await Favorites.create({
-    user_id: userId,
-    song_id: songId,
-  });
+//   // 3. Tạo like
+//   await Favorites.create({
+//     user_id: userId,
+//     song_id: songId,
+//   });
 
-  return {
-    message: "Đã thích bài hát.",
-    song_id: songId,
-    liked: true,
-  };
-};
+//   return {
+//     message: "Đã thích bài hát.",
+//     song_id: songId,
+//     liked: true,
+//   };
+// };
 
 // UNLIKE SONG
-const unlikeSong = async (userId, songId) => {
-  // 1. Kiểm tra bài hát tồn tại
-  const song = await Song.findByPk(songId);
-  if (!song) {
-    throw new Error("Không tìm thấy bài hát.");
-  }
+// const unlikeSong = async (userId, songId) => {
+//   // 1. Kiểm tra bài hát tồn tại
+//   const song = await Song.findByPk(songId);
+//   if (!song) {
+//     throw new Error("Không tìm thấy bài hát.");
+//   }
 
-  // 2. Kiểm tra đã like chưa
-  const existed = await Favorites.findOne({
-    where: {
-      user_id: userId,
-      song_id: songId,
-    },
-  });
+//   // 2. Kiểm tra đã like chưa
+//   const existed = await Favorites.findOne({
+//     where: {
+//       user_id: userId,
+//       song_id: songId,
+//     },
+//   });
 
-  if (!existed) {
-    throw new Error("Bạn chưa thích bài hát này.");
-  }
+//   if (!existed) {
+//     throw new Error("Bạn chưa thích bài hát này.");
+//   }
 
-  // 3. Xóa like
-  await Favorites.destroy({
-    where: {
-      user_id: userId,
-      song_id: songId,
-    },
-  });
+//   // 3. Xóa like
+//   await Favorites.destroy({
+//     where: {
+//       user_id: userId,
+//       song_id: songId,
+//     },
+//   });
 
-  return {
-    message: "Đã bỏ thích bài hát.",
-    song_id: songId,
-    liked: false,
-  };
-};
+//   return {
+//     message: "Đã bỏ thích bài hát.",
+//     song_id: songId,
+//     liked: false,
+//   };
+// };
 
-const getLikeStatus = async (userId, songId) => {
-  // 1. Kiểm tra bài hát tồn tại
-  const song = await Song.findByPk(songId);
-  if (!song) {
-    throw new Error("Không tìm thấy bài hát.");
-  }
+// const getLikeStatus = async (userId, songId) => {
+//   // 1. Kiểm tra bài hát tồn tại
+//   const song = await Song.findByPk(songId);
+//   if (!song) {
+//     throw new Error("Không tìm thấy bài hát.");
+//   }
 
-  // 2. Kiểm tra bảng favorites
-  const existed = await Favorites.findOne({
-    where: {
-      user_id: userId,
-      song_id: songId,
-    },
-  });
+//   // 2. Kiểm tra bảng favorites
+//   const existed = await Favorites.findOne({
+//     where: {
+//       user_id: userId,
+//       song_id: songId,
+//     },
+//   });
 
-  return {
-    song_id: songId,
-    liked: !!existed,
-  };
-};
+//   return {
+//     song_id: songId,
+//     liked: !!existed,
+//   };
+// };
 
-const getLikedSongs = async (userId) => {
-  const user = await User.findByPk(userId, {
-    include: [
-      {
-        model: Song,
-        as: "likedSongs",
-        through: { attributes: [] },
-        where: {
-          is_visible: true,
-        },
-        required: false, // tránh lỗi nếu user chưa like bài nào
-        include: [
-          {
-            model: Artist,
-            as: "artists",
-            attributes: ["name"],
-          },
-        ],
-      },
-    ],
-    order: [[{ model: Song, as: "likedSongs" }, "fetched_at", "DESC"]],
-  });
+// const getLikedSongs = async (userId) => {
+//   const user = await User.findByPk(userId, {
+//     include: [
+//       {
+//         model: Song,
+//         as: "likedSongs",
+//         through: { attributes: [] },
+//         where: {
+//           is_visible: true,
+//         },
+//         required: false, // tránh lỗi nếu user chưa like bài nào
+//         include: [
+//           {
+//             model: Artist,
+//             as: "artists",
+//             attributes: ["name"],
+//           },
+//         ],
+//       },
+//     ],
+//     order: [[{ model: Song, as: "likedSongs" }, "fetched_at", "DESC"]],
+//   });
 
-  if (!user) {
-    throw new Error("Không tìm thấy user");
-  }
+//   if (!user) {
+//     throw new Error("Không tìm thấy user");
+//   }
 
-  return user.likedSongs.map((song) => ({
-    trackId: song.song_id,
-    jamendoId: Number(song.jamendo_id),
-    title: song.title,
-    duration: song.duration,
-    imageUrl: song.image_url,
-    audioUrl: song.audio_url,
-    artistName: song.artists?.name || "Unknown",
-    albumName: song.album_name || null,
-    genre: song.genre,
-    viewCount: song.view_count,
-    isVisible: song.is_visible,
-    fetched_at: song.fetched_at,
-  }));
-};
+//   return user.likedSongs.map((song) => ({
+//     trackId: song.song_id,
+//     jamendoId: Number(song.jamendo_id),
+//     title: song.title,
+//     duration: song.duration,
+//     imageUrl: song.image_url,
+//     audioUrl: song.audio_url,
+//     artistName: song.artists?.name || "Unknown",
+//     albumName: song.album_name || null,
+//     genre: song.genre,
+//     viewCount: song.view_count,
+//     isVisible: song.is_visible,
+//     fetched_at: song.fetched_at,
+//   }));
+// };
 
 const searchSongs = async (keyword, limit) => {
   return Song.findAll({
@@ -642,10 +642,10 @@ module.exports = {
   deleteSongById,
   toggleSongVisibility,
   getSongs,
-  likeSong,
-  unlikeSong,
-  getLikeStatus,
-  getLikedSongs,
+  // likeSong,
+  // unlikeSong,
+  // getLikeStatus,
+  // getLikedSongs,
   incrementSongView,
   searchSongs,
 };

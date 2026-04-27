@@ -13,6 +13,7 @@ import { UserProvider } from "@/app/context/UserContext";
 import { ModalProvider } from "@/app/context/ModalContext";
 import { PlayerProvider } from "@/app/context/PlayerContext";
 import { MusicDataProvider } from "@/app/context/MusicDataContext";
+import { LikeProvider } from "@/app/context/LikeContext";
 
 export default function ExploreLayout({
   children,
@@ -24,7 +25,9 @@ export default function ExploreLayout({
       <ModalProvider>
         {/* <MusicDataProvider> */}
         <PlayerProvider>
-          <MainLayout>{children}</MainLayout>
+          <LikeProvider>
+            <MainLayout>{children}</MainLayout>
+          </LikeProvider>
         </PlayerProvider>
         {/* </MusicDataProvider> */}
       </ModalProvider>

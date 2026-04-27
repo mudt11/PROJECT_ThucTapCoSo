@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const songController = require("../controllers/song.controller");
-const ratingController = require("../controllers/rating.controller");
 const {
   protect,
   isAdmin,
@@ -15,13 +14,13 @@ router.get("/search", songController.searchSongs);
 /* --- ROUTES FOR USER --- */
 
 // lấy danh sách bài hát yêu thích
-router.get("/me/favorites", protect, songController.getLikedSongs);
+// router.get("/me/favorites", protect, songController.getLikedSongs);
 
-router.get("/:id/like-status", protect, songController.getLikeStatus);
+// router.get("/:id/like-status", protect, songController.getLikeStatus);
 // Like
-router.post("/:id/like", protect, songController.likeSong);
+// router.post("/:id/like", protect, songController.likeSong);
 // Unlike
-router.delete("/:id/like", protect, songController.unlikeSong);
+// router.delete("/:id/like", protect, songController.unlikeSong);
 // track list hằng ngày
 router.get("/", songController.getSongList);
 // tăng view

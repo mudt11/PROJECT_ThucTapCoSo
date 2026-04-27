@@ -1,8 +1,7 @@
 const songService = require("../services/song.service");
-const jamendoService = require("../services/jamendo.service");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs-extra");
-const { Rating, Song, User } = require("../models");
+const { Song, User } = require("../models");
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -217,71 +216,71 @@ const toggleSongVisibility = async (req, res, next) => {
 };
 
 // POST /songs/:id/like
-const likeSong = async (req, res, next) => {
-  try {
-    const songId = Number(req.params.id);
-    const userId = req.user.user_id;
+// const likeSong = async (req, res, next) => {
+//   try {
+//     const songId = Number(req.params.id);
+//     const userId = req.user.user_id;
 
-    if (Number.isNaN(songId)) {
-      return res.status(400).json({ message: "ID bài hát không hợp lệ." });
-    }
+//     if (Number.isNaN(songId)) {
+//       return res.status(400).json({ message: "ID bài hát không hợp lệ." });
+//     }
 
-    const result = await songService.likeSong(userId, songId);
-    res.status(201).json(result);
-  } catch (error) {
-    next(error);
-  }
-};
+//     const result = await songService.likeSong(userId, songId);
+//     res.status(201).json(result);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 // DELETE /songs/:id/like
-const unlikeSong = async (req, res, next) => {
-  try {
-    const songId = Number(req.params.id);
-    const userId = req.user.user_id;
+// const unlikeSong = async (req, res, next) => {
+//   try {
+//     const songId = Number(req.params.id);
+//     const userId = req.user.user_id;
 
-    if (Number.isNaN(songId)) {
-      return res.status(400).json({ message: "ID bài hát không hợp lệ." });
-    }
+//     if (Number.isNaN(songId)) {
+//       return res.status(400).json({ message: "ID bài hát không hợp lệ." });
+//     }
 
-    const result = await songService.unlikeSong(userId, songId);
-    res.status(200).json(result);
-  } catch (error) {
-    next(error);
-  }
-};
+//     const result = await songService.unlikeSong(userId, songId);
+//     res.status(200).json(result);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
-const getLikeStatus = async (req, res, next) => {
-  try {
-    const songId = Number(req.params.id);
-    const userId = req.user.user_id;
+// const getLikeStatus = async (req, res, next) => {
+//   try {
+//     const songId = Number(req.params.id);
+//     const userId = req.user.user_id;
 
-    if (Number.isNaN(songId)) {
-      return res.status(400).json({
-        message: "ID bài hát không hợp lệ.",
-      });
-    }
+//     if (Number.isNaN(songId)) {
+//       return res.status(400).json({
+//         message: "ID bài hát không hợp lệ.",
+//       });
+//     }
 
-    const result = await songService.getLikeStatus(userId, songId);
+//     const result = await songService.getLikeStatus(userId, songId);
 
-    res.status(200).json(result);
-  } catch (error) {
-    next(error);
-  }
-};
+//     res.status(200).json(result);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
-const getLikedSongs = async (req, res, next) => {
-  try {
-    const userId = req.user.user_id;
+// const getLikedSongs = async (req, res, next) => {
+//   try {
+//     const userId = req.user.user_id;
 
-    const songs = await songService.getLikedSongs(userId);
+//     const songs = await songService.getLikedSongs(userId);
 
-    res.status(200).json({
-      data: songs,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+//     res.status(200).json({
+//       data: songs,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 const searchSongs = async (req, res) => {
   try {
@@ -307,10 +306,10 @@ module.exports = {
   deleteSongById,
   toggleSongVisibility,
   getSongList,
-  likeSong,
-  unlikeSong,
-  getLikeStatus,
-  getLikedSongs,
+  // likeSong,
+  // unlikeSong,
+  // getLikeStatus,
+  // getLikedSongs,
   increaseView,
   searchSongs,
 };
