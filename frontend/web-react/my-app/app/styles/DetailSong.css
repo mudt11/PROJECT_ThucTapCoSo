@@ -166,6 +166,7 @@
 
 .rating-section-inline .stars {
   display: flex;
+  align-items: center;
   gap: 8px;
   font-size: 1.4rem;
   cursor: pointer;
@@ -178,6 +179,12 @@
 
 .rating-section-inline .stars i.filled {
   color: var(--tt-orange);
+}
+
+.rating-section-inline .stars p {
+  font-size: 20px;
+  font-weight: 600;
+  opacity: 0.7;
 }
 
 .rating-text {

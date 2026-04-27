@@ -87,6 +87,7 @@ const DetailSong = () => {
                   onClick={() => submitRating(currentTrack.trackId, star)}
                 />
               ))}
+              <p>{`( ${summary.totalRatings} )`}</p>
             </div>
 
             <p className="rating-text">
@@ -95,9 +96,9 @@ const DetailSong = () => {
                 : "Chưa đánh giá"}
             </p>
 
-            <p className="rating-summary">
+            {/* <p className="rating-text">
               {summary.averageRating.toFixed(1)} / 5 ({summary.totalRatings})
-            </p>
+            </p> */}
           </div>
 
           {showUserMenu && (
