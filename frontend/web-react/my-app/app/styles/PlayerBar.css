@@ -6,7 +6,8 @@
   bottom: 20px;
 
   width: 300px;
-  height: auto;
+  height: 570px;
+  overflow: hidden;
 
   background: var(--tt-surface);
   border-radius: 20px;
@@ -16,7 +17,7 @@
 
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 
   padding: 16px;
   z-index: 1000;
@@ -282,7 +283,7 @@
 .vol {
   display: flex;
   align-items: center;
-  gap: 10px;
+  /* gap: 10px; */
 }
 
 .volume {
@@ -313,4 +314,79 @@
   display: flex;
   flex-direction: column;
   gap: 40px;
+}
+
+/* Hàng đợi queue */
+.queue {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.queue-header p {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tt-text-secondary);
+}
+
+.queue-list {
+  max-height: 150px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.queue-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 6px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.queue-item:hover {
+  background: var(--tt-surface-2);
+}
+
+.queue-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.queue-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.queue-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--tt-text-primary);
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.queue-artist {
+  font-size: 11px;
+  color: var(--tt-text-secondary);
+}
+
+.queue-item.next {
+  background: var(--tt-orange-pale);
+}
+
+.playing-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--tt-orange);
 }

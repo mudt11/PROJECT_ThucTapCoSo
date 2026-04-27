@@ -11,7 +11,8 @@
   width: 100%;
   margin-top: 20px;
   color: var(--tt-text-primary);
-  /* font-family: Arial, sans-serif; */
+  background: var(--tt-surface);
+  border-radius: 20px;
 }
 
 .table_header {

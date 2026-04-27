@@ -33,7 +33,7 @@
   object-fit: cover;
 }
 
-.banner-btn {
+/* .banner-btn {
   display: flex;
   justify-content: center;
   position: absolute;
@@ -59,7 +59,7 @@
 
 .banner-btn.right {
   right: -20px;
-}
+} */
 
 /* === Category Grid === */
 .category-grid {

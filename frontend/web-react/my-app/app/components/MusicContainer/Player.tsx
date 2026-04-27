@@ -11,6 +11,27 @@ import { useLikeContext } from "@/app/context/LikeContext";
 import PopUp from "../PopUp";
 import { increaseSongView } from "@/app/utils/songApi";
 
+const mockQueue = [
+  {
+    id: 1,
+    title: "Nếu Biết Đó Là Lần Cuối",
+    artist: "Đức Trường",
+    cover: "https://i.scdn.co/image/ab67616d00001e02b667917dd1a458f91d15b146",
+  },
+  {
+    id: 2,
+    title: "Waiting For You",
+    artist: "MONO",
+    cover: "https://picsum.photos/100?random=2",
+  },
+  {
+    id: 3,
+    title: "Lạc Trôi",
+    artist: "Sơn Tùng",
+    cover: "https://picsum.photos/100?random=3",
+  },
+];
+
 const PlayerContent: React.FC = () => {
   const {
     playlist,
@@ -281,6 +302,30 @@ const PlayerContent: React.FC = () => {
           max={100}
           onChange={handleVolumeChange}
         />
+      </div>
+
+      <div className="queue">
+        <div className="queue-header">
+          <p>Next in queue</p>
+        </div>
+
+        <div className="queue-list">
+          {mockQueue.map((song, index) => (
+            <div
+              key={song.id}
+              className={`queue-item ${index === 0 ? "next" : ""}`}
+            >
+              <img src={song.cover} alt={song.title} />
+
+              <div className="queue-info">
+                <p className="queue-title">{song.title}</p>
+                <p className="queue-artist">{song.artist}</p>
+              </div>
+
+              {index === 0 && <span className="playing-dot"></span>}
+            </div>
+          ))}
+        </div>
       </div>
     </footer>
   );

@@ -28,7 +28,7 @@ const HorizontalScroll: React.FC<HorizontalScrollProps> = ({
     const el = scrollRef.current;
 
     const handleScroll = () => {
-      const threshold = 200; 
+      const threshold = 200;
       const isNearEnd =
         el.scrollLeft + el.clientWidth >= el.scrollWidth - threshold;
 
@@ -49,6 +49,9 @@ const HorizontalScroll: React.FC<HorizontalScrollProps> = ({
       <button className="banner-btn left" onClick={scrollLeft}>
         <i className="fa-solid fa-chevron-left"></i>
       </button>
+      <button className="banner-btn right" onClick={scrollRight}>
+        <i className="fa-solid fa-chevron-right"></i>
+      </button>
 
       {/* Nội dung cuộn ngang */}
       <div
@@ -63,9 +66,6 @@ const HorizontalScroll: React.FC<HorizontalScrollProps> = ({
       >
         {children}
       </div>
-      <button className="banner-btn right" onClick={scrollRight}>
-        <i className="fa-solid fa-chevron-right"></i>
-      </button>
     </div>
   );
 };

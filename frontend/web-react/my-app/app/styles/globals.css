@@ -100,27 +100,14 @@ body {
   position: relative;
 
   margin-left: var(--sidebar-width);
-  margin-top: 80px;
+  margin-top: 90px;
 
   padding: 24px 32px;
   min-height: 100vh;
   background: var(--background-color);
 
-  padding-right: 380px;
+  padding-right: 350px;
   transition: all 0.3s ease;
-
-  /* top: 90px;
-  bottom: 100px;
-  padding: 20px 10vw;
-  margin-left: var(--sidebar-width);
-  overflow-y: auto;
-  scrollbar-width: none;
-  height: calc(100vh - 170px);
-  transition:
-    margin-left 0.3s ease,
-    width 0.3s ease;
-  background-color: var(--background-color);
-  border-radius: 23px; */
 }
 
 .main::-webkit-scrollbar {

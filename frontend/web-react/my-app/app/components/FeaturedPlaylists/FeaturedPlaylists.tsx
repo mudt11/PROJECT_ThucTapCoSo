@@ -13,6 +13,46 @@ import MyPlaylistGrid from "../MusicContainer/MyPlaylistGrid";
 import { SelectedItem } from "@/app/types/music";
 
 import { RiResetRightLine } from "react-icons/ri";
+import HorizontalScroll from "../HorizontalScroll";
+
+const mockTracks = [
+  {
+    id: 1,
+    title: "Anh Đã Ổn Hơn",
+    artist: "RPT MCK",
+    cover: "https://picsum.photos/300?random=1",
+  },
+  {
+    id: 2,
+    title: "Waiting For You",
+    artist: "MONO",
+    cover: "https://picsum.photos/300?random=2",
+  },
+  {
+    id: 3,
+    title: "Em Là",
+    artist: "Orange",
+    cover: "https://picsum.photos/300?random=3",
+  },
+  {
+    id: 4,
+    title: "Lạc Trôi",
+    artist: "Sơn Tùng",
+    cover: "https://picsum.photos/300?random=4",
+  },
+  {
+    id: 5,
+    title: "Nàng Thơ",
+    artist: "Hoàng Dũng",
+    cover: "https://picsum.photos/300?random=5",
+  },
+  {
+    id: 6,
+    title: "Chạy Ngay Đi",
+    artist: "Sơn Tùng",
+    cover: "https://picsum.photos/300?random=6",
+  },
+];
 
 interface Props {
   onSelect: (item: SelectedItem) => void;
@@ -25,10 +65,23 @@ const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
   return (
     <div className="explore-container">
       <div className="make-for">
-        <h2 className="title">Recommendation</h2>
-        <button id="refresh-recommendList">
-          <RiResetRightLine /> Làm mới{" "}
-        </button>
+        <div className="make-for-header">
+          <h2 className="title">Recommendation</h2>
+
+          <button id="refresh-recommendList">
+            <RiResetRightLine /> Làm mới
+          </button>
+        </div>
+
+        <HorizontalScroll>
+          {mockTracks.map((track) => (
+            <div key={track.id} className="card">
+              <img src={track.cover} alt={track.title} />
+              <h3>{track.title}</h3>
+              <p>{track.artist}</p>
+            </div>
+          ))}
+        </HorizontalScroll>
       </div>
 
       {/* <h2 className="title">Mới cập nhật</h2>
