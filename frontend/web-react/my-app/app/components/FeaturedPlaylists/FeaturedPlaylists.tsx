@@ -61,12 +61,35 @@ interface Props {
 const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
   const { user } = useUser();
   const [activeTab, setActiveTab] = useState("tracks");
+  const [recType, setRecType] = useState<"NCF" | "MF">("NCF");
+
+  // Render data theo mode
+  const dataToRender =
+    recType === "NCF" ? mockTracks : mockTracks.slice().reverse();
 
   return (
     <div className="explore-container">
       <div className="make-for">
         <div className="make-for-header">
-          <h2 className="title">Recommendation</h2>
+          <div className="left">
+            <h2 className="title">Recommendation</h2>
+
+            {/* SWITCH */}
+            <div className="rec-switch">
+              <button
+                className={recType === "NCF" ? "active" : ""}
+                onClick={() => setRecType("NCF")}
+              >
+                NCF
+              </button>
+              <button
+                className={recType === "MF" ? "active" : ""}
+                onClick={() => setRecType("MF")}
+              >
+                MF
+              </button>
+            </div>
+          </div>
 
           <button id="refresh-recommendList">
             <RiResetRightLine /> Làm mới
@@ -74,7 +97,7 @@ const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
         </div>
 
         <HorizontalScroll>
-          {mockTracks.map((track) => (
+          {dataToRender.map((track) => (
             <div key={track.id} className="card">
               <img src={track.cover} alt={track.title} />
               <h3>{track.title}</h3>

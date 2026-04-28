@@ -15,12 +15,43 @@
   margin-bottom: 10px;
 }
 
+.make-for-header .left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .make-for-header .title {
   margin-bottom: 0;
   font-size: 24px;
   font-weight: 700;
   line-height: 32px;
   color: var(--color-text);
+}
+
+/* toggle */
+.rec-switch {
+  display: flex;
+  background: var(--tt-surface-2);
+  border-radius: 20px;
+  padding: 2px;
+}
+
+.rec-switch button {
+  border: none;
+  background: transparent;
+  padding: 4px 12px;
+  font-size: 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  color: var(--tt-text-secondary);
+  transition: all 0.2s ease;
+}
+
+.rec-switch button.active {
+  background: var(--tt-orange);
+  color: white;
+  font-weight: 600;
 }
 
 #refresh-recommendList {
@@ -228,6 +259,7 @@
 .card h3 {
   font-size: 14px;
   font-weight: bold;
+  color: var(--color-text);
 }
 
 .card h3:hover {
