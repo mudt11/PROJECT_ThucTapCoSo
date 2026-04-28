@@ -107,15 +107,6 @@ const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
         </HorizontalScroll>
       </div>
 
-      {/* <h2 className="title">Mới cập nhật</h2>
-      <TrackSection />
-
-      <h2 className="title">Daily Mix</h2>
-      <PlaylistSection onSelect={onSelect} />
-
-      <h2 className="title">Top Artists</h2>
-      <ArtistSection onSelect={onSelect} /> */}
-
       {/* TAB */}
       <div className="explore-tabs">
         <div className="tabs">

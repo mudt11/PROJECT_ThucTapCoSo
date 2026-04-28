@@ -1,7 +1,10 @@
 "use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import "../styles/SideBar.css";
+import styles from "@/app/styles/Sidebar.module.css";
+
+import Footer from "./Footer";
 
 import { RiHome5Fill } from "react-icons/ri";
 import { BsHeart } from "react-icons/bs";
@@ -12,34 +15,46 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="menu">
-      <nav>
+    <div className={styles.menu}>
+      <nav className={styles.nav}>
         <Link
           href="/explore"
-          className={pathname === "/explore" ? "active" : ""}
+          className={`${styles.link} ${
+            pathname === "/explore" ? styles.active : ""
+          }`}
         >
-          <RiHome5Fill className="icon" /> Home
+          <RiHome5Fill className={styles.icon} /> Home
         </Link>
+
         <Link
           href="/library"
-          className={pathname.startsWith("/library") ? "active" : ""}
+          className={`${styles.link} ${
+            pathname.startsWith("/library") ? styles.active : ""
+          }`}
         >
-          <BsHeart className="icon" /> Likes
+          <BsHeart className={styles.icon} /> Likes
         </Link>
+
         <Link
           href="/myplaylists"
-          className={pathname.startsWith("/myplaylists") ? "active" : ""}
+          className={`${styles.link} ${
+            pathname.startsWith("/myplaylists") ? styles.active : ""
+          }`}
         >
-          <PiPlaylist className="icon" /> Playlist
+          <PiPlaylist className={styles.icon} /> Playlist
         </Link>
 
         <Link
           href="#"
-          className={pathname.startsWith("/following") ? "active" : ""}
+          className={`${styles.link} ${
+            pathname.startsWith("/following") ? styles.active : ""
+          }`}
         >
-          <HiOutlineUser className="icon" /> Following
+          <HiOutlineUser className={styles.icon} /> Following
         </Link>
       </nav>
+
+      <Footer />
     </div>
   );
 }

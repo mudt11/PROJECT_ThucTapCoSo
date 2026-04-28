@@ -1,8 +1,8 @@
 import { useState } from "react";
+import styles from "@/app/styles/form.module.css";
 import { useModal } from "@/app/context/ModalContext";
 import { changePassword } from "../utils/accountApi";
 import { validatePassword } from "@/app/utils/passwordValidator";
-import "@/app/styles/AdminPage/addAdmin.css";
 
 export default function ChangePassword() {
   const [oldPassword, setOldPassword] = useState("");
@@ -34,45 +34,35 @@ export default function ChangePassword() {
   };
 
   return (
-    <div className="container">
-      <h1>Change your password</h1>
+    <div className={styles.formContainer}>
+      <h1 className={styles.title}>Change your password</h1>
+
       <form onSubmit={handleChangePassword}>
-        {/* <label htmlFor="password" className="form_label">
-          Old Password
-        </label> */}
         <input
-          id="old-password"
           type="password"
           placeholder="Old Password"
+          className={styles.input}
           value={oldPassword}
           onChange={(e) => setOldPassword(e.target.value)}
-          required
         />
 
-        {/* <label htmlFor="password" className="form_label">
-          New Password
-        </label> */}
         <input
-          id="new-password"
           type="password"
           placeholder="New Password"
+          className={styles.input}
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
-          required
         />
 
-        {/* <label htmlFor="confirm_password" className="form_label">
-          Password Confirmation
-        </label> */}
         <input
-          id="confirm_password"
           type="password"
           placeholder="Password Confirmation"
+          className={styles.input}
           value={confirmPW}
           onChange={(e) => setConfirmPW(e.target.value)}
-          required
         />
-        <button type="submit">Change</button>
+
+        <button className={styles.button}>Change</button>
       </form>
     </div>
   );

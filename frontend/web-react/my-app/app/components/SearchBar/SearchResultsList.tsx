@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import "./SearchResultsList.css";
+import styles from "./search.module.css";
 import SearchResult from "./SearchResult";
 import { Track } from "@/app/types/music";
 
@@ -21,9 +21,9 @@ const SearchResultsList = ({
   }
 
   return (
-    <div className="results-list">
+    <div className={styles.resultsList}>
       {results.length === 0 ? (
-        <div className="no-results">Không tìm thấy bài hát phù hợp</div>
+        <div className={styles.noResults}>Không tìm thấy bài hát phù hợp</div>
       ) : (
         results.map((track) => (
           <SearchResult

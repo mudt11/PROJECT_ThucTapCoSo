@@ -1,13 +1,12 @@
 "use client";
 
-import "@/app/styles/PlayerBar.css";
 import React, { useEffect, useState, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-
+// import styles from "@/app/styles/PlayerBar.module.css";
+import "@/app/styles/PlayerBar.css";
 import { usePlayer } from "@/app/context/PlayerContext";
 import { useLikeContext } from "@/app/context/LikeContext";
-
 import PopUp from "../PopUp";
 import { increaseSongView } from "@/app/utils/songApi";
 

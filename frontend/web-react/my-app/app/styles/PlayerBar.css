@@ -1,43 +1,33 @@
 /* ========== FOOTER PLAYER ========== */
 .info {
   position: fixed;
-
   right: 20px;
   bottom: 20px;
-
   width: 300px;
-  height: 570px;
+  height: 650px;
   overflow: hidden;
-
   background: var(--tt-surface);
   border-radius: 20px;
   box-shadow: var(--tt-shadow-md);
-
   border: 1px solid var(--tt-border);
-
   display: flex;
   flex-direction: column;
   gap: 14px;
-
   padding: 16px;
-  z-index: 1000;
+  z-index: 999;
 }
-
 .info-player {
   width: 100%;
   justify-content: flex-start;
-
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-
 .background-singer {
   width: 100%;
   aspect-ratio: 1 / 1;
-  border-radius: 16px;
+  border-radius: 20px;
 }
-
 .background-singer img {
   width: 100%;
   height: 100%;
@@ -46,53 +36,44 @@
   object-position: center;
   display: block;
 }
-
 .song-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
 }
-
 .info-song {
   display: flex;
   flex-direction: column;
   flex: 1;
   min-width: 0;
 }
-
 .song-actions {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-
 .song-actions button {
   opacity: 0.7;
 }
-
 .song-row:hover .song-actions button {
   opacity: 1;
 }
-
 .song-tittle {
   font-size: 14px;
   font-weight: bold;
   line-height: 20px;
   color: var(--tt-text-primary);
-
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
 .artist-name {
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
   color: var(--tt-text-secondary);
 }
-
 .info-player button {
   background: transparent;
   border: none;
@@ -104,9 +85,7 @@
   transition:
     color 0.2s ease,
     transform 0.2s ease;
-}
-
-/* Nút trái tim (like) */
+} /* Nút trái tim (like) */
 .like-icon i {
   font-size: 22px;
   color: #bdbdbd;
@@ -114,139 +93,107 @@
     color 0.2s ease,
     transform 0.2s ease;
 }
-
 .like-icon.liked i {
   color: #e74c3c;
 }
-
 .like-icon:active i {
   transform: scale(0.9);
-}
-
-/* Nút 3 chấm ngang */
+} /* Nút 3 chấm ngang */
 .expand-icon i {
   font-size: 22px;
 }
-
 .Other-options-popup {
   position: absolute;
   right: 20;
   bottom: 40;
-
   width: 200px;
   background: var(--background-modal);
   border-radius: 12px;
   padding: 12px;
-
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
-
   box-shadow: 0 0 16px rgba(0, 0, 0, 0.5);
   animation: fadeIn 0.15s ease-out;
 }
-
 .Other-options-popup button {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 8px;
-
   font-size: 13px;
   font-weight: 600;
-
   width: 150px;
-
   padding: 5px 0;
   border: none;
   color: var(--tt-text-secondary);
   cursor: pointer;
 }
-
 .player-center {
   position: static;
   transform: none;
-
   width: 100%;
   align-items: center;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-
 .control {
   display: flex;
   gap: 25px;
   font-size: 18px;
 }
-
 .play {
   background: none;
   border: none;
   color: rgb(170, 168, 168);
   font-size: 20px;
 }
-
 .play-btn {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-
   background: var(--tt-orange);
   color: white;
-
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   font-size: 20px;
-}
-
-/* #playBtn i {
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-/* Khi chuyển sang trạng thái playing -> đổi icon */
+} /* #playBtn i { transition: transform 0.3s ease, opacity 0.3s ease; } /* Khi chuyển sang trạng thái playing -> đổi icon */
 #playBtn.playing i {
   opacity: 0;
   transform: scale(0.5);
 }
-
 #playBtn.playing i::before {
   content: "\f04c";
   opacity: 1;
   transform: scale(1);
 }
-
 .control {
   justify-content: center;
   gap: 16px;
 }
-
 .control button {
   cursor: pointer;
   transition: 0.2;
 }
-
 .control .play:hover,
 .volume:hover {
   transform: scale(1.2s);
   color: var(--button);
 }
-
 .control button:hover,
 .volume:hover {
   transform: scale(1.05);
 }
-
 .like-icon:active,
 .expand-icon:active,
 .control i:active,
 .volume:hover {
   transform: scale(0.95);
 }
-
 .run {
   margin-top: 10px;
   display: flex;
@@ -255,7 +202,6 @@
   color: #8f8f8f;
   width: 100%;
 }
-
 .run .seek-bar {
   flex: 1;
   width: 500px;
@@ -264,8 +210,8 @@
   overflow: hidden;
   -webkit-appearance: none;
   border-radius: 10px;
+  background: var(--tt-bg);
 }
-
 .run .seek-bar::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 1px;
@@ -273,26 +219,22 @@
   background-color: var(--tt-orange-light);
   box-shadow: -400px 0 0 400px var(--tt-orange);
 }
-
 .current-time,
 .music-time {
   width: 40px;
   text-align: center;
 }
-
 .vol {
   display: flex;
   align-items: center;
-  /* gap: 10px; */
+  gap: 10px;
 }
-
 .volume {
   background: none;
   border: none;
   color: var(--tt-orange);
   cursor: pointer;
 }
-
 .vol .seek-volume {
   flex: 1;
   height: 4px;
@@ -300,8 +242,9 @@
   overflow: hidden;
   -webkit-appearance: none;
   border-radius: 10px;
+  /* border: 1px solid red; */
+  background: var(--tt-bg);
 }
-
 .vol .seek-volume::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 1px;
@@ -309,7 +252,6 @@
   background-color: var(--button);
   box-shadow: -400px 0 0 400px var(--button);
 }
-
 .home-menu {
   display: flex;
   flex-direction: column;
@@ -322,13 +264,11 @@
   flex-direction: column;
   gap: 5px;
 }
-
 .queue-header p {
   font-size: 13px;
   font-weight: 600;
   color: var(--tt-text-secondary);
 }
-
 .queue-list {
   max-height: 150px;
   overflow-y: auto;
@@ -337,53 +277,43 @@
   gap: 8px;
   flex: 1;
 }
-
 .queue-item {
   display: flex;
   align-items: center;
   gap: 10px;
-
   padding: 6px;
   border-radius: 10px;
   cursor: pointer;
   transition: 0.2s;
 }
-
 .queue-item:hover {
   background: var(--tt-surface-2);
 }
-
 .queue-item img {
   width: 40px;
   height: 40px;
   border-radius: 6px;
   object-fit: cover;
 }
-
 .queue-info {
   flex: 1;
   min-width: 0;
 }
-
 .queue-title {
   font-size: 13px;
   font-weight: 500;
   color: var(--tt-text-primary);
-
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .queue-artist {
   font-size: 11px;
   color: var(--tt-text-secondary);
 }
-
 .queue-item.next {
   background: var(--tt-orange-pale);
 }
-
 .playing-dot {
   width: 6px;
   height: 6px;

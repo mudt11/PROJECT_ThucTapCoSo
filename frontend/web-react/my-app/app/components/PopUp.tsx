@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useEffect } from "react";
-import "@/app/styles/PopUp.css";
+import styles from "@/app/styles/PopUp.module.css";
 
 interface PopUpProps {
   show: boolean;
@@ -17,14 +17,20 @@ export default function UserMenuPopup({ show, onClose, children }: PopUpProps) {
         onClose();
       }
     }
-    if (show) document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [show]);
+
+    if (show) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [show, onClose]);
 
   if (!show) return null;
 
   return (
-    <div className="popup-overlay">
+    <div className={styles.overlay}>
       <div ref={popupRef}>{children}</div>
     </div>
   );

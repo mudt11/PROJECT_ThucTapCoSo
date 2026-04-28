@@ -1,0 +1,68 @@
+.formContainer {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  width: 400px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* TITLE */
+.title {
+  text-align: center;
+  color: #111827;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+/* LABEL */
+.label {
+  color: #9ca3af;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+/* INPUT */
+.input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #ebf2f8;
+  color: #111827;
+  font-size: 0.95rem;
+  margin-bottom: 1.2rem;
+  outline: none;
+}
+
+.input::placeholder {
+  color: #9ca3af;
+}
+
+.input:focus {
+  box-shadow: 0 0 0 3px rgba(252, 49, 104, 0.25);
+}
+
+/* BUTTON */
+.button {
+  background-color: var(--button);
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: 0.2s;
+}
+
+.button:hover {
+  background-color: rgb(246, 112, 154);
+}
+
+.button:active {
+  transform: scale(0.98);
+}

@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useModal } from "@/app/context/ModalContext";
 import { registerUser } from "@/app/utils/authApi";
 import { validatePassword } from "@/app/utils/passwordValidator";
-import "@/app/styles/auth.css";
+import styles from "@/app/styles/Auth.module.css";
+import Logo from "@/app/components/Logo";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -29,69 +30,89 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="auth-container register-page">
-      <header>
-        <div className="logo">
-          <a>
-            <img src="/images/Logo/logo.png" alt="logo" />
-          </a>
-        </div>
-      </header>
+    <div className={styles.authWrapper}>
+      <div className={`${styles.authContainer} ${styles.registerPage}`}>
+        <header className={styles.header}>
+          <div className={styles.logo}>
+            <a>
+              {/* <img
+                src="/images/Logo/logo.png"
+                alt="logo"
+                className={styles.logoImg}
+              /> */}
+              <Logo size={80} />
+            </a>
+          </div>
+        </header>
 
-      <h1>Register to start listening</h1>
-      <form onSubmit={handleRegister}>
-        <label htmlFor="username" className="form_label">
-          Username
-        </label>
-        <input
-          id="username"
-          type="text"
-          placeholder="abc"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <label htmlFor="email" className="form_label">
-          Email
-        </label>
-        <input
-          id="email"
-          type="email"
-          placeholder="abc@domain.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <label htmlFor="password" className="form_label">
-          Password
-        </label>
-        <input
-          id="password"
-          type="password"
-          placeholder="At least 8 characters, letters & numbers"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        {/* <label htmlFor="confirm_password" className="form_label">
-          Password Confirmation
-        </label>
-        <input
-          id="confirm_password"
-          type="password"
-          placeholder="Password Confirmation"
-          value={confirmPW}
-          onChange={(e) => setConfirmPW(e.target.value)}
-          required
-        /> */}
-        <button type="submit">Register</button>
-      </form>
-      <p className="switch-form">
-        You already have an account?{" "}
-        <a className="create" onClick={() => openModal("signin")}>
-          Sign in
-        </a>
-      </p>
+        <h1 className={styles.title}>Create Account</h1>
+        <p className={styles.subtitle}>
+          Register to start listening to endless music
+        </p>
+
+        <form onSubmit={handleRegister} className={styles.form}>
+          <div className={styles.formField}>
+            <label htmlFor="username" className={styles.formLabel}>
+              Username
+            </label>
+            <input
+              id="username"
+              type="text"
+              className={styles.formInput}
+              placeholder="e.g. johndoe"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className={styles.formField}>
+            <label htmlFor="email" className={styles.formLabel}>
+              Email Address
+            </label>
+            <input
+              id="email"
+              type="email"
+              className={styles.formInput}
+              placeholder="you@domain.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className={styles.formField}>
+            <label htmlFor="password" className={styles.formLabel}>
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              className={styles.formInput}
+              placeholder="At least 8 chars, letters & numbers"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <button type="submit" className={styles.submitButton}>
+            Get Started
+          </button>
+        </form>
+
+        <div className={styles.switchFormFooter}>
+          <p>
+            Already have an account?{" "}
+            <span
+              className={styles.switchLink}
+              onClick={() => openModal("signin")}
+            >
+              Sign in instead
+            </span>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

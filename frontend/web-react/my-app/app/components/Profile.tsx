@@ -1,9 +1,9 @@
 "use client";
 
+import styles from "@/app/styles/Profile.module.css"; 
 import { useProfileForm } from "../hooks/useProfileForm";
 import { UserProfileData } from "../types/music";
 import { formatDateForInput } from "../utils/dateHelper";
-import "@/app/styles/Profile.css";
 
 const Profile = ({
   initialData,
@@ -24,145 +24,106 @@ const Profile = ({
   } = useProfileForm(initialData, mode, userId);
 
   return (
-    <div className="profile_card" role="region" aria-labelledby="form-title">
-      <h1 id="form-title">
+    <div className={styles.profileCard}>
+      <h1 className={styles.title}>
         {existingProfile
           ? "Chỉnh sửa thông tin cá nhân"
           : "Nhập thông tin cá nhân"}
       </h1>
-      <p className="lead">
+
+      <p className={styles.lead}>
         {existingProfile ? "" : "Vui lòng điền đầy đủ thông tin."}
       </p>
 
-      <form id="personalForm" noValidate onSubmit={handleSubmit}>
-        {/* Họ và tên */}
-        <div className="name-row">
-          <div className="name-field first">
-            <label htmlFor="fullName">
-              First Name <span aria-hidden="true">*</span>
-            </label>
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <div className={styles.nameRow}>
+          <div className={`${styles.nameField} ${styles.first}`}>
+            <label className={styles.label}>First Name</label>
             <input
-              id="firstName"
               name="firstName"
-              type="text"
-              placeholder="Nguyễn Văn"
+              className={styles.input}
               value={formData.firstName}
               onChange={handleChange}
-              required
             />
           </div>
-          <div className="name-field last">
-            <label htmlFor="lastName">
-              Last Name <span aria-hidden="true">*</span>
-            </label>
+
+          <div className={`${styles.nameField} ${styles.last}`}>
+            <label className={styles.label}>Last Name</label>
             <input
-              id="lastName"
               name="lastName"
-              type="text"
-              placeholder="A"
+              className={styles.input}
               value={formData.lastName}
               onChange={handleChange}
-              required
             />
           </div>
         </div>
 
-        {/* Giới tính */}
-        <div className="field">
-          <label>
-            Giới tính <span aria-hidden="true">*</span>
-          </label>
-          <div className="radio-group">
-            <label>
-              <input
-                type="radio"
-                name="gender"
-                value="male"
-                checked={formData.gender === "male"}
-                onChange={handleChange}
-                required
-              />{" "}
-              Nam
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="gender"
-                value="female"
-                checked={formData.gender === "female"}
-                onChange={handleChange}
-              />{" "}
-              Nữ
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="gender"
-                value="other"
-                checked={formData.gender === "other"}
-                onChange={handleChange}
-              />{" "}
-              Khác
-            </label>
+        <div className={styles.field}>
+          <label className={styles.label}>Giới tính</label>
+          <div className={styles.radioGroup}>
+            {["male", "female", "other"].map((g) => (
+              <label key={g} className={styles.radioLabel}>
+                <input
+                  type="radio"
+                  name="gender"
+                  value={g}
+                  checked={formData.gender === g}
+                  onChange={handleChange}
+                  className={styles.radio}
+                />
+                {g}
+              </label>
+            ))}
           </div>
         </div>
 
-        {/* Năm sinh */}
-        <div className="field">
-          <label htmlFor="birthYear">
-            Năm sinh <span aria-hidden="true">*</span>
-          </label>
+        <div className={styles.field}>
+          <label className={styles.label}>Năm sinh</label>
           <input
-            id="dateOfBirth"
-            name="dateOfBirth"
             type="date"
+            name="dateOfBirth"
+            className={styles.input}
             value={formatDateForInput(formData.dateOfBirth)}
             onChange={handleChange}
-            required
           />
         </div>
 
-        {/* Số điện thoại */}
-        <div className="field">
-          <label htmlFor="phone">
-            Số điện thoại <span aria-hidden="true">*</span>
-          </label>
+        <div className={styles.field}>
+          <label className={styles.label}>Số điện thoại</label>
           <input
-            id="phone"
-            name="phone"
             type="tel"
-            placeholder="0912xxxxxx"
+            name="phone"
+            className={styles.input}
             value={formData.phone}
             onChange={handleChange}
-            required
           />
         </div>
 
-        {/* Địa chỉ */}
-        <div className="field">
-          <label htmlFor="address">Địa chỉ</label>
+        <div className={styles.field}>
+          <label className={styles.label}>Địa chỉ</label>
           <textarea
-            id="address"
             name="address"
-            placeholder="Ví dụ: 123 Đường ABC, Quận X, TP"
+            className={styles.textarea}
             value={formData.address}
             onChange={handleChange}
-          ></textarea>
+          />
         </div>
 
-        {/* Nút hành động */}
-        <div className="actions">
-          <button type="button" className="btn-secondary" onClick={handleReset}>
+        <div className={styles.actions}>
+          <button
+            type="button"
+            className={`${styles.btn} ${styles.secondary}`}
+            onClick={handleReset}
+          >
             Xóa
           </button>
-          <button type="submit" className="btn-primary">
-            {existingProfile ? "Cập nhật thông tin" : "Gửi thông tin"}
+
+          <button type="submit" className={`${styles.btn} ${styles.primary}`}>
+            {existingProfile ? "Cập nhật" : "Gửi"}
           </button>
         </div>
 
-        <p className="note" id="formNote" aria-live="polite">
-          {note}
-        </p>
+        <p className={styles.note}>{note}</p>
       </form>
     </div>
   );

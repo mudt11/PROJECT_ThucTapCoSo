@@ -1,6 +1,7 @@
 "use client";
+
 import React from "react";
-import "@/app/styles/Modal.css";
+import styles from "@/app/styles/Modal.module.css";
 
 interface ModalProps {
   isOpen: boolean;
@@ -12,11 +13,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-container" onClick={(e) => e.stopPropagation()}>
-        {/* Vùng nội dung modal */}
-        <div className="modal-content">
-          <button className="modal-close" onClick={onClose}>
+    <div className={styles.overlay} onClick={onClose}>
+      <div className={styles.container} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.content}>
+          <button className={styles.closeBtn} onClick={onClose}>
             ✕
           </button>
           {children}

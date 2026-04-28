@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useState } from "react";
-import "./SearchResult.css";
+import styles from "./search.module.css";
 import { Track } from "@/app/types/music";
 import { usePlayer } from "@/app/context/PlayerContext";
 
@@ -13,7 +13,6 @@ interface SearchResultProps {
 
 const SearchResult = ({ result, searchTerm }: SearchResultProps) => {
   const { setPlaylist } = usePlayer();
-  const [showResults, setShowResults] = useState(false);
 
   const highlight = (text: string, term: string) => {
     if (!term) return text;
@@ -23,26 +22,24 @@ const SearchResult = ({ result, searchTerm }: SearchResultProps) => {
 
     return parts.map((part, i) =>
       regex.test(part) ? (
-        <span key={i} className="highlight">
-          {part}
-        </span>
+        <span className={styles.highlight}>{part}</span>
       ) : (
         part
       ),
     );
   };
   return (
-    <div className="search-result" onClick={() => setPlaylist([result], 0)}>
+    <div className={styles.resultItem} onClick={() => setPlaylist([result], 0)}>
       <img
         src={result.imageUrl || "/images/default-song.jpg"}
-        className="result-img"
+        className={styles.resultImg}
       />
 
-      <div className="result-info">
-        <div className="result-title">
+      <div className={styles.resultInfo}>
+        <div className={styles.resultTitle}>
           {highlight(result.title, searchTerm)}
         </div>
-        <div className="result-artist">{result.artistName}</div>
+        <div className={styles.resultArtist}>{result.artistName}</div>
       </div>
     </div>
   );

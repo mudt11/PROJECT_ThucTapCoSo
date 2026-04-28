@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import styles from "./search.module.css";
 import SearchBar from "./SearchBar";
 import SearchResultsList from "./SearchResultsList";
-import "./SearchBarComponent.css";
 import { Track } from "@/app/types/music";
 
 export default function SearchBarComponent() {
@@ -12,7 +12,7 @@ export default function SearchBarComponent() {
   const [isSearchFocused, setIsSearchFocused] = useState<boolean>(false);
 
   return (
-    <div className="search-bar-container">
+    <div className={styles.container}>
       <SearchBar
         setResults={setResults}
         setSearchTerm={setSearchTerm}

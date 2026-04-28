@@ -1,11 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import styles from "@/app/styles/form.module.css";
 import { useModal } from "@/app/context/ModalContext";
 import { addNewAdmin } from "@/app/utils/authApi";
 import { mutate } from "swr";
-// import "@/app/styles/auth.css";
-import "@/app/styles/AdminPage/addAdmin.css";
 
 export default function AddNewAdmin() {
   const [username, setUsername] = useState("");
@@ -33,50 +32,33 @@ export default function AddNewAdmin() {
   };
 
   return (
-    <div className="container">
-      <h1>Add a new administrator</h1>
+    <div className={styles.formContainer}>
+      <h1 className={styles.title}>Add a new administrator</h1>
+
       <form onSubmit={handleAddNewAdmin}>
-        <label htmlFor="username" className="form_label">
-          Username
-        </label>
+        <label className={styles.label}>Username</label>
         <input
-          id="username"
-          type="text"
-          placeholder="abc"
+          className={styles.input}
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          required
         />
-        <label htmlFor="email" className="form_label">
-          Email
-        </label>
+
+        <label className={styles.label}>Email</label>
         <input
-          id="email"
-          type="email"
-          placeholder="abc@domain.com"
+          className={styles.input}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          required
         />
-        <label htmlFor="password" className="form_label">
-          Password
-        </label>
+
+        <label className={styles.label}>Password</label>
         <input
-          id="password"
-          type="password"
-          placeholder="At least 8 characters, letters & numbers"
+          className={styles.input}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          required
         />
-        <button type="submit">Add</button>
+
+        <button className={styles.button}>Add</button>
       </form>
-      {/* <p className="switch-form">
-        You already have an account?{" "}
-        <a className="create" onClick={() => openModal("signin-admin")}>
-          Sign in
-        </a>
-      </p> */}
     </div>
   );
 }

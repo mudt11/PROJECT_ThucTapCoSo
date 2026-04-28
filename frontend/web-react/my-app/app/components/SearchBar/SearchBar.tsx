@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import styles from "./search.module.css";
 import { FaSearch, FaTimes } from "react-icons/fa";
 import { searchSongs } from "@/app/utils/songApi";
-import "./SearchBar.css";
 import { Track } from "@/app/types/music";
 
 interface SearchBarProps {
@@ -33,7 +33,6 @@ const SearchBar = ({
         const tracks = await searchSongs(value, 10);
 
         setResults(tracks || []);
-        
       } catch (err) {
         console.error("Search error:", err);
         const errorMessage =
@@ -43,7 +42,7 @@ const SearchBar = ({
     }, 300);
 
     return () => clearTimeout(handler);
-  }, [input, setResults]);
+  }, [input]);
 
   const handleChange = (value: string) => {
     setInput(value);
@@ -58,10 +57,14 @@ const SearchBar = ({
   };
 
   return (
-    <div className="input-wrapper">
-      <FaSearch id="search-icon" onClick={() => inputRef.current?.focus()} />
-      <div className="input-container">
+    <div className={styles.inputWrapper}>
+      <FaSearch
+        className={`${styles.icon} ${styles.searchIcon}`}
+        onClick={() => inputRef.current?.focus()}
+      />
+      <div className={styles.inputContainer}>
         <input
+          className={styles.input}
           ref={inputRef}
           placeholder="Bạn muốn phát nội dung gì?"
           value={input}
@@ -74,7 +77,7 @@ const SearchBar = ({
         />
         {input && (
           <FaTimes
-            id="clear-icon"
+            className={`${styles.icon} ${styles.clearIcon}`}
             onClick={clearInput}
             onMouseDown={(e) => e.preventDefault()} // Ngăn onBlur trigger
           />

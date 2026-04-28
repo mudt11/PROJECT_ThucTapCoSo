@@ -1,0 +1,206 @@
+/* Nhúng Font chữ */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+/* .authWrapper {
+  font-family: "Inter", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--tt-bg);
+  padding: 20px;
+} */
+
+.authContainer {
+  font-family: "Inter", sans-serif;
+  background-color: var(--tt-surface);
+  width: 100%;
+  max-width: 480px;
+  padding: 48px;
+  border-radius: 24px;
+  box-shadow: var(--tt-shadow-md);
+  border: 1px solid var(--tt-border);
+  transition: all 0.3s ease;
+}
+
+/* Header & Logo */
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.logo a {
+  display: inline-block;
+}
+
+.logoImg {
+  height: 48px; 
+  width: auto;
+}
+
+/* Typography */
+.title {
+  color: var(--tt-text-primary);
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.subtitle {
+  color: var(--tt-text-secondary);
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+/* Form Styles */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formLabel {
+  color: var(--tt-dark);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.formInput {
+  width: 100%;
+  padding: 16px 20px;
+  font-size: 16px;
+  color: var(--tt-text-primary);
+  background-color: var(--tt-surface);
+  border: 1px solid var(--tt-border);
+  border-radius: 12px;
+  transition: all 0.2s ease-in-out;
+}
+
+.formInput::placeholder {
+  color: var(--tt-text-muted);
+}
+
+.formInput:focus {
+  outline: none;
+  border-color: var(--tt-orange);
+  box-shadow: 0 0 0 4px var(--tt-orange-pale);
+  background-color: var(--tt-surface);
+}
+
+/* Options (Remember me & Forgot Password) */
+.optionsRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: -8px;
+  margin-bottom: 8px;
+}
+
+.rememberMe {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.rememberMe input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--tt-orange); /* Màu ô checkbox khi tick */
+  cursor: pointer;
+}
+
+.rememberMeSpan {
+  font-size: 14px;
+  color: var(--tt-text-secondary);
+}
+
+.forgotPasswordLink {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--tt-orange);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.forgotPasswordLink:hover {
+  color: var(--tt-brown);
+  text-decoration: underline;
+}
+
+/* Buttons */
+.submitButton {
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: var(--tt-orange);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--tt-shadow-sm);
+  margin-top: 12px;
+}
+
+.submitButton:hover {
+  background-color: var(--tt-brown);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(115, 57, 26, 0.2);
+}
+
+.submitButton:active {
+  transform: translateY(0);
+}
+
+/* Switch Form Footer */
+.switchFormFooter {
+  margin-top: 40px;
+  text-align: center;
+  padding-top: 24px;
+  border-top: 1px solid var(--tt-border);
+  color: var(--tt-text-secondary);
+  font-size: 15px;
+}
+
+.switchLink {
+  font-weight: 600;
+  color: var(--tt-orange);
+  cursor: pointer;
+  margin-left: 5px;
+  transition: color 0.2s;
+}
+
+.switchLink:hover {
+  color: var(--tt-brown);
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .authContainer {
+    padding: 32px 24px;
+    border-radius: 16px;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+}

@@ -1,97 +1,87 @@
 "use client";
-import "@/app/styles/header-bar.css";
-import { useState, useRef, useEffect } from "react";
+
+import styles from "@/app/styles/Header.module.css";
+import { useState } from "react";
 import Link from "next/link";
-import { HiOutlineUpload } from "react-icons/hi";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/app/context/ModalContext";
 import { useUser } from "@/app/context/UserContext";
 import { logoutUser } from "../utils/authApi";
 import PopUp from "./PopUp";
 import SearchBarComponent from "./SearchBar/SearchBarComponent";
-import Sidebar from "./Sidebar";
 
 export default function Header() {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const { openModal } = useModal();
-  const [q, setQ] = useState("");
   const { user, loading, setUser } = useUser();
   const router = useRouter();
 
   return (
-    <header className="header">
-      <div className="left">
-        <div className="logo">
+    <header className={styles.header}>
+      <div className={styles.left}>
+        <div className={styles.logo}>
           <Link href="/explore">
-            {/* <img src="/images/Logo/logo.png" alt="logo web page" /> */}
-            <span>BTM</span>
+            <span className={styles.logoText}>BTM</span>
           </Link>
         </div>
+
         <SearchBarComponent />
       </div>
 
-      <div className="right">
-        {/* Upload icon */}
-        {/* <HiOutlineUpload id="upload-icon" /> */}
-        <div className="user-area">
+      <div className={styles.right}>
+        <div className={styles.userArea}>
           {loading ? null : user ? (
-            <div className="user-greeting">
+            <div className={styles.userGreeting}>
               <button
-                className={`profile-btn ${showUserMenu ? "active" : ""}`}
+                className={styles.profileBtn}
                 onClick={() => setShowUserMenu(!showUserMenu)}
               >
                 <img
                   src="/images/Avatar/avt01.png"
                   alt="Avatar"
-                  className="avatar"
+                  className={styles.avatar}
                 />
 
-                <div className="user-meta">
-                  <span className="username">{user?.username}</span>
-                  <span className="plan">Premium</span>
+                <div className={styles.userMeta}>
+                  <span className={styles.username}>{user?.username}</span>
+                  <span className={styles.plan}>Premium</span>
                 </div>
 
-                <i className="fa-solid fa-chevron-down arrow"></i>
+                <i
+                  className={`${styles.arrow} ${
+                    showUserMenu ? styles.arrowActive : ""
+                  }`}
+                ></i>
               </button>
+
               {showUserMenu && (
                 <PopUp
                   show={showUserMenu}
                   onClose={() => setShowUserMenu(false)}
                 >
-                  <div className="user-popup">
-                    {/* <div className="user-info">
-                      <img src="/images/Avatar/avt01.png" className="avatar" />
-                      <div>
-                        <strong>{user.username}</strong>
-                        <p>Premium</p>
-                      </div>
-                    </div> */}
-
+                  <div className={styles.userPopup}>
                     <button
-                      className="logout-btn"
+                      className={styles.logoutBtn}
                       onClick={() => openModal("profile")}
                     >
-                      <i className="fa-regular fa-user"></i>
                       Xem hồ sơ
                     </button>
 
                     <button
-                      className="logout-btn"
+                      className={styles.logoutBtn}
                       onClick={() => openModal("change-password")}
                     >
-                      <i className="fa-solid fa-key"></i>
                       Thay đổi mật khẩu
                     </button>
 
                     <button
-                      className="logout-btn"
+                      className={styles.logoutBtn}
                       onClick={async () => {
                         await logoutUser();
                         setUser(null);
                         router.replace("/explore");
                       }}
                     >
-                      <i className="fa-solid fa-arrow-right-from-bracket"></i>
                       Đăng xuất
                     </button>
                   </div>
@@ -99,13 +89,16 @@ export default function Header() {
               )}
             </div>
           ) : (
-            <div className="auth-box">
-              <button className="sign-in" onClick={() => openModal("signin")}>
+            <div className={styles.authBox}>
+              <button
+                className={styles.signIn}
+                onClick={() => openModal("signin")}
+              >
                 Sign in
               </button>
 
               <button
-                className="register"
+                className={styles.register}
                 onClick={() => openModal("register")}
               >
                 Sign up

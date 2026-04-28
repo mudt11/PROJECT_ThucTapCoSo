@@ -23,8 +23,6 @@ const LibraryTable: React.FC = () => {
     return <div className="empty">Bạn chưa thích bài hát nào</div>;
   }
 
-  console.log("Liked songs list:", likedSongsList);
-
   return (
     <div id="table_row">
       {likedSongsList.map((song: Track, index: number) => {

@@ -1,0 +1,145 @@
+.profileCard {
+  background-color: #212121;
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  width: 500px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* TITLE */
+.title {
+  margin-bottom: 12px;
+  font-size: 20px;
+}
+
+.lead {
+  margin-bottom: 18px;
+  color: #9fb7c3;
+  font-size: 13px;
+}
+
+/* FORM */
+.form {
+  display: grid;
+  gap: 12px;
+}
+
+/* FIELD */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 13px;
+  color: #a8c0c9;
+}
+
+/* INPUT */
+.input {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.input:focus {
+  box-shadow: 0 0 0 4px rgba(252, 107, 143, 0.15);
+  border-color: var(--button);
+}
+
+.textarea {
+  composes: input;
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* NAME ROW */
+.nameRow {
+  display: flex;
+  gap: 12px;
+}
+
+.nameField {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.first {
+  flex: 2;
+}
+
+.last {
+  flex: 1;
+}
+
+/* ACTION */
+.actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.primary {
+  background: var(--button);
+  color: white;
+}
+
+.secondary {
+  background: transparent;
+  color: white;
+  border: 1px solid var(--button);
+}
+
+.note {
+  font-size: 12px;
+  color: #8fa6b1;
+}
+
+/* RADIO */
+.radioGroup {
+  display: flex;
+  gap: 18px;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.radio {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #6b7280;
+  border-radius: 50%;
+}
+
+.radio:checked {
+  background: var(--button);
+  border-color: var(--button);
+}
+
+/* RESPONSIVE */
+@media (max-width: 560px) {
+  .nameRow {
+    flex-direction: column;
+  }
+}

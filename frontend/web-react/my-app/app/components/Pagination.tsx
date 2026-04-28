@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import "@/app/styles/Pagination.css";
+import styles from "@/app/styles/Pagination.module.css";
 
 type Props = {
   currentPage: number;
@@ -13,7 +13,6 @@ export default function Pagination({ currentPage, totalPages }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  //Auto scroll lên đầu khi đổi trang
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [currentPage]);
@@ -30,23 +29,27 @@ export default function Pagination({ currentPage, totalPages }: Props) {
     const end = Math.min(totalPages, currentPage + 2);
 
     for (let i = start; i <= end; i++) pages.push(i);
-
     return pages;
   };
 
   return (
-    <div className="pagination">
+    <div className={styles.pagination}>
       <button
+        className={`${styles.button} ${
+          currentPage === 1 ? styles.disabled : ""
+        }`}
         disabled={currentPage === 1}
         onClick={() => goToPage(currentPage - 1)}
       >
         &lt;
       </button>
 
-      {renderPages().map((page, i) => (
+      {renderPages().map((page) => (
         <button
           key={page}
-          className={page === currentPage ? "active" : ""}
+          className={`${styles.button} ${
+            page === currentPage ? styles.active : ""
+          }`}
           onClick={() => goToPage(page)}
         >
           {page}
@@ -54,6 +57,9 @@ export default function Pagination({ currentPage, totalPages }: Props) {
       ))}
 
       <button
+        className={`${styles.button} ${
+          currentPage === totalPages ? styles.disabled : ""
+        }`}
         disabled={currentPage === totalPages}
         onClick={() => goToPage(currentPage + 1)}
       >
