@@ -5,39 +5,16 @@ import Sidebar from "@/app/components/Sidebar";
 import Header from "@/app/components/Header";
 import Player from "@/app/components/MusicContainer/Player";
 import { useEffect } from "react";
-
 import { useModal } from "@/app/context/ModalContext";
 import { useUser } from "@/app/context/UserContext";
 
-import { UserProvider } from "@/app/context/UserContext";
-import { ModalProvider } from "@/app/context/ModalContext";
-import { PlayerProvider } from "@/app/context/PlayerContext";
-import { MusicDataProvider } from "@/app/context/MusicDataContext";
-import { LikeProvider } from "@/app/context/LikeContext";
-
-export default function ExploreLayout({
+export default function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <UserProvider>
-      <ModalProvider>
-        {/* <MusicDataProvider> */}
-        <PlayerProvider>
-          <LikeProvider>
-            <MainLayout>{children}</MainLayout>
-          </LikeProvider>
-        </PlayerProvider>
-        {/* </MusicDataProvider> */}
-      </ModalProvider>
-    </UserProvider>
-  );
-}
-
-function MainLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useUser();
-  const { openModal, closeModal } = useModal();
+  const { openModal } = useModal();
 
   useEffect(() => {
     if (loading) return;
@@ -46,7 +23,6 @@ function MainLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      {/* <Sidebar /> */}
       <Sidebar />
       <div className="main">
         <Header />
