@@ -13,6 +13,10 @@ services:
       - mysql_data:/var/lib/mysql
       # Dòng 2 (MỚI): Map file SQL để tự động import
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
 
   mongo:
     image: mongo:6
@@ -22,6 +26,11 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # --- BACKEND ---
   server:
@@ -31,7 +40,10 @@ services:
     ports:
       - "5000:5000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
     env_file:
       - .env
     # --- CẤU HÌNH TỰ ĐỘNG CẬP NHẬT CODE (HOT RELOAD) ---
@@ -40,6 +52,30 @@ services:
       - /app/node_modules
       - ./Server/src/public:/app/src/public
     command: npm run dev
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # --- AI SERVICE ---
+  ai_service:
+    build: ./AI_Services
+    container_name: music_web_ai
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+    env_file:
+      - .env
+    volumes:
+      - ./AI_Services:/app
+      - /app/__pycache__
+    command: python src/api/server.py
 
   # --- FRONTEND ---
   ui:
@@ -49,10 +85,12 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - server
+      server:
+        condition: service_healthy
     # --- CẤU HÌNH TỰ ĐỘNG CẬP NHẬT CODE (HOT RELOAD) ---
     environment:
       - WATCHPACK_POLLING=true
+      - NEXT_PUBLIC_API_URL=http://server:5000
     volumes:
       - ./UI:/app
       - /app/node_modules

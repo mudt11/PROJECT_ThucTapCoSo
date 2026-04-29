@@ -14,9 +14,7 @@ export async function fetchDailySongs(
   limit = 20,
   page = 1,
 ): Promise<PaginatedSongs> {
-  const res = await fetch(
-    `http://localhost:5000/api/songs?page=${page}&limit=${limit}`,
-  );
+  const res = await fetch(`${URL}/songs?page=${page}&limit=${limit}`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch songs");

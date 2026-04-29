@@ -1,9 +1,10 @@
-from mongo import MongoClient
+from pymongo import MongoClient
 import pandas as pd
+from src.config.settings import MONGO_URI
 
 def get_mongo_data():
     # Kết nối MongoDB và thực hiện: db.useractivities.find()
-    client = MongoClient("mongodb://localhost:27017/")
+    client = MongoClient(MONGO_URI)
 
     db = client.music
 

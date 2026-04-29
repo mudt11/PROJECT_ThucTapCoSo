@@ -1,13 +1,14 @@
 import mysql.connector
 import pandas as pd
+from src.config.settings import MYSQL_CONFIG
 
 def get_mysql_data():
     # Kết nối MySQL và thực hiện: SELECT user_id, song_id, rating FROM ratings
     conn = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="",
-        database="music_db"
+        host=MYSQL_CONFIG["host"],
+        user=MYSQL_CONFIG["user"],
+        password=MYSQL_CONFIG["password"],
+        database=MYSQL_CONFIG["database"]
     )
 
     rating_query = "SELECT user_id, song_id, score as rating FROM ratings"
