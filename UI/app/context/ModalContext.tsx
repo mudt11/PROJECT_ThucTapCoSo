@@ -9,27 +9,23 @@ import SongFormModal from "../components/AdminPage/SongFormModal";
 import dynamic from "next/dynamic";
 
 // Dynamic import cho user
-const SignInPage = dynamic(
-  () => import("@/app/(Pages)/(main)/auth/sign-in/page")
-);
-const RegisterPage = dynamic(
-  () => import("@/app/(Pages)/(main)/auth/register/page")
-);
+const SignInPage = dynamic(() => import("@/app/(Pages)/sign-in/page"));
+const RegisterPage = dynamic(() => import("@/app/(Pages)/register/page"));
 
 // Dynamic import cho admin
 const SignInAdminPage = dynamic(
-  () => import("@/app/(Pages)/administrator/authAdmin/sign-in/page")
+  () => import("@/app/(Pages)/administrator/authAdmin/sign-in/page"),
 );
 const RegisterAdminPage = dynamic(
-  () => import("@/app/(Pages)/administrator/authAdmin/register/page")
+  () => import("@/app/(Pages)/administrator/authAdmin/register/page"),
 );
 
 const AddNewAdmin = dynamic(
-  () => import("@/app/components/AdminPage/AddAdmin")
+  () => import("@/app/components/AdminPage/AddAdmin"),
 );
 
 const ResetAdminPassword = dynamic(
-  () => import("@/app/components/AdminPage/ResetAdminPassword")
+  () => import("@/app/components/AdminPage/ResetAdminPassword"),
 );
 
 type ModalType =
