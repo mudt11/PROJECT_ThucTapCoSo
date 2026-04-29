@@ -14,6 +14,15 @@ services:
       # Dòng 2 (MỚI): Map file SQL để tự động import
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
+  mongo:
+    image: mongo:6
+    container_name: music_web_mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
   # --- BACKEND ---
   server:
     build: ./Server
@@ -52,3 +61,4 @@ services:
 
 volumes:
   mysql_data:
+  mongo_data:

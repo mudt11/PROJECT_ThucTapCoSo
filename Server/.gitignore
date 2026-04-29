@@ -4,4 +4,3 @@ dist/
 build/
 .DS_Store
 music_app_db.sql
-Dockerfile
