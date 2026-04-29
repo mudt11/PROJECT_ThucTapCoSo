@@ -9,5 +9,5 @@ COPY . .
 
 EXPOSE 8000
 
-# Trỏ đúng file server (src/api/server.py)
-CMD ["python", "src/api/server.py"]
+# Chạy FastAPI từ Bảo/main.py
+CMD ["uvicorn", "Bảo.main:app", "--host", "0.0.0.0", "--port", "8000"]

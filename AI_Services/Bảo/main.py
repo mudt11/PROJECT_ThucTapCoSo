@@ -4,25 +4,37 @@ import tensorflow as tf
 import pickle
 import numpy as np
 import pandas as pd
+import os
 
 app = FastAPI(title="Music Recommendation API")
 
+# Lấy đường dẫn của thư mục chứa file main.py hiện tại (chính là thư mục 'Bảo')
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+# Trỏ trực tiếp vào thư mục 'models' nằm bên trong thư mục 'Bảo'
+MODELS_DIR = os.path.join(CURRENT_DIR, "models")
+
+
 # 1. Load mô hình và các file ánh xạ khi khởi động API
-# Đảm bảo các file này nằm trong thư mục models/
-with open("models/user_to_index.pkl", "rb") as f:
+with open(os.path.join(MODELS_DIR, "user_to_index.pkl"), "rb") as f:
     user_mapping = pickle.load(f)  # Cấu trúc: {Index: UserID}
     
-with open("models/item_to_index.pkl", "rb") as f:
+with open(os.path.join(MODELS_DIR, "item_to_index.pkl"), "rb") as f:
     item_mapping = pickle.load(f)  # Cấu trúc: {Index: ArtistID}
 
 # Đảo ngược từ điển User để tìm Index từ ID nhanh hơn (O(1) thay vì O(n))
 user_id_to_idx = {v: k for k, v in user_mapping.items()}
 
 # Load mô hình AI
-model = tf.keras.models.load_model('models/ncf_model_v2.keras')
+model = tf.keras.models.load_model(os.path.join(MODELS_DIR, 'ncf_model_v2.keras'))
 
 # Load dữ liệu lịch sử để lọc
-train_data = pd.read_csv("models/lastfm_clean.csv")
+train_data = pd.read_csv(os.path.join(MODELS_DIR, "lastfm_clean.csv"))
+
+# Gom nhóm sẵn các item_index đã nghe theo từng userID thành dạng dictionary
+# Ví dụ: { user_1: [1, 5, 9], user_2: [2, 4] }
+user_history_dict = train_data.groupby('userID')['item_index'].apply(list).to_dict()
+
+print("✅ Hệ thống đã sẵn sàng phục vụ!")
 
 @app.get("/recommend/{user_id}")
 async def recommend(user_id: int, type: str = "discover"):
@@ -46,8 +58,8 @@ async def recommend(user_id: int, type: str = "discover"):
     predictions = model.predict([user_array, all_item_indices], batch_size=512, verbose=0).flatten()
 
     # Lấy danh sách index các bài user ĐÃ NGHE
-    # Lưu ý: Tên cột phải khớp với file csv của bạn (userID và item_index)
-    heard_items = train_data[train_data['userID'] == user_id]['item_index'].values
+    # Tra cứu danh sách đã nghe siêu nhanh từ dictionary tạo sẵn
+    heard_items = user_history_dict.get(user_id, [])
 
     if type == "discover":
         # KHÁM PHÁ: Ép điểm các bài ĐÃ NGHE xuống cực thấp để lọc ra bài MỚI
