@@ -25,14 +25,14 @@ with open(os.path.join(MODELS_DIR, "item_to_index.pkl"), "rb") as f:
 user_id_to_idx = {v: k for k, v in user_mapping.items()}
 
 # Load mô hình AI
-model = tf.keras.models.load_model(os.path.join(MODELS_DIR, 'ncf_model_v2.keras'))
+model = tf.keras.models.load_model(os.path.join(MODELS_DIR, 'ncf_model.keras'))
 
 # Load dữ liệu lịch sử để lọc
 train_data = pd.read_csv(os.path.join(MODELS_DIR, "lastfm_clean.csv"))
 
 # Gom nhóm sẵn các item_index đã nghe theo từng userID thành dạng dictionary
 # Ví dụ: { user_1: [1, 5, 9], user_2: [2, 4] }
-user_history_dict = train_data.groupby('userID')['item_index'].apply(list).to_dict()
+user_history_dict = train_data.groupby('user_index')['item_index'].apply(list).to_dict()
 
 print("✅ Hệ thống đã sẵn sàng phục vụ!")
 
