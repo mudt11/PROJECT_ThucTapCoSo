@@ -1,44 +1,62 @@
-# Dependencies
-node_modules/
-.venv/
-__pycache__/
+# ============================================================
+#  .gitignore — ĐẶT Ở ROOT DỰ ÁN
+# ============================================================
 
-# Environment variables - NEVER commit these
+# --- Env files: KHÔNG BAO GIỜ commit file thật ---
 .env
 .env.local
 .env.*.local
+Server/.env
+Server/.env.local
+AI_Services/.env
 
-# Build outputs
+# Chỉ commit file mẫu
+!.env.example
+!Server/.env.example
+!AI_Services/.env.example
+
+# --- Dependencies ---
+node_modules/
+**/node_modules/
+.venv/
+venv/
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+
+# --- Build outputs ---
 dist/
 build/
 .next/
+**/.next/
 
-# OS
-.DS_Store
-Thumbs.db
-
-# Database
-music_app_db.sql
+# --- Database dumps ---
 *.sql.bak
+# Chú ý: db/init.sql NÊN commit 
+# Chỉ thêm vào đây nếu chứa data nhạy cảm
+# db/init.sql
 
-# Logs
+# --- Logs ---
 *.log
 npm-debug.log*
+pip-debug.log*
 
-# Cache
+# --- Cache ---
 .cache/
 .turbo/
+.pytest_cache/
+.ipynb_checkpoints/
 
-# IDE
+# --- IDE ---
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# Python
-*.pyc
-*.pyo
-.pytest_cache/
+# --- OS ---
+.DS_Store
+Thumbs.db
 
-# Docker
-.dockerignore
+# --- Python notebook artifacts ---
+*.ipynb_checkpoints/

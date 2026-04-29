@@ -11,7 +11,13 @@ const connectMongoDB = require("./config/mongodb");
 
 const app = express();
 
-// Middleware
+// --- CORS: Hỗ trợ cả local dev lẫn Docker ---
+const allowedOrigins = [
+  "http://localhost:3000", // Local dev
+  "http://ui:3000", // Docker internal
+  "https://project-web-gamma-neon.vercel.app",
+  // Thêm domain production ở đây nếu cần
+];
 
 // app.use(cors());
 app.use(express.json());
@@ -19,10 +25,12 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://project-web-gamma-neon.vercel.app",
-    ],
+    origin: function (origin, callback) {
+      // Cho phép request không có origin (Postman, server-to-server)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      callback(new Error("Not allowed by CORS: " + origin));
+    },
     credentials: true,
   }),
 );

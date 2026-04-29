@@ -8,10 +8,9 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_PASS}
       MYSQL_DATABASE: ${DB_NAME}
     ports:
-      - "3307:3306" # Map ra port 3307 để không đụng MySQL trên máy thật
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      # Dòng 2 (MỚI): Map file SQL để tự động import
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
@@ -46,7 +45,6 @@ services:
         condition: service_healthy
     env_file:
       - .env
-    # --- CẤU HÌNH TỰ ĐỘNG CẬP NHẬT CODE (HOT RELOAD) ---
     volumes:
       - ./Server:/app
       - /app/node_modules
@@ -75,7 +73,6 @@ services:
     volumes:
       - ./AI_Services:/app
       - /app/__pycache__
-    command: python src/api/server.py
 
   # --- FRONTEND ---
   ui:
@@ -87,10 +84,9 @@ services:
     depends_on:
       server:
         condition: service_healthy
-    # --- CẤU HÌNH TỰ ĐỘNG CẬP NHẬT CODE (HOT RELOAD) ---
     environment:
       - WATCHPACK_POLLING=true
-      - NEXT_PUBLIC_API_URL=http://server:5000
+      - NEXT_PUBLIC_API_URL=http://localhost:5000
     volumes:
       - ./UI:/app
       - /app/node_modules
