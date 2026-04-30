@@ -38,7 +38,9 @@ export interface User {
   username: string;
   email: string;
   role: string;
-  activity_status: string;
+  actStatus: string;
+  isActive;
+  avatar: string;
 }
 
 export interface UserProfileData {

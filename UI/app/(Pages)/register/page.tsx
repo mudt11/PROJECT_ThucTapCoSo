@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useModal } from "@/app/context/ModalContext";
-import { registerUser } from "@/app/utils/authApi";
+// import { registerUser } from "@/app/utils/authApi";
+import { registerService } from "@/app/features/auth/service";
 import { validatePassword } from "@/app/utils/passwordValidator";
 import styles from "@/app/styles/Auth.module.css";
 import Logo from "@/app/components/Logo";
@@ -22,11 +23,14 @@ export default function RegisterPage() {
       return;
     }
 
-    const res = await registerUser(username, email, password);
-    const data = await res.json();
-    alert(data.message);
-
-    openModal("signin");
+    try {
+      const data = await registerService(username, email, password);
+      alert(data.message);
+      openModal("signin");
+    } catch (error: any) {
+      const message = error.response?.data?.message || "Đăng ký thất bại";
+      alert(message);
+    }
   };
 
   return (

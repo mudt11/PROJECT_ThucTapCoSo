@@ -4,7 +4,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useModal } from "@/app/context/ModalContext";
 import { useUser } from "@/app/context/UserContext";
-import { loginUser } from "@/app/utils/authApi";
+// import { loginUser } from "@/app/utils/authApi";
+import { loginService } from "@/app/features/auth/service";
 // import "@/app/styles/auth.css";
 import styles from "@/app/styles/Auth.module.css";
 import Logo from "@/app/components/Logo";
@@ -19,22 +20,22 @@ export default function SignInPage() {
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await loginUser(username, password);
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.message || "Đăng nhập thất bại!");
-        return;
-      }
-
+      const data = await loginService(username, password);
       alert(data.message);
+
+      // if (!res.ok) {
+      //   alert(data.message || "Đăng nhập thất bại!");
+      //   return;
+      // }
+
+      // alert(data.message);
 
       await refreshUser();
       closeModal();
       router.refresh();
-    } catch (error) {
-      console.error("Lỗi đăng nhập:", error);
-      alert("Đăng nhập thất bại, vui lòng thử lại!");
+    } catch (error: any) {
+      const message = error.response?.data?.message || "Đăng nhập thất bại";
+      alert(message);
     }
   };
 

@@ -1,20 +1,21 @@
 "use client";
 
-import styles from "@/app/styles/Header.module.css";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useModal } from "@/app/context/ModalContext";
-import { useUser } from "@/app/context/UserContext";
-import { logoutUser } from "../utils/authApi";
+import styles from "@/app/styles/Header.module.css";
 import PopUp from "./PopUp";
 import SearchBarComponent from "./SearchBar/SearchBarComponent";
+import { useModal } from "@/app/context/ModalContext";
+import { useUser } from "@/app/context/UserContext";
+import { useLogout } from "../features/auth/useLogout";
 
 export default function Header() {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const { openModal } = useModal();
   const { user, loading, setUser } = useUser();
   const router = useRouter();
+  const { logout } = useLogout();
 
   return (
     <header className={styles.header}>
@@ -74,14 +75,7 @@ export default function Header() {
                       Thay đổi mật khẩu
                     </button>
 
-                    <button
-                      className={styles.logoutBtn}
-                      onClick={async () => {
-                        await logoutUser();
-                        setUser(null);
-                        router.replace("/explore");
-                      }}
-                    >
+                    <button className={styles.logoutBtn} onClick={logout}>
                       Đăng xuất
                     </button>
                   </div>

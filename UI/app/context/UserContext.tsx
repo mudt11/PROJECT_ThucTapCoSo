@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
-import { fetchCurrentUser } from "../utils/authApi";
+// import { fetchCurrentUser } from "../utils/authApi";
+import { getCurrentUserService } from "../features/user/service";
 import { User } from "../types/music";
 
 interface UserContextType {
@@ -17,14 +18,10 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   const refreshUser = async () => {
+    setLoading(true);
     try {
-      const res = await fetchCurrentUser();
-      if (res.ok) {
-        const { data } = await res.json();
-        setUser(data);
-      } else {
-        setUser(null);
-      }
+      const data = await getCurrentUserService();
+      setUser(data);
     } catch {
       setUser(null);
     } finally {
