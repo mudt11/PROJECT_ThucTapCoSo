@@ -2,35 +2,23 @@
 
 import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
-import { useModal } from "@/app/context/ModalContext";
-import { useAdminUser } from "@/app/context/AdminUserContext";
-import { loginAdmin, fetchCurrentAdmin } from "@/app/utils/authApi";
 import "@/app/styles/auth.css";
+import { useAdminUser } from "@/app/context/AdminUserContext";
+import { loginAdminService } from "@/app/features/admin/service";
 
 export default function SignInAdminPage() {
   const router = useRouter();
-  const pathname = usePathname();
+  const { checkAdmin } = useAdminUser();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { openModal, closeModal } = useModal();
-  const { admin, setAdmin, checkAdmin } = useAdminUser();
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await loginAdmin(username, password);
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.message || "Đăng nhập thất bại!");
-        return;
-      }
+      const data = await loginAdminService(username, password);
 
       alert(data.message);
       await checkAdmin();
-      // Đóng modal
-      closeModal();
-
       router.replace("/administrator/ManageUser");
     } catch (error) {
       console.error("Lỗi đăng nhập:", error);
@@ -86,12 +74,6 @@ export default function SignInAdminPage() {
       <div className="fogot-password">
         <a href="#">Forgot your password?</a>
       </div>
-      {/* <p>
-        Not registered?{" "}
-        <a className="create" onClick={() => openModal("register-admin")}>
-          Create an account
-        </a>
-      </p> */}
     </div>
   );
 }

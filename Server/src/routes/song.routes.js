@@ -1,11 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const songController = require("../controllers/song.controller");
-const {
-  protect,
-  isAdmin,
-  protectAdmin,
-} = require("../midlewares/auth.midleware");
+const { protect, authorizeRoles } = require("../midlewares/auth.midleware");
 const upload = require("../midlewares/upload.midleware");
 
 // tìm kiếm bài hát
@@ -21,25 +17,42 @@ router.post("/:songId/view", songController.increaseView);
 /* --- ROUTES FOR ADMIN --- */
 
 // manage song
-router.get("/all", protectAdmin, songController.getAllSongs);
+router.get(
+  "/all",
+  protect,
+  authorizeRoles("admin", "super_admin"),
+  songController.getAllSongs,
+);
 // router.get("/:id", songController.getSongById);
 
 // sửa
-router.put("/:id", protectAdmin, songController.updateSongById);
+router.put(
+  "/:id",
+  protect,
+  authorizeRoles("admin", "super_admin"),
+  songController.updateSongById,
+);
 // xóa
-router.delete("/:id", protectAdmin, songController.deleteSongById);
+router.delete(
+  "/:id",
+  protect,
+  authorizeRoles("admin", "super_admin"),
+  songController.deleteSongById,
+);
 
 // Ẩn hiện
 router.patch(
   "/:id/toggle-invisibility",
-  protectAdmin,
+  protect,
+  authorizeRoles("admin", "super_admin"),
   songController.toggleSongVisibility,
 );
 
 // admin up nhạc
 router.post(
   "/",
-  protectAdmin,
+  protect,
+  authorizeRoles("admin", "super_admin"),
   upload.fields([
     { name: "audioFile", maxCount: 1 },
     { name: "imageFile", maxCount: 1 },

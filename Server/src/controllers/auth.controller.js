@@ -121,14 +121,14 @@ const loginAdmin = async (req, res) => {
   try {
     const result = await authService.loginAdmin({ username, password });
 
-    res.cookie("adminAccessToken", result.tokens.accessToken, {
+    res.cookie("accessToken", result.tokens.accessToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
       maxAge: ACCESS_TOKEN_TTL,
     });
 
-    res.cookie("adminRefreshToken", result.tokens.refreshToken, {
+    res.cookie("refreshToken", result.tokens.refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
@@ -146,21 +146,21 @@ const loginAdmin = async (req, res) => {
 
 const logoutAdmin = async (req, res) => {
   try {
-    const adminRefreshToken = req.cookies.adminRefreshToken;
+    const refreshToken = req.cookies.refreshToken;
 
     // Xóa refresh token trong DB (nếu có)
-    if (adminRefreshToken) {
-      await authService.logoutAdmin(adminRefreshToken);
+    if (refreshToken) {
+      await authService.logoutAdmin(refreshToken);
     }
 
     // Xóa cookie admin
-    res.clearCookie("adminAccessToken", {
+    res.clearCookie("accessToken", {
       httpOnly: true,
       secure: true,
       sameSite: "none",
     });
 
-    res.clearCookie("adminRefreshToken", {
+    res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: true,
       sameSite: "none",
@@ -178,17 +178,17 @@ const logoutAdmin = async (req, res) => {
 
 const refreshAdminToken = async (req, res) => {
   try {
-    const refreshToken = req.cookies?.adminRefreshToken;
+    const refreshToken = req.cookies?.refreshToken;
 
     if (!refreshToken) {
       return res.status(401).json({
-        message: "Thiếu refresh token admin",
+        message: "Thiếu refresh token",
       });
     }
 
     const result = await authService.refreshAdminToken(refreshToken);
 
-    res.cookie("adminAccessToken", result.accessToken, {
+    res.cookie("accessToken", result.accessToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",

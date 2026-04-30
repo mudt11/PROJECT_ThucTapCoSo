@@ -60,6 +60,7 @@ const loginUser = async (userData) => {
   // tạo token
   const tokens = generateTokens({
     userId: user.user_id,
+    role: user.role,
     username: user.username,
   });
 
@@ -77,7 +78,7 @@ const loginUser = async (userData) => {
     {
       activity_status: "online",
     },
-    { where: { user_id: user.user_id } }
+    { where: { user_id: user.user_id } },
   );
 
   // ẩn password khi trả về
@@ -122,7 +123,7 @@ const refreshToken = async (refreshTokenFromClient) => {
   const newAccessToken = jwt.sign(
     { userId: user.user_id, email: user.email },
     JWT_SECRET,
-    { expiresIn: "30m" }
+    { expiresIn: "30m" },
   );
 
   return { accessToken: newAccessToken };
@@ -147,7 +148,7 @@ const logoutUser = async (refreshToken) => {
   // 2. Update trạng thái user
   await User.update(
     { activity_status: "offline" },
-    { where: { user_id: userId } }
+    { where: { user_id: userId } },
   );
 
   // 3. Xóa refresh token
@@ -167,7 +168,7 @@ const loginAdmin = async ({ username, password }) => {
   }
 
   if (!["admin", "super_admin"].includes(user.role)) {
-    throw new Error("Bạn không có quyền truy cập trang admin");
+    throw new Error("Bạn không có quyền truy cập admin");
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
@@ -178,7 +179,6 @@ const loginAdmin = async ({ username, password }) => {
   const tokens = generateTokens({
     userId: user.user_id,
     role: user.role,
-    scope: "admin",
   });
 
   await RefreshToken.create({
@@ -255,12 +255,11 @@ const refreshAdminToken = async (refreshTokenFromClient) => {
       scope: "admin",
     },
     JWT_SECRET,
-    { expiresIn: "30m" }
+    { expiresIn: "30m" },
   );
 
   return { accessToken };
 };
-
 
 module.exports = {
   registerUser,

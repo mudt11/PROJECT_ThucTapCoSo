@@ -39,7 +39,6 @@ const updateUserProfile = async (req, res, next) => {
   }
 };
 
-
 const uploadAvatar = async (req, res, next) => {
   try {
     if (!req.file) {
@@ -62,7 +61,7 @@ const uploadAvatar = async (req, res, next) => {
 
     res.status(200).json({
       message: "Cập nhật Avatar thành công!",
-      avatar: avatarUrl
+      avatar: avatarUrl,
     });
   } catch (error) {
     if (req.file && fs.existsSync(req.file.path)) {
@@ -85,7 +84,7 @@ const changeUserPassword = async (req, res, next) => {
     const result = await userService.changeUserPassword(
       userId,
       oldPassword,
-      newPassword
+      newPassword,
     );
     res.status(200).json(result);
   } catch (error) {
@@ -96,7 +95,7 @@ const changeUserPassword = async (req, res, next) => {
 /* Controller for Admin */
 
 const getCurrentAdmin = async (req, res) => {
-  const adminId = req.user.userId;
+  const adminId = req.user.user_id;
   const admin = await userService.getCurrentAdmin(adminId);
   res.json({ admin });
 };
@@ -181,7 +180,7 @@ const updateUserById = async (req, res, next) => {
 
     const updatedUser = await userService.updateUserById(
       id,
-      updateData
+      updateData,
       //   requesterId
     );
     res.status(200).json({
@@ -219,7 +218,7 @@ const resetUserPassword = async (req, res, next) => {
     const result = await userService.resetUserPassword(
       id,
       newPassword,
-      requester
+      requester,
     );
     res.status(200).json(result);
   } catch (error) {

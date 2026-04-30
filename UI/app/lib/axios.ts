@@ -50,7 +50,7 @@ http.interceptors.response.use(
       } catch (err) {
         processQueue(err);
 
-        window.location.href = "/login";
+        // window.location.href = "/explore";
         return Promise.reject(err);
       } finally {
         isRefreshing = false;

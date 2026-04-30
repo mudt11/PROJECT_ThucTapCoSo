@@ -59,7 +59,7 @@ export default function Header() {
             <button
               className="logout-from-dashboard"
               onClick={() => {
-                openModal("signin-admin");
+                router.push("/administrator/login");
               }}
             >
               Sign in

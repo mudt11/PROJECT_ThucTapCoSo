@@ -1,12 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const artistController = require("../controllers/artist.controller");
-const { protect, isAdmin } = require("../midlewares/auth.midleware");
+const { protect, authorizeRoles } = require("../midlewares/auth.midleware");
 
 // API tạo nghệ sĩ
 // POST /api/artists
 
-router.post("/", protect, isAdmin, artistController.createArtist);
+router.post(
+  "/",
+  protect,
+  authorizeRoles("admin", "super_admin"),
+  artistController.createArtist,
+);
 
 // API lấy tất cả nghệ sĩ
 // GET/api/artist

@@ -18,14 +18,11 @@ const protect = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = {
+      user_id: decoded.userId,
+      role: decoded.role,
+    };
 
-    req.user = await User.findByPk(decoded.userId, {
-      attributes: { exclude: ["password"] },
-    });
-
-    if (!req.user) {
-      return res.status(401).json({ message: "Người dùng không tồn tại!" });
-    }
     next();
   } catch (error) {
     console.error("Lỗi khi xác minh JWT:", error);
@@ -33,13 +30,27 @@ const protect = async (req, res, next) => {
   }
 };
 
-const isAdmin = async (req, res, next) => {
-  if (req.user && req.user.role === "admin") {
+const authorizeRoles = (...roles) => {
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({ message: "Can't access!" });
+    }
+
     next();
-  } else {
-    return res.status(403).json({ message: "Can't access!" });
-  }
+  };
 };
+
+// const isAdmin = async (req, res, next) => {
+//   if (req.user && req.user.role === "admin") {
+//     next();
+//   } else {
+//     return res.status(403).json({ message: "Can't access!" });
+//   }
+// };
 
 const protectAdmin = async (req, res, next) => {
   const token = req.cookies.adminAccessToken;
@@ -60,18 +71,4 @@ const protectAdmin = async (req, res, next) => {
   }
 };
 
-const authorizeRoles = (...roles) => {
-  return (req, res, next) => {
-    if (!req.user) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    if (!roles.includes(req.user.role)) {
-      return res.status(403).json({ message: "Can't access!" });
-    }
-
-    next();
-  };
-};
-
-module.exports = { protect, isAdmin, protectAdmin, authorizeRoles };
+module.exports = { protect, authorizeRoles };

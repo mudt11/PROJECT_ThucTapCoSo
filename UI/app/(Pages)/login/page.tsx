@@ -22,14 +22,6 @@ export default function SignInPage() {
     try {
       const data = await loginService(username, password);
       alert(data.message);
-
-      // if (!res.ok) {
-      //   alert(data.message || "Đăng nhập thất bại!");
-      //   return;
-      // }
-
-      // alert(data.message);
-
       await refreshUser();
       closeModal();
       router.refresh();

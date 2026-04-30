@@ -9,12 +9,12 @@ import SongFormModal from "../components/AdminPage/SongFormModal";
 import dynamic from "next/dynamic";
 
 // Dynamic import cho user
-const SignInPage = dynamic(() => import("@/app/(Pages)/sign-in/page"));
+const SignInPage = dynamic(() => import("@/app/(Pages)/login/page"));
 const RegisterPage = dynamic(() => import("@/app/(Pages)/register/page"));
 
 // Dynamic import cho admin
 const SignInAdminPage = dynamic(
-  () => import("@/app/(Pages)/administrator/authAdmin/sign-in/page"),
+  () => import("@/app/(Pages)/administrator/login/page"),
 );
 const RegisterAdminPage = dynamic(
   () => import("@/app/(Pages)/administrator/authAdmin/register/page"),
@@ -73,10 +73,10 @@ export function ModalProvider({ children }: { children: ReactNode }) {
         return <SignInPage />;
       case "register":
         return <RegisterPage />;
-      case "signin-admin":
-        return <SignInAdminPage />;
-      case "register-admin":
-        return <RegisterAdminPage />;
+      // case "signin-admin":
+      //   return <SignInAdminPage />;
+      // case "register-admin":
+      //   return <RegisterAdminPage />;
       case "add-new-admin":
         return <AddNewAdmin />;
       case "edit-user-profile":

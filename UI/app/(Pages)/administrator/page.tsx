@@ -12,7 +12,7 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (!loading && !admin) {
-      openModal("signin-admin");
+      router.push("/administrator/login");
     }
   }, [admin, loading]);
 

@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
-import { fetchCurrentAdmin } from "../utils/authApi";
+import { getCurrentAdminService } from "@/app/features/admin/service";
 
 interface Admin {
   user_id: number;
@@ -17,7 +17,7 @@ interface AdminUserContextType {
 }
 
 const AdminUserContext = createContext<AdminUserContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const AdminUserProvider = ({
@@ -30,16 +30,9 @@ export const AdminUserProvider = ({
 
   const checkAdmin = async () => {
     try {
-      const res = await fetchCurrentAdmin();
-
-      if (res.ok) {
-        const data = await res.json();
-        setAdmin(data.admin);
-      } else {
-        setAdmin(null);
-      }
+      const data = await getCurrentAdminService();
+      setAdmin(data.admin);
     } catch (err) {
-      console.error("Lỗi khi kiểm tra admin:", err);
       setAdmin(null);
     } finally {
       setLoading(false);
