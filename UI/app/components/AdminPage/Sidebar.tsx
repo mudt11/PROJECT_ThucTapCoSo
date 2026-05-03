@@ -8,6 +8,12 @@ export default function Sidebar() {
     <div className="sidebar">
       <nav>
         <Link
+          href="/administrator/Statistics"
+          className={pathname === "/administrator/Statistics" ? "active" : ""}
+        >
+          <i className="fa-solid fa-chart-line"></i> Statistics
+        </Link>
+        <Link
           href="/administrator/ManageUser"
           className={pathname === "/administrator/ManageUser" ? "active" : ""}
         >
@@ -25,12 +31,6 @@ export default function Sidebar() {
         >
           <i className="fa-solid fa-list"></i> Manage Song
         </Link>
-        {/* <Link
-          href="/administrator/Statistics"
-          className={pathname === "/administrator/Statistics" ? "active" : ""}
-        >
-          <i className="fa-solid fa-chart-line"></i> Statistics
-        </Link> */}
       </nav>
     </div>
   );
