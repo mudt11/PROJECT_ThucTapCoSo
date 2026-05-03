@@ -2,7 +2,7 @@ const favoriteService = require("../services/favorite.service");
 
 exports.toggleLikeSong = async (req, res, next) => {
   try {
-    const userId = req.user.user_id;
+    const userId = req.user.userId;
     const songId = Number(req.params.id);
 
     const result = await favoriteService.toggleLikeSong(userId, songId);
@@ -25,7 +25,7 @@ exports.toggleLikeSong = async (req, res, next) => {
 
 exports.getLikeStatus = async (req, res) => {
   try {
-    const userId = req.user.user_id;
+    const userId = req.user.userId;
     const songId = Number(req.params.id);
 
     const result = await favoriteService.getLikeStatus(userId, songId);
@@ -42,7 +42,7 @@ exports.getLikeStatus = async (req, res) => {
 
 exports.getMyFavoriteSongs = async (req, res) => {
   try {
-    const userId = req.user.user_id;
+    const userId = req.user.userId;
 
     // query params
     const page = Number(req.query.page) || 1;

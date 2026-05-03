@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const songController = require("../controllers/song.controller");
-const { protect, authorizeRoles } = require("../midlewares/auth.midleware");
+const { protect, protectAdmin, authorizeRoles } = require("../midlewares/auth.midleware");
 const upload = require("../midlewares/upload.midleware");
 
 // tìm kiếm bài hát
@@ -19,7 +19,7 @@ router.post("/:songId/view", songController.increaseView);
 // manage song
 router.get(
   "/all",
-  protect,
+  protectAdmin,
   authorizeRoles("admin", "super_admin"),
   songController.getAllSongs,
 );
@@ -28,14 +28,14 @@ router.get(
 // sửa
 router.put(
   "/:id",
-  protect,
+  protectAdmin,
   authorizeRoles("admin", "super_admin"),
   songController.updateSongById,
 );
 // xóa
 router.delete(
   "/:id",
-  protect,
+  protectAdmin,
   authorizeRoles("admin", "super_admin"),
   songController.deleteSongById,
 );
@@ -43,7 +43,7 @@ router.delete(
 // Ẩn hiện
 router.patch(
   "/:id/toggle-invisibility",
-  protect,
+  protectAdmin,
   authorizeRoles("admin", "super_admin"),
   songController.toggleSongVisibility,
 );
@@ -51,7 +51,7 @@ router.patch(
 // admin up nhạc
 router.post(
   "/",
-  protect,
+  protectAdmin,
   authorizeRoles("admin", "super_admin"),
   upload.fields([
     { name: "audioFile", maxCount: 1 },

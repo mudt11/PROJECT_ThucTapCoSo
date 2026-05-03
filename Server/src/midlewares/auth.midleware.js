@@ -4,24 +4,28 @@ require("dotenv").config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+// Middleware bảo vệ USER routes
+// Đọc cookie "accessToken", kiểm tra scope === "user"
 const protect = async (req, res, next) => {
   try {
-    let token =
+    const token =
       req.cookies?.accessToken ||
       (req.headers.authorization?.startsWith("Bearer")
         ? req.headers.authorization.split(" ")[1]
         : null);
-    // token = req.headers.authorization.split(" ")[1];
 
     if (!token) {
       return res.status(401).json({ message: "Không tìm thấy token!" });
     }
 
     const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = {
-      user_id: decoded.userId,
-      role: decoded.role,
-    };
+
+    // Chặn admin token dùng vào user routes
+    if (decoded.scope !== "user") {
+      return res.status(403).json({ message: "Không có quyền truy cập!" });
+    }
+
+    req.user = decoded;
 
     next();
   } catch (error) {
@@ -30,6 +34,7 @@ const protect = async (req, res, next) => {
   }
 };
 
+// Middleware kiểm tra role (dùng sau protect hoặc protectAdmin)
 const authorizeRoles = (...roles) => {
   return (req, res, next) => {
     if (!req.user) {
@@ -44,31 +49,36 @@ const authorizeRoles = (...roles) => {
   };
 };
 
-// const isAdmin = async (req, res, next) => {
-//   if (req.user && req.user.role === "admin") {
-//     next();
-//   } else {
-//     return res.status(403).json({ message: "Can't access!" });
-//   }
-// };
-
+// Middleware bảo vệ ADMIN routes
+// Đọc cookie "adminAccessToken", kiểm tra scope === "admin"
 const protectAdmin = async (req, res, next) => {
-  const token = req.cookies.adminAccessToken;
-  if (!token) return res.status(401).json({ message: "Unauthorized" });
-
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const token = req.cookies?.accessToken_admin;
+
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    // Chặn user token dùng vào admin routes
+    if (decoded.scope !== "admin") {
+      return res
+        .status(403)
+        .json({ message: "Token không hợp lệ cho admin!" });
+    }
 
     if (!["admin", "super_admin"].includes(decoded.role)) {
-      return res.status(403).json({ message: "Forbidden" });
+      return res.status(403).json({ message: "Không có quyền truy cập!" });
     }
 
     req.user = decoded;
 
     next();
   } catch (err) {
-    res.status(401).json({ message: "Invalid token" });
+    console.error("Lỗi xác minh admin token:", err);
+    return res.status(401).json({ message: "Invalid token" });
   }
 };
 
-module.exports = { protect, authorizeRoles };
+module.exports = { protect, authorizeRoles, protectAdmin };

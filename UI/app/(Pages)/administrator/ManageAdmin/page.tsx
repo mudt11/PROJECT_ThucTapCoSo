@@ -14,7 +14,6 @@ export default function ManageAdmin() {
   if (isLoading) return <p>Đang tải...</p>;
   if (error) return <p>Lỗi tải danh sách admin!</p>;
   if (!admins || admins.length === 0) return null;
-  console.log("admins: ", admins);
 
   return (
     <div id="admins" className={stylesUser.section}>

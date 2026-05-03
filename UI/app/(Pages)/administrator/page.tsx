@@ -1,28 +1,31 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useModal } from "@/app/context/ModalContext";
 import { useAdminUser } from "@/app/context/AdminUserContext";
 
 export default function AdminPage() {
   const { admin, loading } = useAdminUser();
-  const { openModal, closeModal } = useModal();
   const router = useRouter();
 
+  console.log("🔥 RENDER ADMIN PAGE:", { admin, loading });
+
   useEffect(() => {
-    if (!loading && !admin) {
-      router.push("/administrator/login");
+    console.log("⚡ EFFECT:", { admin, loading });
+
+    if (loading) {
+      console.log("➡️ STILL LOADING, WAITING...");
+      return;
     }
-  }, [admin, loading]);
 
-  if (loading) return null;
+    if (!admin) {
+      console.log("➡️ REDIRECT LOGIN");
+      router.replace("/administrator/login");
+    } else {
+      console.log("➡️ REDIRECT MANAGE USER");
+      router.replace("/administrator/ManageUser");
+    }
+  }, [admin, loading, router]);
 
-  return (
-    <h1
-      style={{ fontSize: "100px", padding: "150px 10px", textAlign: "center" }}
-    >
-      Welcome to Admin Page!
-    </h1>
-  );
+  return <div>Đang chuyển hướng...</div>;
 }

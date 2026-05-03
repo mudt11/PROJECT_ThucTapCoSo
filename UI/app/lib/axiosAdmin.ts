@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const http = axios.create({
+const httpAdmin = axios.create({
   baseURL:
     (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000") + "/api",
   withCredentials: true,
@@ -9,7 +9,7 @@ const http = axios.create({
   },
 });
 
-// xử lí REFRESH TOKEN
+// Xử lý tự động refresh adminAccessToken khi hết hạn
 let isRefreshing = false;
 let failedQueue: {
   resolve: (value?: any) => void;
@@ -24,8 +24,7 @@ const processQueue = (error: any) => {
   failedQueue = [];
 };
 
-// bắt response
-http.interceptors.response.use(
+httpAdmin.interceptors.response.use(
   (res) => res,
   async (error) => {
     const originalReq = error.config;
@@ -33,27 +32,27 @@ http.interceptors.response.use(
     if (
       error.response?.status === 401 &&
       !originalReq._retry &&
-      !originalReq.url.includes("/auth/refresh-token")
+      !originalReq.url.includes("/auth/admin/refresh-token")
     ) {
       // Nếu đang refresh → queue lại
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
-        }).then(() => http(originalReq));
+        }).then(() => httpAdmin(originalReq));
       }
 
       originalReq._retry = true;
       isRefreshing = true;
 
       try {
-        await http.post("/auth/refresh-token");
+        // Gọi đúng endpoint refresh của admin
+        await httpAdmin.post("/auth/admin/refresh-token");
 
         processQueue(null);
-        return http(originalReq);
+        return httpAdmin(originalReq);
       } catch (err) {
         processQueue(err);
-
-        // window.location.href = "/explore";
+        // window.location.href = "/administrator/login";
         return Promise.reject(err);
       } finally {
         isRefreshing = false;
@@ -64,4 +63,4 @@ http.interceptors.response.use(
   },
 );
 
-export default http;
+export default httpAdmin;

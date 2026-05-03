@@ -39,8 +39,7 @@ export interface User {
   email: string;
   role: string;
   actStatus: string;
-  isActive;
-  avatar: string;
+  isActive: boolean;
 }
 
 export interface UserProfileData {
@@ -50,4 +49,5 @@ export interface UserProfileData {
   dateOfBirth: string;
   phone: string;
   address: string;
+  // avatar: string;
 }

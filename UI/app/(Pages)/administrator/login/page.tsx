@@ -2,9 +2,10 @@
 
 import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
-import "@/app/styles/auth.css";
+import styles from "@/app/styles/Auth.module.css";
 import { useAdminUser } from "@/app/context/AdminUserContext";
 import { loginAdminService } from "@/app/features/admin/service";
+import Logo from "@/app/components/Logo";
 
 export default function SignInAdminPage() {
   const router = useRouter();
@@ -16,7 +17,6 @@ export default function SignInAdminPage() {
     e.preventDefault();
     try {
       const data = await loginAdminService(username, password);
-
       alert(data.message);
       await checkAdmin();
       router.replace("/administrator/ManageUser");
@@ -27,52 +27,65 @@ export default function SignInAdminPage() {
   };
 
   return (
-    <div className="auth-container sign-in-page">
-      <header>
-        <div className="logo">
-          <a>
-            <img src="/images/Logo/logo.png" alt="logo" />
-          </a>
-        </div>
-      </header>
+    <div className={`${styles.authWrapper} ${styles.forAdminPage}`}>
+      <div className={styles.authContainer}>
+        <header className={styles.header}>
+          <div className={styles.logo}>
+            <Logo size={80} />
+            {/* <a>
+              <img src="/images/Logo/logo.png" alt="logo" />
+            </a> */}
+          </div>
+        </header>
 
-      <h1>Welcome, administrator</h1>
-      <form onSubmit={handleSignIn}>
-        <label htmlFor="email" className="form_label">
-          Username
-        </label>
-        <input
-          id="username"
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <label htmlFor="password" className="form_label">
-          Password
-        </label>
-        <input
-          id="password"
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <div className="options">
-          <label className="switch">
-            <input type="checkbox" />
-            <span className="slider round"></span>
-          </label>
-          <label style={{ fontSize: "13px" }}>Remember me</label>
-        </div>
-        <button type="submit" className="submit">
-          Sign In
-        </button>
-      </form>
-      <div className="fogot-password">
-        <a href="#">Forgot your password?</a>
+        <h1 className={styles.title}>Welcome, administrator</h1>
+
+        <form onSubmit={handleSignIn} className={styles.form}>
+          <div className={styles.formField}>
+            <label htmlFor="username" className={styles.formLabel}>
+              Username
+            </label>
+            <input
+              id="username"
+              type="text"
+              className={styles.formInput}
+              placeholder="Enter your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className={styles.formField}>
+            <label htmlFor="password" className={styles.formLabel}>
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              className={styles.formInput}
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className={styles.optionsRow}>
+            <label className={styles.rememberMe}>
+              <input type="checkbox" name="remember" />
+              <span className={styles.rememberMeSpan}>Remember me</span>
+            </label>
+
+            <a href="#" className={styles.forgotPasswordLink}>
+              Forgot password?
+            </a>
+          </div>
+
+          <button type="submit" className={styles.submitButton}>
+            Sign In
+          </button>
+        </form>
       </div>
     </div>
   );

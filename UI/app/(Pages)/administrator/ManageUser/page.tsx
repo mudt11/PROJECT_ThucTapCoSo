@@ -13,7 +13,6 @@ export default function ManageUser() {
   if (error) return <p>Lỗi tải danh sách user!</p>;
   if (!users || users.length === 0) return null;
 
-  // console.log("users: ", users);
 
   return (
     <div id="users" className={styles.section}>
@@ -44,12 +43,12 @@ export default function ManageUser() {
               <div>
                 <span
                   className={
-                    user.activity_status === "online"
+                    user.actStatus === "online"
                       ? `${styles.status} ${styles.active}`
                       : `${styles.status} ${styles.inactive}`
                   }
                 >
-                  {user.activity_status}
+                  {user.actStatus}
                 </span>
               </div>
 
@@ -71,21 +70,6 @@ export default function ManageUser() {
             </div>
           ))}
 
-          <div className={styles.row}>
-            <div>0</div>
-            <div>Huỳnh Đình Thạch</div>
-            <div>dinhthach11@gmail.com</div>
-            <div>User</div>
-            <div>
-              <span className={`${styles.status} ${styles.inactive}`}>
-                offline
-              </span>
-            </div>
-            <div className={styles.rowOption}>
-              <button className={styles.edit}>Edit</button>
-              <button className={styles.delete}>Delete</button>
-            </div>
-          </div>
         </div>
       </div>
     </div>

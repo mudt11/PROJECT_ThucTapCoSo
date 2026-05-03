@@ -16,9 +16,6 @@ const RegisterPage = dynamic(() => import("@/app/(Pages)/register/page"));
 const SignInAdminPage = dynamic(
   () => import("@/app/(Pages)/administrator/login/page"),
 );
-const RegisterAdminPage = dynamic(
-  () => import("@/app/(Pages)/administrator/authAdmin/register/page"),
-);
 
 const AddNewAdmin = dynamic(
   () => import("@/app/components/AdminPage/AddAdmin"),

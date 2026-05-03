@@ -3,7 +3,11 @@ const router = express.Router();
 const userController = require("../controllers/user.controller");
 const upload = require("../midlewares/upload.midleware");
 
-const { protect, authorizeRoles } = require("../midlewares/auth.midleware");
+const {
+  protect,
+  protectAdmin,
+  authorizeRoles,
+} = require("../midlewares/auth.midleware");
 
 /* --- ROUTES FOR USER --- */
 
@@ -23,26 +27,24 @@ router.post("/change-password", protect, userController.changeUserPassword);
 
 router.get(
   "/admin/me",
-  protect,
-  authorizeRoles("admin", "super_admin"),
-  userController.getCurrentAdmin,
+  protectAdmin,
+  userController.getUserProfile,
 );
 
 // router.post("/:id/promote", protect, isAdmin, userController.promoteUser);
-
 // router.post("/:id/demote", protect, isAdmin, userController.demoteAdminToUser);
 
 // lấy danh sách user
 router.get(
   "/",
-  protect,
+  protectAdmin,
   authorizeRoles("admin", "super_admin"),
   userController.getAllUsers,
 );
 // lấy danh sách admin
 router.get(
   "/admins",
-  protect,
+  protectAdmin,
   authorizeRoles("admin", "super_admin"),
   userController.getAllAdmins,
 );
@@ -50,21 +52,21 @@ router.get(
 // Lấy thông tin user theo ID
 router.get(
   "/profile/:id",
-  protect,
+  protectAdmin,
   authorizeRoles("admin", "super_admin"),
   userController.getUserProfileByAdmin,
 );
 // Cập nhật thông tin user theo ID
 router.put(
   "/profile/:id",
-  protect,
+  protectAdmin,
   authorizeRoles("admin", "super_admin"),
   userController.updateUserById,
 );
 // Xóa user
 router.delete(
   "/:id",
-  protect,
+  protectAdmin,
   authorizeRoles("admin", "super_admin"),
   userController.deleteUserById,
 );
@@ -72,7 +74,7 @@ router.delete(
 // Thêm mới tài khoản admin, *** cần xem lại chức năng này, phải để super duyệt
 router.post(
   "/admin/new",
-  protect,
+  protectAdmin,
   authorizeRoles("admin", "super_admin"),
   userController.addNewAdmin,
 );
@@ -80,7 +82,7 @@ router.post(
 // Reset password
 router.put(
   "/:id/reset-password",
-  protect,
+  protectAdmin,
   authorizeRoles("admin", "super_admin"),
   userController.resetUserPassword,
 );

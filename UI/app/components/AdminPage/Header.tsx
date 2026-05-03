@@ -10,7 +10,6 @@ import "@/app/styles/AdminPage/ad-Header.css";
 import "@/app/styles/AdminPage/ad-Sidebar.css";
 
 export default function Header() {
-  const { openModal } = useModal();
   const { admin, setAdmin, loading } = useAdminUser();
   const router = useRouter();
 
@@ -18,10 +17,9 @@ export default function Header() {
 
   const handleLogout = async () => {
     try {
-      // Gọi API Logout đến backend
       await logoutAdmin();
       setAdmin(null);
-      router.replace("/administrator");
+      router.replace("/administrator/login");
     } catch (error) {
       console.error("Lỗi khi đăng xuất:", error);
       alert("Đăng xuất thất bại!");

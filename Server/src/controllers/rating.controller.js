@@ -3,7 +3,7 @@ const ratingService = require("../services/rating.service"); // Gá»i Service vÃ
 
 exports.rateSong = async (req, res) => {
   try {
-    const userId = req.user.user_id;
+    const userId = req.user.userId;
     const { songId, score } = req.body;
 
     if (score < 1 || score > 5) {
@@ -58,7 +58,7 @@ exports.getSongRatingSummary = async (req, res) => {
 
 exports.getMyRating = async (req, res) => {
   try {
-    const userId = req.user?.user_id;
+    const userId = req.user?.userId;
 
     if (!userId) {
       return res.status(401).json({

@@ -53,6 +53,9 @@ const loginUser = async (userData) => {
   const user = await User.findOne({ where: { username } });
   if (!user) throw new Error("Username hoặc mật khẩu không đúng");
 
+  //  chỉ người dùng có role là user mới được đăng nhập 
+  if(user.role !== "user") throw new Error("Tài khoản không có quyền đăng nhập");
+
   // so sánh password
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) throw new Error("Username hoặc mật khẩu không đúng");
@@ -62,6 +65,7 @@ const loginUser = async (userData) => {
     userId: user.user_id,
     role: user.role,
     username: user.username,
+    scope: "user",
   });
 
   // Lưu refresh token
@@ -121,7 +125,7 @@ const refreshToken = async (refreshTokenFromClient) => {
 
   // Check xong, cấp lại Access token
   const newAccessToken = jwt.sign(
-    { userId: user.user_id, email: user.email },
+    { userId: user.user_id, role: user.role, username: user.username, scope: "user" },
     JWT_SECRET,
     { expiresIn: "30m" },
   );
@@ -179,6 +183,8 @@ const loginAdmin = async ({ username, password }) => {
   const tokens = generateTokens({
     userId: user.user_id,
     role: user.role,
+    username: user.username,
+    scope: "admin",
   });
 
   await RefreshToken.create({

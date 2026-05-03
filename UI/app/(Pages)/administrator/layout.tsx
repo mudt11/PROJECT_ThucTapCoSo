@@ -1,7 +1,6 @@
 "use client";
 
 import "@/app/styles/AdminPage/Admin.css";
-import "@/app/styles/AdminPage/Dashboard.css";
 import Header from "@/app/components/AdminPage/Header";
 import { AdminUserProvider } from "@/app/context/AdminUserContext";
 

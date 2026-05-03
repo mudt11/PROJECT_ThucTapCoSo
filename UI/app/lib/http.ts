@@ -9,6 +9,8 @@ const http = axios.create({
   },
 });
 
+export default http;
+
 // xử lí REFRESH TOKEN
 let isRefreshing = false;
 let failedQueue: {
@@ -24,7 +26,6 @@ const processQueue = (error: any) => {
   failedQueue = [];
 };
 
-// bắt response
 http.interceptors.response.use(
   (res) => res,
   async (error) => {
@@ -33,9 +34,16 @@ http.interceptors.response.use(
     if (
       error.response?.status === 401 &&
       !originalReq._retry &&
-      !originalReq.url.includes("/auth/refresh-token")
+      !originalReq.url.includes("refresh-token")
     ) {
-      // Nếu đang refresh → queue lại
+      // lấy type (user | admin)
+      const authType = originalReq.headers["x-auth-type"] || "user";
+
+      const refreshEndpoint =
+        authType === "admin"
+          ? "/auth/admin/refresh-token"
+          : "/auth/refresh-token";
+
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
@@ -46,14 +54,16 @@ http.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await http.post("/auth/refresh-token");
+        await http.post(refreshEndpoint, null, {
+          headers: {
+            "x-auth-type": authType, //giữ context
+          },
+        });
 
         processQueue(null);
         return http(originalReq);
       } catch (err) {
         processQueue(err);
-
-        // window.location.href = "/explore";
         return Promise.reject(err);
       } finally {
         isRefreshing = false;
@@ -63,5 +73,3 @@ http.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-
-export default http;

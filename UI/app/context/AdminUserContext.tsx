@@ -1,17 +1,11 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
 import { getCurrentAdminService } from "@/app/features/admin/service";
-
-interface Admin {
-  user_id: number;
-  username: string;
-  email: string;
-  role: string;
-}
+import type { User } from "@/app/types/music";
 
 interface AdminUserContextType {
-  admin: Admin | null;
-  setAdmin: React.Dispatch<React.SetStateAction<Admin | null>>;
+  admin: User | null;
+  setAdmin: React.Dispatch<React.SetStateAction<User | null>>;
   loading: boolean;
   checkAdmin: () => Promise<void>;
 }
@@ -25,16 +19,21 @@ export const AdminUserProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [admin, setAdmin] = useState<Admin | null>(null);
+  const [admin, setAdmin] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   const checkAdmin = async () => {
+    console.log("🚀 checkAdmin START");
+    setLoading(true);
     try {
       const data = await getCurrentAdminService();
-      setAdmin(data.admin);
+      console.log("✅ API SUCCESS:", data);
+      setAdmin(data.data);
     } catch (err) {
+      console.log("❌ API ERROR:", err);
       setAdmin(null);
     } finally {
+      console.log("🏁 FINALLY - SET LOADING FALSE");
       setLoading(false);
     }
   };

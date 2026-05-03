@@ -107,7 +107,7 @@ const logout = async (req, res, next) => {
     });
 
     res.status(200).json({
-      message: "Log out successfully.",
+      message: "Logout successfully.",
     });
   } catch (error) {
     next(error);
@@ -121,14 +121,14 @@ const loginAdmin = async (req, res) => {
   try {
     const result = await authService.loginAdmin({ username, password });
 
-    res.cookie("accessToken", result.tokens.accessToken, {
+    res.cookie("accessToken_admin", result.tokens.accessToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
       maxAge: ACCESS_TOKEN_TTL,
     });
 
-    res.cookie("refreshToken", result.tokens.refreshToken, {
+    res.cookie("refreshToken_admin", result.tokens.refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
@@ -146,7 +146,7 @@ const loginAdmin = async (req, res) => {
 
 const logoutAdmin = async (req, res) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
+    const refreshToken = req.cookies.refreshToken_admin;
 
     // Xóa refresh token trong DB (nếu có)
     if (refreshToken) {
@@ -154,13 +154,13 @@ const logoutAdmin = async (req, res) => {
     }
 
     // Xóa cookie admin
-    res.clearCookie("accessToken", {
+    res.clearCookie("accessToken_admin", {
       httpOnly: true,
       secure: true,
       sameSite: "none",
     });
 
-    res.clearCookie("refreshToken", {
+    res.clearCookie("refreshToken_admin", {
       httpOnly: true,
       secure: true,
       sameSite: "none",
@@ -178,7 +178,7 @@ const logoutAdmin = async (req, res) => {
 
 const refreshAdminToken = async (req, res) => {
   try {
-    const refreshToken = req.cookies?.refreshToken;
+    const refreshToken = req.cookies?.refreshToken_admin;
 
     if (!refreshToken) {
       return res.status(401).json({
@@ -188,11 +188,11 @@ const refreshAdminToken = async (req, res) => {
 
     const result = await authService.refreshAdminToken(refreshToken);
 
-    res.cookie("accessToken", result.accessToken, {
+    res.cookie("accessToken_admin", result.accessToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: 30 * 60 * 1000, // 30 phút
+      maxAge: 30 * 60 * 1000,
     });
 
     return res.status(200).json({

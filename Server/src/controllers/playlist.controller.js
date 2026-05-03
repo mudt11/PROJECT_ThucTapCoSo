@@ -2,7 +2,7 @@ const playlistService = require("../services/playlist.service");
 
 const createPlaylist = async (req, res, next) => {
   try {
-    const userId = req.user.user_id; // Lay ID nguoi dung tu token
+    const userId = req.user.userId; // Lay ID nguoi dung tu token
     const playlistData = req.body;
 
     const newPlaylist = await playlistService.createPlaylist(
@@ -20,7 +20,7 @@ const createPlaylist = async (req, res, next) => {
 
 const getMyPlaylists = async (req, res, next) => {
   try {
-    const userId = req.user.user_id;
+    const userId = req.user.userId;
     const playlists = await playlistService.getMyPlaylists(userId);
 
     res.status(200).json({ data: playlists });
@@ -31,7 +31,7 @@ const getMyPlaylists = async (req, res, next) => {
 
 const addSongToPlaylist = async (req, res, next) => {
   try {
-    const userId = req.user.user_id;
+    const userId = req.user.userId;
     const { id } = req.params; // ID Playlist
     const { songId } = req.body; // ID bai hat muon them
 
@@ -44,7 +44,7 @@ const addSongToPlaylist = async (req, res, next) => {
 
 const removeSongFromPlaylist = async (req, res, next) => {
   try {
-    const userId = req.user.user_id;
+    const userId = req.user.userId;
     const { id, songId } = req.params;
 
     const result = await playlistService.removeSongFromPlaylist(
@@ -60,7 +60,7 @@ const removeSongFromPlaylist = async (req, res, next) => {
 
 const deletePlaylist = async (req, res, next) => {
   try {
-    const userId = req.user.user_id;
+    const userId = req.user.userId;
     const { id } = req.params;
 
     const result = await playlistService.deletePlaylist(userId, id);

@@ -2,11 +2,7 @@ const express = require("express");
 const router = express.Router();
 const ratingController = require("../controllers/rating.controller");
 
-const {
-  protect,
-  isAdmin,
-  protectAdmin,
-} = require("../midlewares/auth.midleware");
+const { protect } = require("../midlewares/auth.midleware");
 
 // User rating bài hát
 router.post("/rate", protect, ratingController.rateSong);

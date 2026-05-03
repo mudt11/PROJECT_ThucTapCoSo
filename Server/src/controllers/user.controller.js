@@ -13,10 +13,11 @@ cloudinary.config({
 
 const getUserProfile = async (req, res, next) => {
   try {
-    const userId = req.user.user_id;
+    const userId = req.user.userId;
     const user = await userService.getUserProfile(userId);
 
     res.status(200).json({
+      message: "Lấy thông tin user thành công",
       data: user,
     });
   } catch (error) {
@@ -26,7 +27,7 @@ const getUserProfile = async (req, res, next) => {
 
 const updateUserProfile = async (req, res, next) => {
   try {
-    const userId = req.user.user_id;
+    const userId = req.user.userId;
     const updateData = req.body;
     const updatedUser = await userService.updateUserProfile(userId, updateData);
 
@@ -54,7 +55,7 @@ const uploadAvatar = async (req, res, next) => {
       fs.unlinkSync(req.file.path);
     }
 
-    const userId = req.user.user_id;
+    const userId = req.user.userId;
     const avatarUrl = result.secure_url;
 
     await userService.updateUserAvatar(userId, avatarUrl);
@@ -74,7 +75,7 @@ const uploadAvatar = async (req, res, next) => {
 
 const changeUserPassword = async (req, res, next) => {
   try {
-    const userId = req.user.user_id;
+    const userId = req.user.userId;
     const { oldPassword, newPassword } = req.body;
 
     if (!oldPassword || !newPassword) {
@@ -94,16 +95,10 @@ const changeUserPassword = async (req, res, next) => {
 
 /* Controller for Admin */
 
-const getCurrentAdmin = async (req, res) => {
-  const adminId = req.user.user_id;
-  const admin = await userService.getCurrentAdmin(adminId);
-  res.json({ admin });
-};
-
 const promoteUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const requesterId = req.user.user_id;
+    const requesterId = req.user.userId;
 
     const updateUser = await userService.promoteUserToAdmin(id, requesterId);
 
@@ -119,7 +114,7 @@ const promoteUser = async (req, res) => {
 const demoteAdminToUser = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const requesterId = req.user.user_id;
+    const requesterId = req.user.userId;
 
     const result = await userService.demoteAdminToUser(id, requesterId);
     res.status(200).json({
@@ -265,7 +260,6 @@ module.exports = {
   deleteUserById,
   demoteAdminToUser,
   resetUserPassword,
-  getCurrentAdmin,
   getUserProfileByAdmin,
   getAllAdmins,
   addNewAdmin,

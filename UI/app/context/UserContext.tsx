@@ -15,13 +15,13 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const refreshUser = async () => {
     setLoading(true);
     try {
       const data = await getCurrentUserService();
-      setUser(data);
+      setUser(data.data);
     } catch {
       setUser(null);
     } finally {

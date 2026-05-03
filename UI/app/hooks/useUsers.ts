@@ -18,7 +18,7 @@ const fetcher = async (): Promise<User[]> => {
     username: item.username,
     email: item.email,
     role: item.role,
-    activity_status: item.activity_status,
+    actStatus: item.activity_status,
   }));
 };
 
