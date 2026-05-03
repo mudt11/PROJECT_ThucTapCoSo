@@ -1,28 +1,22 @@
 "use client";
 import { useState, useEffect } from "react";
-import {
-  addNewProfile,
-  updateProfile,
-  adminUpdateUserProfile,
-} from "../utils/accountApi";
-import { fetchCurrentUser } from "../utils/authApi";
+import { updateProfile, adminUpdateUserProfile } from "../utils/accountApi";
+import { getCurrentUserService } from "../features/user/service";
 import { UserProfileData } from "../types/music";
 
 export function useProfileForm(
   initialData: UserProfileData,
   mode: "user" | "admin" = "user",
-  userId?: number
+  userId?: number,
 ) {
-  const [formData, setFormData] = useState(
-    initialData || {
-      firstName: "",
-      lastName: "",
-      gender: "",
-      dateOfBirth: "",
-      phone: "",
-      address: "",
-    }
-  );
+  const [formData, setFormData] = useState<UserProfileData>({
+    firstName: "",
+    lastName: "",
+    gender: "",
+    dateOfBirth: "",
+    phone: "",
+    address: "",
+  });
 
   const [note, setNote] = useState("*Vui lòng nhập đầy đủ thông tin");
   const [existingProfile, setExistingProfile] = useState(false);
@@ -37,35 +31,35 @@ export function useProfileForm(
 
     const fetchProfile = async () => {
       try {
-        const res = await fetchCurrentUser();
-        const result = await res.json();
+        const data = await getCurrentUserService();
 
-        if (!res.ok || !result?.data) {
+        if (!data?.data) {
           setExistingProfile(false);
           return;
         }
 
-        const u = result.data;
+        const profile = data.data;
 
         setFormData({
-          firstName: u.first_name || "",
-          lastName: u.last_name || "",
-          gender: u.gender || "",
-          dateOfBirth: u.birthday || "",
-          phone: u.phone_number || "",
-          address: u.address || "",
+          firstName: profile.first_name || "",
+          lastName: profile.last_name || "",
+          gender: profile.gender || "",
+          dateOfBirth: profile.birthday || "",
+          phone: profile.phone_number || "",
+          address: profile.address || "",
         });
 
         setExistingProfile(true);
       } catch (err) {
-        console.error(err);
+        console.error("Fetch profile error:", err);
+        setExistingProfile(false);
       }
     };
     fetchProfile();
-  }, []);
+  }, [initialData]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -87,23 +81,30 @@ export function useProfileForm(
     e.preventDefault();
     setNote("");
 
-    // Gọi API
-    let res;
-    if (mode === "admin" && userId) {
-      // ADMIN sửa USER
-      res = await adminUpdateUserProfile(userId, formData);
-    } else {
-      res = await updateProfile(formData);
+    try {
+      // Gọi API
+      let res;
+      if (mode === "admin" && userId) {
+        // ADMIN sửa USER
+        res = await adminUpdateUserProfile(userId, formData);
+      } else {
+        res = await updateProfile(formData);
+      }
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setNote(data.message || "Có lỗi xảy ra khi gửi thông tin.");
+        return;
+      }
+
+      setNote(data.message || "Đã gửi thông tin thành công!");
+    } catch (err: any) {
+      console.error("Submit error:", err);
+      setNote(
+        err?.response?.data?.message || "Có lỗi xảy ra khi gửi thông tin.",
+      );
     }
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      setNote(data.message || "Có lỗi xảy ra khi gửi thông tin.");
-      return;
-    }
-
-    setNote(data.message || "Đã gửi thông tin thành công!");
   };
 
   return {

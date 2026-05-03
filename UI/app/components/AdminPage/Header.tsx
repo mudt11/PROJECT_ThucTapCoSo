@@ -1,13 +1,11 @@
 "use client";
-// import { useModal } from "@/app/context/ModalContext";
-import { useRouter } from "next/navigation";
-import { useAdminUser } from "@/app/context/AdminUserContext";
-import { logoutAdmin } from "@/app/utils/authApi";
-import { useModal } from "@/app/context/ModalContext";
-import Sidebar from "@/app/components/AdminPage/Sidebar";
 
+import { useRouter } from "next/navigation";
 import "@/app/styles/AdminPage/ad-Header.css";
-import "@/app/styles/AdminPage/ad-Sidebar.css";
+import { useAdminUser } from "@/app/context/AdminUserContext";
+// import { logoutAdmin } from "@/app/utils/authApi";
+import { logoutAdminService } from "@/app/features/admin/service";
+import Sidebar from "@/app/components/AdminPage/Sidebar";
 
 export default function Header() {
   const { admin, setAdmin, loading } = useAdminUser();
@@ -17,7 +15,7 @@ export default function Header() {
 
   const handleLogout = async () => {
     try {
-      await logoutAdmin();
+      await logoutAdminService();
       setAdmin(null);
       router.replace("/administrator/login");
     } catch (error) {

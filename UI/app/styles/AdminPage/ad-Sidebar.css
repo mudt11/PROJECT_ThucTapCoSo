@@ -19,13 +19,13 @@
 .sidebar a {
   display: flex;
   align-items: center;
-  color: #333;
-  font-weight: 550;
+  color: var(--color-text);
   text-decoration: none;
   padding: 8px 20px;
-  border-radius: 6px;
   height: 45px;
-  transition: background 0.25s, color 0.25s;
+  transition:
+    background 0.25s,
+    color 0.25s;
 }
 
 .sidebar a i {
@@ -34,11 +34,11 @@
 
 /* Hover và active */
 .sidebar a:hover {
-  /* color: rgb(108, 176, 191); */
   color: var(--button);
 }
 
 .sidebar a.active {
-  background: rgba(252, 99, 132, 0.15);
+  border-bottom: 2px solid var(--button);
   color: var(--button);
+  font-weight: 600;
 }

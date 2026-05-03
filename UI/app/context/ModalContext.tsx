@@ -70,10 +70,6 @@ export function ModalProvider({ children }: { children: ReactNode }) {
         return <SignInPage />;
       case "register":
         return <RegisterPage />;
-      // case "signin-admin":
-      //   return <SignInAdminPage />;
-      // case "register-admin":
-      //   return <RegisterAdminPage />;
       case "add-new-admin":
         return <AddNewAdmin />;
       case "edit-user-profile":

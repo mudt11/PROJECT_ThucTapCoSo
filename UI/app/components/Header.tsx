@@ -13,8 +13,7 @@ import { useLogout } from "../features/auth/useLogout";
 export default function Header() {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const { openModal } = useModal();
-  const { user, loading, setUser } = useUser();
-  const router = useRouter();
+  const { user, loading } = useUser();
   const { logout } = useLogout();
 
   return (

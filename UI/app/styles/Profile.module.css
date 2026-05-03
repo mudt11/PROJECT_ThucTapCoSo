@@ -1,12 +1,13 @@
 .profileCard {
-  background-color: #212121;
-  border-radius: 16px;
+  background-color: var(--tt-surface);
+  border-radius: 20px;
   padding: 2rem 2.5rem;
   width: 500px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  margin: 0 auto;
+  /* margin: 0 auto; */
   display: flex;
   flex-direction: column;
+  color: var(--color-text);
 }
 
 /* TITLE */
@@ -17,8 +18,7 @@
 
 .lead {
   margin-bottom: 18px;
-  color: #9fb7c3;
-  font-size: 13px;
+  font-size: 50px;
 }
 
 /* FORM */
@@ -36,13 +36,13 @@
 
 .label {
   font-size: 13px;
-  color: #a8c0c9;
+  color: var(--color-text-secondary);
 }
 
 /* INPUT */
 .input {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background-color: var(--tt-surface);
+  border: 1px solid var(--tt-border);
   color: var(--text);
   padding: 10px 12px;
   border-radius: 8px;
@@ -51,8 +51,10 @@
 }
 
 .input:focus {
-  box-shadow: 0 0 0 4px rgba(252, 107, 143, 0.15);
-  border-color: var(--button);
+  outline: none;
+  border-color: var(--tt-orange);
+  box-shadow: 0 0 0 4px var(--tt-orange-pale);
+  background-color: var(--tt-surface);
 }
 
 .textarea {
@@ -103,13 +105,13 @@
 
 .secondary {
   background: transparent;
-  color: white;
+  color: var(--color-text-secondary);
   border: 1px solid var(--button);
 }
 
 .note {
   font-size: 12px;
-  color: #8fa6b1;
+  color: var(--color-text-secondary);
 }
 
 /* RADIO */
@@ -134,7 +136,9 @@
 
 .radio:checked {
   background: var(--button);
-  border-color: var(--button);
+  /* border-color: var(--button); */
+  border: none;
+  box-shadow: 0 0 0 2px var(--tt-orange-light);
 }
 
 /* RESPONSIVE */

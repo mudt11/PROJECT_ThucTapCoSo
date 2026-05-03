@@ -35,47 +35,47 @@ export const URL =
 // }
 
 // API xác thực user vừa đăng nhập và lưu thông tin đăng nhập
-export async function fetchCurrentUser() {
-  return await userFetch(URL + "/users/me");
-}
+// export async function fetchCurrentUser() {
+//   return await userFetch(URL + "/users/me");
+// }
 
 // ADMINISTRATOR PAGE
 
 // Đăng kí
-export async function registerAdmin(
-  username: string,
-  email: string,
-  password: string,
-) {
-  return await fetch(URL + "/auth-admin/register-admin", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, email, password }),
-  });
-}
+// export async function registerAdmin(
+//   username: string,
+//   email: string,
+//   password: string,
+// ) {
+//   return await fetch(URL + "/auth-admin/register-admin", {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify({ username, email, password }),
+//   });
+// }
 
 // Đăng nhập
-export async function loginAdmin(username: string, password: string) {
-  return fetch(URL + "/auth/admin/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
-    credentials: "include",
-  });
-}
+// export async function loginAdmin(username: string, password: string) {
+//   return fetch(URL + "/auth/admin/login", {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify({ username, password }),
+//     credentials: "include",
+//   });
+// }
 
 // Đăng xuất
-export async function logoutAdmin() {
-  return await fetch(URL + "/auth/admin/logout", {
-    method: "POST",
-    credentials: "include",
-  });
-}
+// export async function logoutAdmin() {
+//   return await fetch(URL + "/auth/admin/logout", {
+//     method: "POST",
+//     credentials: "include",
+//   });
+// }
 
 // API Xác thực admin vừa đăng nhập và lưu thông tin đăng nhập
-export async function fetchCurrentAdmin() {
-  return await adminFetch(URL + "/users/admin/me");
-}
+// export async function fetchCurrentAdmin() {
+//   return await adminFetch(URL + "/users/admin/me");
+// }
 
 // Accept role admin or reject
 export async function AcceptOrReject(id: number, status: string) {
