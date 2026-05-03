@@ -3,7 +3,7 @@
 import "@/app/styles/myplaylists.css";
 import MyPlaylistGrid from "../../../components/MusicContainer/MyPlaylistGrid";
 
-export default function MyPlaylistsPage() {
+export default function PlaylistsPage() {
   return (
     <div id="playlist_menu">
       <div className="main-header">

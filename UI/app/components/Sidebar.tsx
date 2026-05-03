@@ -18,36 +18,36 @@ export default function Sidebar() {
     <div className={styles.menu}>
       <nav className={styles.nav}>
         <Link
-          href="/explore"
+          href="/Home"
           className={`${styles.link} ${
-            pathname === "/explore" ? styles.active : ""
+            pathname === "/Home" ? styles.active : ""
           }`}
         >
           <RiHome5Fill className={styles.icon} /> Home
         </Link>
 
         <Link
-          href="/library"
+          href="/Library"
           className={`${styles.link} ${
-            pathname.startsWith("/library") ? styles.active : ""
+            pathname.startsWith("/Library") ? styles.active : ""
           }`}
         >
           <BsHeart className={styles.icon} /> Likes
         </Link>
 
         <Link
-          href="/myplaylists"
+          href="/Playlist"
           className={`${styles.link} ${
-            pathname.startsWith("/myplaylists") ? styles.active : ""
+            pathname.startsWith("/Playlist") ? styles.active : ""
           }`}
         >
           <PiPlaylist className={styles.icon} /> Playlist
         </Link>
 
         <Link
-          href="#"
+          href="/Following"
           className={`${styles.link} ${
-            pathname.startsWith("/following") ? styles.active : ""
+            pathname.startsWith("/Following") ? styles.active : ""
           }`}
         >
           <HiOutlineUser className={styles.icon} /> Following
