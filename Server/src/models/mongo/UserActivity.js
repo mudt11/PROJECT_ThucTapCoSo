@@ -6,26 +6,27 @@ const UserActivitySchema = new mongoose.Schema({
 
   session_id: { type: String, required: true, index: true },
 
-  event_type: {
+  // Dữ liệu tóm tắt phiên nghe nhạc
+  total_listened_time: { type: Number, default: 0 }, // Tổng số giây đã nghe
+  song_duration: { type: Number, required: true }, // Độ dài bài hát
+  max_position_reached: { type: Number, default: 0 }, // Giây xa nhất mà user nghe tới
+
+  // Hành vi tương tác
+  play_pause_count: { type: Number, default: 0 }, // Số lần bấm dừng/phát
+  seek_count: { type: Number, default: 0 }, // Số lần tua nhạc
+
+  // Lý do kết thúc session này
+  exit_reason: {
     type: String,
-    enum: ["start", "pause", "resume", "progress", "seek", "end"],
+    enum: ["ended", "skipped", "tab_closed"],
     required: true,
   },
-
-  listened_delta: { type: Number, default: 0 },
-  position: { type: Number, required: true },
-  song_duration: { type: Number, required: true },
 
   source: {
     type: String,
     enum: ["search", "playlist", "recommendation", "radio"],
   },
-
   createdAt: { type: Date, default: Date.now, index: true },
 });
-
-UserActivitySchema.index({ user_id: 1, createdAt: -1 });
-UserActivitySchema.index({ song_id: 1, createdAt: -1 });
-UserActivitySchema.index({ session_id: 1 });
 
 module.exports = mongoose.model("UserActivity", UserActivitySchema);
