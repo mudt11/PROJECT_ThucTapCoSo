@@ -1,40 +1,31 @@
 const mongoose = require("mongoose");
 
-const UserActivitySchema = new mongoose.Schema(
-  {
-    user_id: { type: Number, required: true, index: true }, // Map với MySQL user_id
-    song_id: { type: Number, required: true, index: true }, // Map với MySQL song
+const UserActivitySchema = new mongoose.Schema({
+  user_id: { type: Number, required: true, index: true },
+  song_id: { type: Number, required: true, index: true },
 
-    action: {
-      type: String,
-      enum: ["play", "skip", "complete"],
-      required: true,
-    },
+  session_id: { type: String, required: true, index: true },
 
-    duration_listened: {
-      type: Number,
-      required: true,
-      comment: "Số giây thực tế user đã nghe",
-    },
-
-    completion_rate: {
-      type: Number,
-      min: 0,
-      max: 1,
-      comment: "Tỷ lệ hoàn thành = duration_listened / song_duration",
-    },
-
-    is_view: {
-      type: Boolean,
-      default: false,
-      comment: "Đánh dấu là 1 lượt nghe hợp lệ (ví dụ: >= 20s)",
-    },
-
-    timestamp: { type: Date, default: Date.now, index: true },
+  event_type: {
+    type: String,
+    enum: ["start", "pause", "resume", "progress", "seek", "end"],
+    required: true,
   },
-  {
-    timestamps: { createdAt: true, updatedAt: false },
+
+  listened_delta: { type: Number, default: 0 },
+  position: { type: Number, required: true },
+  song_duration: { type: Number, required: true },
+
+  source: {
+    type: String,
+    enum: ["search", "playlist", "recommendation", "radio"],
   },
-);
+
+  createdAt: { type: Date, default: Date.now, index: true },
+});
+
+UserActivitySchema.index({ user_id: 1, createdAt: -1 });
+UserActivitySchema.index({ song_id: 1, createdAt: -1 });
+UserActivitySchema.index({ session_id: 1 });
 
 module.exports = mongoose.model("UserActivity", UserActivitySchema);
