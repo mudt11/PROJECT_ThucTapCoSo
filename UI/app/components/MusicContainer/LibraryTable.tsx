@@ -8,7 +8,7 @@ import { useLikeContext } from "@/app/context/LikeContext";
 import type { Track } from "@/app/types/music";
 
 const LibraryTable: React.FC = () => {
-  const { setPlaylist, playlist, currentIndex } = usePlayer();
+  const { setPlaylist, currentTrack } = usePlayer();
   const { likedSongsList, fetchLikedSongsList } = useLikeContext();
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const LibraryTable: React.FC = () => {
   return (
     <div id="table_row">
       {likedSongsList.map((song: Track, index: number) => {
-        const isActive = playlist[currentIndex]?.trackId === song.trackId;
+        const isActive = currentTrack?.trackId === song.trackId;
 
         return (
           <div

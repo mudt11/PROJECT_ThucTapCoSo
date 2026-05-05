@@ -1,17 +1,15 @@
-import React, { useRef } from "react";
 import { useState, useEffect } from "react";
 import { FaPlay, FaPause } from "react-icons/fa";
 
 import { fetchDailySongs } from "@/app/utils/songApi";
 import type { Track } from "@/app/types/music";
 import { usePlayer } from "@/app/context/PlayerContext";
-import HorizontalScroll from "@/app/components/HorizontalScroll";
 
 const TrackSection = () => {
   const [tracks, setTracks] = useState<Track[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const { setPlaylist, currentIndex, isPlaying, togglePlay } = usePlayer();
+  const { setPlaylist, isPlaying, togglePlay, currentTrack } = usePlayer();
   const [hasMore, setHasMore] = useState(true);
 
   const loadSongs = async () => {
@@ -20,6 +18,7 @@ const TrackSection = () => {
     setLoading(true);
     try {
       const res = await fetchDailySongs(20, page);
+      // console.log("DEBUG FETCHED: ", res);
 
       const newSongs = res.songs;
       const total = res.total;
@@ -50,6 +49,7 @@ const TrackSection = () => {
     loadSongs();
   }, []);
 
+  // console.log("DEBUG RENDER TRACKS: ", tracks);
 
   if (!tracks.length && loading) return <div>Loading...</div>;
   if (!tracks.length) return <div>No songs found</div>;
@@ -71,9 +71,9 @@ const TrackSection = () => {
       {tracks.map((song: Track, index) => (
         <div
           key={song.trackId}
-          className={`list-item ${currentIndex === index ? "playing" : ""}`}
+          className={`list-item ${currentTrack?.trackId === song.trackId ? "playing" : ""}`}
           onClick={() => {
-            if (currentIndex === index) {
+            if (currentTrack?.trackId === song.trackId) {
               // Nếu đang là bài hiện tại → toggle play/pause
               togglePlay();
             } else {
@@ -95,14 +95,18 @@ const TrackSection = () => {
             onClick={(e) => {
               e.stopPropagation();
 
-              if (currentIndex === index) {
+              if (currentTrack?.trackId === song.trackId) {
                 togglePlay();
               } else {
                 setPlaylist(tracks, index);
               }
             }}
           >
-            {currentIndex === index && isPlaying ? <FaPause /> : <FaPlay />}
+            {currentTrack?.trackId === song.trackId && isPlaying ? (
+              <FaPause />
+            ) : (
+              <FaPlay />
+            )}
           </div>
         </div>
       ))}

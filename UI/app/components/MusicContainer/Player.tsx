@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef, Suspense } from "react";
+import React, { useEffect, useRef, useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 // import styles from "@/app/styles/PlayerBar.module.css";
@@ -33,22 +33,25 @@ const mockQueue = [
 
 const PlayerContent: React.FC = () => {
   const {
-    playlist,
-    play,
-    pause,
-    togglePlay,
+    currentTrack,
     isPlaying,
-    currentIndex,
-    setIndex,
+    next,
+    prev,
+    togglePlay,
+    audioState,
+    seek,
+    setVolume,
   } = usePlayer();
 
   const { likedMap, toggleLike, fetchLikeStatus } = useLikeContext();
-  const [volume, setVolume] = useState(50);
-  const [progress, setProgress] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
+
+  // UI state (không chạm trực tiếp audio)
+  const [volumeUI, setVolumeUI] = useState(50); // 0..100
   const [isMuted, setIsMuted] = useState(false);
+  const [progress, setProgress] = useState(0); // %
   const [showUserMenu, setShowUserMenu] = useState(false);
+
+  // tracking view
   const viewedRef = useRef(false);
   const trackIdRef = useRef<number | null>(null);
   const listenedTimeRef = useRef(0);
@@ -59,21 +62,25 @@ const PlayerContent: React.FC = () => {
   const searchParams = useSearchParams();
 
   // Lấy bài hiện tại
-  const currentSong = playlist[currentIndex];
+  const currentSong = currentTrack;
 
   // Lấy trạng thái like của bài hát hiện tại
-  const liked = likedMap[currentSong?.trackId] || false;
+  const liked = currentSong ? likedMap[currentSong.trackId] || false : false;
 
+  // ===== Like status =====
   useEffect(() => {
     if (currentSong?.trackId) {
       fetchLikeStatus(currentSong.trackId);
     }
-  }, [currentSong?.trackId]);
+  }, [currentSong?.trackId, fetchLikeStatus]);
 
+  // ===== Sync URL + reset tracking =====
   useEffect(() => {
     if (!currentSong?.trackId) return;
 
-    // reset toàn bộ tracking
+    const currentTrackParam = searchParams.get("track");
+    if (currentTrackParam === String(currentSong.trackId)) return;
+
     viewedRef.current = false;
     listenedTimeRef.current = 0;
     lastTimeRef.current = 0;
@@ -82,107 +89,78 @@ const PlayerContent: React.FC = () => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("track", String(currentSong.trackId));
 
-    router.replace(`${pathname}?${params.toString()}`, {
-      scroll: false,
-    });
-  }, [currentIndex]);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [currentSong?.trackId, pathname, router]);
 
-  // Theo dõi tiến trình phát
+  // ===== Progress + view tracking (dựa trên audioState từ context) =====
   useEffect(() => {
-    const audio = (window as any)._audioRef as HTMLAudioElement;
-    // console.log("DEBUG audio ref:", audio);
-    if (!audio) return;
+    const { currentTime, duration } = audioState;
+    if (!duration) return;
 
-    const updateProgress = () => {
-      if (!audio.duration) return;
+    // progress UI
+    setProgress((currentTime / duration) * 100);
 
-      const current = audio.currentTime;
-      const delta = current - lastTimeRef.current;
+    // tính thời gian nghe thực (loại trừ seek lớn)
+    const delta = currentTime - lastTimeRef.current;
+    if (delta > 0 && delta < 2) {
+      listenedTimeRef.current += delta;
+    }
+    lastTimeRef.current = currentTime;
 
-      setProgress((current / audio.duration) * 100);
-      setCurrentTime(current);
-      setDuration(audio.duration);
+    // tăng view khi nghe >= 20s
+    if (
+      listenedTimeRef.current >= 20 &&
+      !viewedRef.current &&
+      trackIdRef.current
+    ) {
+      increaseSongView(trackIdRef.current);
+      viewedRef.current = true;
+    }
+  }, [audioState]);
 
-      // nếu user không tua (delta hợp lý)
-      if (delta > 0 && delta < 2) {
-        listenedTimeRef.current += delta;
-      }
-
-      lastTimeRef.current = current;
-
-      if (
-        listenedTimeRef.current >= 20 &&
-        !viewedRef.current &&
-        trackIdRef.current
-      ) {
-        increaseSongView(trackIdRef.current);
-        viewedRef.current = true;
-      }
-    };
-
-    audio.addEventListener("timeupdate", updateProgress);
-    audio.addEventListener("loadedmetadata", updateProgress);
-
-    return () => {
-      audio.removeEventListener("timeupdate", updateProgress);
-      audio.removeEventListener("loadedmetadata", updateProgress);
-    };
-  }, [currentIndex]);
-
+  // ===== Seek =====
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const audio = (window as any)._audioRef as HTMLAudioElement;
-    if (!audio || !duration) return;
+    const prog = Number(e.target.value); // 0..100
+    const { duration } = audioState;
+    if (!duration) return;
 
-    const newProgress = Number(e.target.value);
-    const newTime = (newProgress / 100) * duration;
+    const newTime = (prog / 100) * duration;
 
-    setProgress(newProgress);
-    setCurrentTime(newTime);
-    audio.currentTime = newTime;
+    setProgress(prog);
+    seek(newTime);
   };
 
-  // Xử lý next / prev
-  const handleNext = () => {
-    if (playlist.length > 0) {
-      setIndex((currentIndex + 1) % playlist.length);
-    }
-  };
-
-  const handlePrev = () => {
-    if (playlist.length > 0) {
-      setIndex((currentIndex - 1 + playlist.length) % playlist.length);
-    }
-  };
-
-  // Khi kéo thanh volume
-  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // ===== Volume =====
+  const handleVolumeChange = (e) => {
     const newVolume = Number(e.target.value);
-    setVolume(newVolume);
-    const audio = (window as any)._audioRef as HTMLAudioElement;
-    if (audio) {
-      audio.volume = newVolume / 100;
-      setIsMuted(audio.volume === 0);
-    }
+    setVolumeUI(newVolume);
+
+    const vol = newVolume / 100;
+    setVolume(vol);
+    setIsMuted(vol === 0);
   };
 
   // Khi click icon volume
   const toggleMute = () => {
-    const audio = (window as any)._audioRef as HTMLAudioElement;
-    if (!audio) return;
-
     if (isMuted) {
       // Bật lại âm thanh
-      audio.volume = volume / 100;
+      const vol = volumeUI / 100 || 0.5;
+      setVolume(vol);
       setIsMuted(false);
     } else {
-      // Tắt âm thanh
-      audio.volume = 0;
+      setVolume(0);
       setIsMuted(true);
     }
   };
 
+  // Xử lý next / prev
+  const handleNext = () => next();
+  const handlePrev = () => prev();
+
   // format theo thời gian
   const formatTime = (time: number) => {
+    if (!time || isNaN(time)) return "0:00";
+
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
@@ -190,10 +168,13 @@ const PlayerContent: React.FC = () => {
 
   // icon thay đổi theo trạng thái âm lượng
   const getVolumeIcon = () => {
-    if (isMuted || volume === 0) return "fa-volume-xmark";
-    if (volume < 50) return "fa-volume-low";
+    if (isMuted || volumeUI === 0) return "fa-volume-xmark";
+    if (volumeUI < 50) return "fa-volume-low";
     return "fa-volume-high";
   };
+
+  const currentTime = audioState.currentTime || 0;
+  const duration = audioState.duration || 0;
 
   return (
     <footer className="info">
@@ -201,25 +182,25 @@ const PlayerContent: React.FC = () => {
         <Link
           className="background-singer"
           scroll={false}
-          href={`/detailSong?track=${currentSong?.trackId}`}
+          href={`/DetailSong?track=${currentSong?.trackId ?? ""}`}
         >
           <img
             src={currentSong?.imageUrl || "/images/default-song.jpg"}
-            alt="Singer"
-            onClick={() => {}}
+            alt="cover"
           />
         </Link>
 
         <div className="song-row">
           <div className="info-song">
-            <a className="song-tittle">{currentSong?.title}</a>
-            <a className="artist-name">{currentSong?.artistName}</a>
+            <a className="song-tittle">{currentSong?.title || "—"}</a>
+            <a className="artist-name">{currentSong?.artistName || "—"}</a>
           </div>
 
           <div className="song-actions">
             <button
               className={`icon-btn like-icon ${liked ? "liked" : ""}`}
-              onClick={() => toggleLike(currentSong.trackId)}
+              onClick={() => currentSong && toggleLike(currentSong.trackId)}
+              disabled={!currentSong}
             >
               <i
                 className={liked ? "fa-solid fa-heart" : "fa-regular fa-heart"}
@@ -228,7 +209,7 @@ const PlayerContent: React.FC = () => {
 
             <button
               className="icon-btn expand-icon"
-              onClick={() => setShowUserMenu(!showUserMenu)}
+              onClick={() => setShowUserMenu((v) => !v)}
             >
               <i className="fa-solid fa-ellipsis"></i>
             </button>
@@ -261,6 +242,7 @@ const PlayerContent: React.FC = () => {
           <button className="play">
             <i className="fa-solid fa-shuffle"></i>
           </button>
+
           <button id="prevBtn" className="play" onClick={handlePrev}>
             <i className="fa-solid fa-backward-step"></i>
           </button>
@@ -296,7 +278,7 @@ const PlayerContent: React.FC = () => {
         <input
           className="seek-volume"
           type="range"
-          value={volume}
+          value={volumeUI}
           min={0}
           max={100}
           onChange={handleVolumeChange}

@@ -20,7 +20,7 @@ export default function Header() {
     <header className={styles.header}>
       <div className={styles.left}>
         <div className={styles.logo}>
-          <Link href="/explore">
+          <Link href="/Home">
             <span className={styles.logoText}>BTM</span>
           </Link>
         </div>

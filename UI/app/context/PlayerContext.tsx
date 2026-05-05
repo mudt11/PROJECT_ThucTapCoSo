@@ -1,97 +1,205 @@
 "use client";
+
 import React, {
   createContext,
   useContext,
-  useEffect,
   useRef,
   useState,
+  useEffect,
 } from "react";
+import { useAudioEngine } from "@/app/hooks/useAudioEngine";
+import { PlayerService } from "@/app/services/playerService";
 import type { Track } from "@/app/types/music";
+import { fetchDailySongs } from "@/app/utils/songApi";
 
 type PlayerContextType = {
-  playlist: Track[];
-  setPlaylist: (pl: Track[], startIndex?: number) => void;
+  currentTrack: Track | null;
+  isPlaying: boolean;
   play: () => void;
   pause: () => void;
   togglePlay: () => void;
-  isPlaying: boolean;
-  currentIndex: number;
-  setIndex: (i: number) => void;
+  setPlaylist: (tracks: Track[], index: number) => void;
+  next: () => void;
+  prev: () => void;
+
+  audioState: {
+    currentTime: number;
+    duration: number;
+  };
+  seek: (time: number) => void;
+  setVolume: (volume: number) => void;
 };
 
 const PlayerContext = createContext<PlayerContextType | null>(null);
 
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [playlist, setPlaylistState] = useState<Track[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const playerServiceRef = useRef(new PlayerService());
+  const audio = useAudioEngine();
 
-  /* INIT AUDIO – CHỈ 1 LẦN */
+  const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
+
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  // ===== RESTORE PLAYER STATE =====
   useEffect(() => {
-    audioRef.current = new Audio();
-    audioRef.current.volume = 0.5;
-    (window as any)._audioRef = audioRef.current;
+    const raw = localStorage.getItem("player_state_v2");
+    if (!raw) return;
 
-    const a = audioRef.current;
-    const onEnded = () => {
-      setCurrentIndex((idx) =>
-        playlist.length ? (idx + 1) % playlist.length : 0,
-      );
-    };
+    try {
+      const data = JSON.parse(raw);
 
-    a.addEventListener("ended", onEnded);
-    return () => a.removeEventListener("ended", onEnded);
+      if (!data.playlist?.length) return;
+
+      playerServiceRef.current.setPlaylist(data.playlist, data.index);
+
+      const track = playerServiceRef.current.getCurrentTrack();
+      if (track?.audioUrl) {
+        audio.load(track.audioUrl);
+
+        setTimeout(() => {
+          audio.seek(data.currentTime || 0);
+
+          if (data.isPlaying) {
+            audio.play();
+          }
+        }, 200);
+      }
+
+      setCurrentTrack(track);
+    } catch (e) {
+      console.error("restore failed", e);
+    }
   }, []);
 
-  /* CHỈ LOAD KHI ĐỔI BÀI */
+  // ===== SAVE PLAYER STATE =====
   useEffect(() => {
-    if (!audioRef.current) return;
-    if (!playlist.length) return;
+    const interval = setInterval(() => {
+      const data = {
+        playlist: playerServiceRef.current.getPlaylist(),
+        index: playerServiceRef.current.getIndex(),
+        currentTime: audio.state.currentTime,
+        isPlaying: audio.state.isPlaying,
+      };
 
-    const track = playlist[currentIndex];
-    if (!track?.audioUrl) return;
+      localStorage.setItem("player_state_v2", JSON.stringify(data));
+    }, 2000);
 
-    audioRef.current.src = track.audioUrl;
-    audioRef.current.currentTime = 0;
+    return () => clearInterval(interval);
+  }, [audio.state]);
 
-    audioRef.current
-      .play()
-      .then(() => setIsPlaying(true))
-      .catch(() => setIsPlaying(false));
-  }, [playlist, currentIndex]);
+  // ===== AUTO NEXT =====
+  useEffect(() => {
+    const audioEl = audio.audioRef.current;
+    if (!audioEl) return;
+
+    const handleEnded = () => {
+      const track = playerServiceRef.current.next();
+
+      if (!track) {
+        loadMore();
+        return;
+      }
+
+      loadTrack(track);
+    };
+
+    audioEl.addEventListener("ended", handleEnded);
+
+    return () => {
+      audioEl.removeEventListener("ended", handleEnded);
+    };
+  }, []);
 
   useEffect(() => {
-    if (!audioRef.current) return;
+    const remaining = playerServiceRef.current.remaining();
 
-    if (isPlaying) {
-      audioRef.current.play().catch(() => {});
-    } else {
-      audioRef.current.pause();
+    // nếu còn <= 2 bài → load thêm
+    if (remaining <= 2) {
+      loadMore();
     }
-  }, [isPlaying]);
+  }, [currentTrack]);
 
-  const setPlaylist = (pl: Track[], startIndex = 0) => {
-    setPlaylistState(pl);
-    setCurrentIndex(startIndex);
-    setIsPlaying(true);
+  const loadTrack = (track: Track | null) => {
+    if (!track?.audioUrl) return;
+    audio.load(track.audioUrl);
+    audio.play();
+    setCurrentTrack(track);
   };
 
-  const play = () => setIsPlaying(true);
-  const pause = () => setIsPlaying(false);
-  const togglePlay = () => setIsPlaying((p) => !p);
+  const setPlaylist = (tracks: Track[], index: number) => {
+    playerServiceRef.current.setPlaylist(tracks, index);
+    loadTrack(playerServiceRef.current.getCurrentTrack());
+  };
+
+  const loadMore = async () => {
+    if (loadingMore || !hasMore) return;
+
+    setLoadingMore(true);
+
+    try {
+      const res = await fetchDailySongs(20, page + 1);
+
+      playerServiceRef.current.appendTracks(res.songs);
+
+      setPage(res.page);
+
+      if (playerServiceRef.current.getPlaylist().length >= res.total) {
+        setHasMore(false);
+      }
+    } catch (e) {
+      console.error("loadMore failed", e);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+  const next = async () => {
+    let track = playerServiceRef.current.next();
+
+    if (!track && hasMore) {
+      await loadMore();
+      track = playerServiceRef.current.next();
+    }
+
+    if (track) {
+      loadTrack(track);
+    }
+  };
+
+  const prev = () => {
+    const track = playerServiceRef.current.prev();
+    loadTrack(track);
+  };
+
+  const play = () => audio.play();
+  const pause = () => audio.pause();
+  const togglePlay = () => {
+    audio.state.isPlaying ? pause() : play();
+  };
 
   return (
     <PlayerContext.Provider
       value={{
-        playlist,
-        setPlaylist,
+        currentTrack,
+        isPlaying: audio.state.isPlaying,
         play,
         pause,
         togglePlay,
-        isPlaying,
-        currentIndex,
-        setIndex: setCurrentIndex,
+        setPlaylist,
+        next,
+        prev,
+        audioState: {
+          currentTime: audio.state.currentTime,
+          duration: audio.state.duration,
+        },
+        seek: audio.seek,
+        setVolume: (v) => {
+          if (audio.audioRef.current) {
+            audio.audioRef.current.volume = v;
+          }
+        },
       }}
     >
       {children}

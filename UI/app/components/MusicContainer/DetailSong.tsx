@@ -10,8 +10,7 @@ import { useRating } from "@/app/features/rating/useRating";
 import { useLikeContext } from "@/app/context/LikeContext";
 
 const DetailSong = () => {
-  const { playlist, currentIndex } = usePlayer();
-  const currentTrack = playlist[currentIndex];
+  const { currentTrack } = usePlayer();
 
   const [showUserMenu, setShowUserMenu] = useState(false);
 
@@ -21,7 +20,7 @@ const DetailSong = () => {
   const { likedMap, toggleLike, fetchLikeStatus } = useLikeContext();
 
   // Lấy trạng thái like của bài hát hiện tại
-  const liked = likedMap[currentTrack?.trackId] || false;
+  const liked = currentTrack ? likedMap[currentTrack.trackId] || false : false;
 
   useEffect(() => {
     if (currentTrack?.trackId) {
