@@ -17,19 +17,27 @@ const SearchResult = ({ result, searchTerm }: SearchResultProps) => {
   const highlight = (text: string, term: string) => {
     if (!term) return text;
 
-    const regex = new RegExp(`(${term})`, "gi");
-    const parts = text.split(regex);
+    const parts = text.split(new RegExp(`(${term})`, "gi"));
 
-    return parts.map((part, i) =>
-      regex.test(part) ? (
-        <span className={styles.highlight}>{part}</span>
+    return parts.map((part, i) => {
+      const isMatch = part.toLowerCase() === term.toLowerCase();
+
+      return isMatch ? (
+        <span key={i} className={styles.highlight}>
+          {part}
+        </span>
       ) : (
-        part
-      ),
-    );
+        <React.Fragment key={i}>{part}</React.Fragment>
+      );
+    });
   };
   return (
-    <div className={styles.resultItem} onClick={() => setPlaylist([result], 0)}>
+    <div
+      className={styles.resultItem}
+      onMouseDown={() => {
+        setPlaylist([{ ...result }], 0);
+      }}
+    >
       <img
         src={result.imageUrl || "/images/default-song.jpg"}
         className={styles.resultImg}

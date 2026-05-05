@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import styles from "@/app/styles/Header.module.css";
 import PopUp from "./PopUp";
 import SearchBarComponent from "./SearchBar/SearchBarComponent";

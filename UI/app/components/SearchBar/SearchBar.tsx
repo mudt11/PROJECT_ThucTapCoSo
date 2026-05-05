@@ -62,6 +62,7 @@ const SearchBar = ({
         className={`${styles.icon} ${styles.searchIcon}`}
         onClick={() => inputRef.current?.focus()}
       />
+
       <div className={styles.inputContainer}>
         <input
           className={styles.input}
@@ -70,16 +71,13 @@ const SearchBar = ({
           value={input}
           onChange={(e) => handleChange(e.target.value)}
           onFocus={() => setIsSearchFocused(true)}
-          onBlur={() => {
-            // Delay để cho phép click vào kết quả
-            setTimeout(() => setIsSearchFocused(false), 150);
-          }}
         />
+
         {input && (
           <FaTimes
             className={`${styles.icon} ${styles.clearIcon}`}
             onClick={clearInput}
-            onMouseDown={(e) => e.preventDefault()} // Ngăn onBlur trigger
+            onMouseDown={(e) => e.preventDefault()}
           />
         )}
       </div>
