@@ -10,7 +10,7 @@ import {
   deleteSong,
   toggleSongVisibility,
   createSong,
-} from "@/app/utils/songApi";
+} from "@/app/features/song/song.api";
 import Pagination from "@/app/components/Pagination";
 import { formatDuration, formatDate } from "@/app/utils/dateHelper";
 

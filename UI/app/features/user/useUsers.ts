@@ -1,8 +1,7 @@
-"use client";
 import useSWR, { mutate } from "swr";
 import { getUsers } from "@/app/utils/authApi";
 import { deleteAccount } from "@/app/utils/accountApi";
-import { User } from "../types/music";
+import { User } from "../../types/music";
 
 interface UsersResponse {
   data: User[];

@@ -7,8 +7,8 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import "@/app/styles/PlayerBar.css";
 import { usePlayer } from "@/app/context/PlayerContext";
 import { useLikeContext } from "@/app/context/LikeContext";
-import PopUp from "../PopUp";
-import { increaseSongView } from "@/app/utils/songApi";
+import PopUp from "../../../components/PopUp";
+import { increaseSongView } from "@/app/features/song/song.api";
 
 const mockQueue = [
   {

@@ -3,7 +3,7 @@
 import "@/app/styles/globals.css";
 import Sidebar from "@/app/components/Sidebar";
 import Header from "@/app/components/Header";
-import Player from "@/app/components/MusicContainer/Player";
+import Player from "@/app/features/player/components/Player";
 import { useEffect } from "react";
 import { useModal } from "@/app/context/ModalContext";
 import { useUser } from "@/app/context/UserContext";

@@ -1,10 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { fetchDailySongs } from "@/app/utils/songApi";
+import { fetchDailySongs } from "@/app/features/song/song.api";
 import type { Track } from "@/app/types/music";
 import { usePlayer } from "@/app/context/PlayerContext";
-import { likeSong, unlikeSong, getLikeStatus } from "@/app/utils/songApi";
+import {
+  likeSong,
+  unlikeSong,
+  getLikeStatus,
+} from "@/app/features/song/song.api";
 import { formatDuration } from "@/app/utils/dateHelper";
 import { IoHeartOutline, IoHeart } from "react-icons/io5";
 import { PiMusicNotesDuotone } from "react-icons/pi";

@@ -7,10 +7,10 @@ import React, {
   useState,
   useEffect,
 } from "react";
-import { useAudioEngine } from "@/app/hooks/useAudioEngine";
-import { PlayerService } from "@/app/services/playerService";
+import { useAudioEngine } from "@/app/features/player/useAudioEngine";
+import { PlayerService } from "@/app/features/player/playerService";
 import type { Track } from "@/app/types/music";
-import { fetchDailySongs } from "@/app/utils/songApi";
+import { fetchDailySongs } from "@/app/features/song/song.api";
 
 type PlayerContextType = {
   currentTrack: Track | null;

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styles from "./search.module.css";
 import { FaSearch, FaTimes } from "react-icons/fa";
-import { searchSongs } from "@/app/utils/songApi";
+import { searchSongs } from "@/app/features/song/song.api";
 import { Track } from "@/app/types/music";
 
 interface SearchBarProps {

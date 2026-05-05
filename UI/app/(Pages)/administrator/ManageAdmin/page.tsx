@@ -3,7 +3,7 @@
 import stylesUser from "@/app/styles/AdminPage/ManageUser.module.css";
 import styles from "@/app/styles/AdminPage/ManageAdmin.module.css";
 import { useModal } from "@/app/context/ModalContext";
-import { useAdmins } from "@/app/hooks/useAdmins";
+import { useAdmins } from "@/app/features/admin/useAdmins";
 import type { User } from "@/app/types/music";
 
 export default function ManageAdmin() {

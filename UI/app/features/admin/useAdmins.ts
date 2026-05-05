@@ -3,7 +3,7 @@
 import useSWR, { mutate } from "swr";
 import { getAdmins, AcceptOrReject } from "@/app/utils/authApi";
 import { deleteAccount } from "@/app/utils/accountApi";
-import { User } from "../types/music";
+import { User } from "../../types/music";
 
 // Fetcher dùng chung
 const fetcher = async (): Promise<User[]> => {
@@ -40,9 +40,9 @@ export function useAdmins() {
           "admins",
           (admins) =>
             admins?.map((u) =>
-              u.userId === id ? { ...u, activity_status: status } : u
+              u.userId === id ? { ...u, activity_status: status } : u,
             ),
-          false
+          false,
         );
 
         // Revalidate
@@ -72,7 +72,7 @@ export function useAdmins() {
         mutate<User[]>(
           "admins",
           (admins) => admins?.filter((u) => u.userId !== userId),
-          false
+          false,
         );
         mutate("admins");
       }

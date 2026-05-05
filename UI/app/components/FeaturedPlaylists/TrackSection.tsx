@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { FaPlay, FaPause } from "react-icons/fa";
 
-import { fetchDailySongs } from "@/app/utils/songApi";
+import { fetchDailySongs } from "@/app/features/song/song.api";
 import type { Track } from "@/app/types/music";
 import { usePlayer } from "@/app/context/PlayerContext";
 
