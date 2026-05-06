@@ -26,6 +26,8 @@ type PlayerContextType = {
   audioState: { currentTime: number; duration: number };
   seek: (time: number) => void;
   setVolume: (volume: number) => void;
+  isShuffle: boolean;
+  toggleShuffle: () => void;
 };
 
 const PlayerContext = createContext<PlayerContextType | null>(null);
@@ -43,6 +45,17 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const loadTrackRef = useRef<
     ((track: Track | null, autoPlay?: boolean) => void) | null
   >(null);
+
+  const [isShuffle, setIsShuffle] = useState(false);
+  const isShuffleRef = useRef(isShuffle); // Dùng ref để xài trong useCallback không bị stale data
+
+  useEffect(() => {
+    isShuffleRef.current = isShuffle;
+  }, [isShuffle]);
+
+  const toggleShuffle = useCallback(() => {
+    setIsShuffle((prev) => !prev);
+  }, []);
 
   // Khởi tạo Logger độc lập với Context State
   const logger = useActivityLogger("playlist");
@@ -101,6 +114,28 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   }, [loadMore]);
 
   const next = useCallback(async () => {
+    const playlist = playerServiceRef.current.getPlaylist();
+    const currentIndex = playerServiceRef.current.getIndex();
+
+    // NẾU BẬT SHUFFLE VÀ CÓ NHIỀU HƠN 1 BÀI HÁT
+    if (isShuffleRef.current && playlist.length > 1) {
+      let randomIndex;
+      // Random một số mới, đảm bảo không trùng với bài hiện tại
+      do {
+        randomIndex = Math.floor(Math.random() * playlist.length);
+      } while (randomIndex === currentIndex);
+
+      // Cập nhật lại index trong PlayerService
+      playerServiceRef.current.setPlaylist(playlist, randomIndex);
+      const track = playerServiceRef.current.getCurrentTrack();
+
+      if (track) {
+        loadTrackRef.current?.(track, true);
+      }
+      return; // Dừng tại đây, không chạy logic next bình thường nữa
+    }
+
+    // LOGIC NEXT BÌNH THƯỜNG (khi tắt shuffle)
     let track = playerServiceRef.current.next();
     if (!track && hasMore) {
       await loadMoreRef.current?.();
@@ -159,6 +194,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
           index: playerServiceRef.current.getIndex(),
           currentTime: audio.state.currentTime,
           isPlaying: audio.state.isPlaying,
+          isShuffle: isShuffleRef.current,
         }),
       );
     }, 2000);
@@ -196,6 +232,8 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         },
         seek: audio.seek,
         setVolume: audio.setVolume,
+        isShuffle,
+        toggleShuffle,
       }}
     >
       {children}
