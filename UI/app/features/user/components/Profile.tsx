@@ -41,6 +41,7 @@ const Profile = ({
             <label className={styles.label}>First Name</label>
             <input
               name="firstName"
+              placeholder="Nguyen Van"
               className={styles.input}
               value={formData.firstName}
               onChange={handleChange}
@@ -51,6 +52,7 @@ const Profile = ({
             <label className={styles.label}>Last Name</label>
             <input
               name="lastName"
+              placeholder="A"
               className={styles.input}
               value={formData.lastName}
               onChange={handleChange}
@@ -93,6 +95,7 @@ const Profile = ({
           <input
             type="tel"
             name="phone"
+            placeholder="0123456789"
             className={styles.input}
             value={formData.phone}
             onChange={handleChange}
@@ -103,6 +106,7 @@ const Profile = ({
           <label className={styles.label}>Địa chỉ</label>
           <textarea
             name="address"
+            placeholder="97 Man Thien, Tang Nhon Phu, Ho Chi Minh City"
             className={styles.textarea}
             value={formData.address}
             onChange={handleChange}
