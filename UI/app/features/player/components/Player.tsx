@@ -41,6 +41,8 @@ const PlayerContent: React.FC = () => {
     setVolume,
     isShuffle,
     toggleShuffle,
+    isRepeat,
+    toggleRepeat,
   } = usePlayer();
   const { likedMap, toggleLike, fetchLikeStatus } = useLikeContext();
 
@@ -232,8 +234,14 @@ const PlayerContent: React.FC = () => {
             <i className="fa-solid fa-forward-step" />
           </button>
 
-          {/* NÚT REPEAT CHỜ XỬ LÝ SAU */}
-          <button className="play">
+          {/* NÚT REPEAT ĐÃ ĐƯỢC GẮN LOGIC */}
+          <button
+            className="play"
+            onClick={toggleRepeat}
+            style={{
+              color: isRepeat ? "var(--tt-orange)" : "var(--tt-text-muted)",
+            }}
+          >
             <i className="fa-solid fa-repeat" />
           </button>
         </div>
