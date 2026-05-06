@@ -64,8 +64,6 @@ export function ModalProvider({ children }: { children: ReactNode }) {
 
   const renderModalContent = () => {
     switch (modalContent) {
-      case "profile":
-        return <Profile initialData={modalData} />;
       case "signin":
         return <SignInPage />;
       case "register":

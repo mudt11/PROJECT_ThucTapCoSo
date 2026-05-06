@@ -40,6 +40,7 @@ export interface User {
   role: string;
   actStatus: string;
   isActive: boolean;
+  avatar: string;
 }
 
 export interface UserProfileData {
@@ -49,5 +50,4 @@ export interface UserProfileData {
   dateOfBirth: string;
   phone: string;
   address: string;
-  // avatar: string;
 }

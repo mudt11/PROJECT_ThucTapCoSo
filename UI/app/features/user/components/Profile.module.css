@@ -1,0 +1,176 @@
+/* app/styles/Profile.module.css */
+
+.profileCard {
+  background-color: var(--tt-surface);
+  border-radius: 20px;
+  padding: 2.5rem 3rem; /* Tăng padding lên một chút cho trang rộng */
+  width: 100%; /* Sửa từ 500px thành 100% để nó tự fill theo max-width của parent */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  color: var(--color-text);
+}
+
+/* TITLE */
+.title {
+  margin-bottom: 8px;
+  font-size: 24px; /* Cho to hơn Modal một chút */
+  font-weight: 600;
+}
+
+.lead {
+  margin-bottom: 24px;
+  font-size: 14px; /* SỬA TỪ 50px XUỐNG 14px */
+  color: var(--color-text-secondary);
+}
+
+/* FORM */
+.form {
+  display: grid;
+  gap: 20px; /* Tăng gap từ 12px lên 20px cho dễ nhìn trên Page */
+}
+
+/* FIELD */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+/* INPUT */
+.input {
+  background-color: var(
+    --tt-surface
+  ); /* Hoặc dùng một biến đậm/nhạt hơn chút để input nổi bật hơn */
+  border: 1px solid var(--tt-border);
+  color: var(
+    --color-text
+  ); /* Sửa --text thành --color-text theo chuẩn biến của bạn */
+  padding: 12px 14px; /* Tăng padding input cho dễ gõ */
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--tt-orange);
+  box-shadow: 0 0 0 3px var(--tt-orange-pale);
+  background-color: var(--tt-surface);
+}
+
+.textarea {
+  composes: input;
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* NAME ROW */
+.nameRow {
+  display: flex;
+  gap: 20px; /* Tăng gap bằng với grid gap */
+}
+
+.nameField {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 8px; /* Thêm gap cho label và input của name */
+}
+
+/* Bỏ .first và .last flex:2/flex:1 đi để tên và họ chia đều 50/50 nhìn sẽ cân đối hơn trên bản rộng */
+
+/* ACTION */
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.btn {
+  padding: 12px 24px; /* Nút to ra một chút */
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.primary {
+  background: var(--button);
+  color: white;
+}
+
+.primary:hover {
+  opacity: 0.9;
+}
+
+.secondary {
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--tt-border); /* Dùng màu border xám thay vì border cam cho nút phụ */
+}
+
+.secondary:hover {
+  background-color: rgba(255, 255, 255, 0.05); /* Hiệu ứng hover nhẹ */
+  color: var(--color-text);
+}
+
+.note {
+  font-size: 13px;
+  color: var(--tt-orange); /* Đổi màu cam cho note để người dùng chú ý hơn */
+  margin-top: 8px;
+}
+
+/* RADIO */
+.radioGroup {
+  display: flex;
+  gap: 24px;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.radio {
+  appearance: none;
+  width: 20px; /* To hơn chút */
+  height: 20px;
+  border: 2px solid var(--tt-border); /* Dùng biến border cho chuẩn */
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.radio:checked {
+  background: var(--button);
+  border: none;
+  box-shadow: 0 0 0 3px var(--tt-orange-pale); /* Đổi sang orange-pale cho hợp với hiệu ứng focus của input */
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .nameRow {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .profileCard {
+    padding: 1.5rem;
+  }
+}

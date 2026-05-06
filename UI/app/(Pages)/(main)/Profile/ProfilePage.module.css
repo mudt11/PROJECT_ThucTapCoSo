@@ -1,0 +1,148 @@
+/* app/(Pages)/profile/ProfilePage.module.css */
+
+.pageContainer {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--background);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 40px;
+}
+
+/* Kéo dài toàn màn hình, tạo điểm nhấn gradient cam/đen */
+.heroSection {
+  width: 100%;
+  height: 250px;
+  border-radius: 20px;
+  background: linear-gradient(
+    135deg,
+    var(--tt-orange-light) 0%,
+    var(--tt-surface) 100%
+  );
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+/* Phần Avatar và tên nổi lên giữa banner và nội dung */
+.userInfo {
+  position: absolute;
+  bottom: -60px; /* Đẩy khối này tụt xuống dưới banner 60px */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatarWrapper {
+  position: relative;
+  border-radius: 50%;
+  padding: 4px; /* Tạo viền bao quanh avatar */
+  background-color: var(--tt-surface);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.largeAvatar {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Nút đổi avatar mini */
+.editAvatarBtn {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background-color: var(--button);
+  color: white;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+}
+
+.editAvatarBtn:hover {
+  transform: scale(1.1);
+}
+
+.displayName {
+  color: var(--color-text);
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.premiumBadge {
+  /* background-color: rgb(245, 220, 78);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase; */
+  width: 180px;
+  height: 40px;
+  border: none;
+  border-radius: 40px;
+  background: linear-gradient(
+    to right,
+    #bf953f,
+    #fcf6ba,
+    #b38728,
+    #fbf5b7,
+    #aa771c
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  color: rgb(121, 103, 3);
+  font-weight: 600;
+  position: relative;
+  z-index: 2;
+  transition-duration: 3s;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.144);
+  background-size: 200% 200%;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.logoIcon {
+  fill: rgb(121, 103, 3);
+}
+
+.premiumBadge:hover {
+  transform: scale(0.95);
+  transition-duration: 3s;
+  animation: gradient 5s ease infinite;
+  background-position: right;
+}
+
+.premiumBadge:disabled {
+  pointer-events: none;
+  opacity: 0.65;
+  color: #7e7e7e;
+  background: #dcdcdc;
+  box-shadow: none;
+}
+
+/* Vùng chứa form */
+.formContainer {
+  margin-top: 100px;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 20px;
+}

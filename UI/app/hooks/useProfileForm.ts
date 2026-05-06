@@ -8,7 +8,7 @@ import { getCurrentUserService } from "../features/user/service";
 import { UserProfileData } from "../types/music";
 
 export function useProfileForm(
-  initialData: UserProfileData,
+  initialData?: UserProfileData,
   mode: "user" | "admin" = "user",
   userId?: number,
 ) {
@@ -82,7 +82,6 @@ export function useProfileForm(
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setNote("");
 
     try {
       // Gọi API
@@ -97,16 +96,14 @@ export function useProfileForm(
       const data = await res.json();
 
       if (!res.ok) {
-        setNote(data.message || "Có lỗi xảy ra khi gửi thông tin.");
+        alert(data.message || "Có lỗi xảy ra khi gửi thông tin.");
         return;
       }
 
-      setNote(data.message || "Đã gửi thông tin thành công!");
+      alert(data.message || "Đã gửi thông tin thành công!");
     } catch (err: any) {
       console.error("Submit error:", err);
-      setNote(
-        err?.response?.data?.message || "Có lỗi xảy ra khi gửi thông tin.",
-      );
+      alert(err?.response?.data?.message || "Có lỗi xảy ra khi gửi thông tin.");
     }
   };
 

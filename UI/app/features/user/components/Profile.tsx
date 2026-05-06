@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "@/app/styles/Profile.module.css";
+import styles from "@/app/features/user/components/Profile.module.css";
 import { useProfileForm } from "../../../hooks/useProfileForm";
 import { UserProfileData } from "../../../types/music";
 import { formatDateForInput } from "../../../utils/dateHelper";
@@ -10,13 +10,13 @@ const Profile = ({
   mode = "user",
   userId,
 }: {
-  initialData: UserProfileData;
+  initialData?: UserProfileData;
   mode?: "user" | "admin";
   userId?: number;
 }) => {
   const {
     formData,
-    note,
+    // note,
     existingProfile,
     handleChange,
     handleReset,
@@ -123,7 +123,7 @@ const Profile = ({
           </button>
         </div>
 
-        <p className={styles.note}>{note}</p>
+        {/* <p className={styles.note}>{note}</p> */}
       </form>
     </div>
   );

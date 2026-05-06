@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from "@/app/components/layout/Header/UserPage/Header.module.css";
 import PopUp from "../../../ui/PopUp";
@@ -14,6 +15,7 @@ export default function Header() {
   const { openModal } = useModal();
   const { user, loading } = useUser();
   const { logout } = useLogout();
+  const router = useRouter();
 
   return (
     <header className={styles.header}>
@@ -61,7 +63,10 @@ export default function Header() {
                   <div className={styles.userPopup}>
                     <button
                       className={styles.logoutBtn}
-                      onClick={() => openModal("profile")}
+                      onClick={() => {
+                        setShowUserMenu(false); // Đóng popup menu lại
+                        router.push("/Profile"); // Chuyển hướng sang trang profile
+                      }}
                     >
                       Xem hồ sơ
                     </button>
