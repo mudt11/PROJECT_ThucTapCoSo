@@ -1,7 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const songController = require("../controllers/song.controller");
-const { protect, protectAdmin, authorizeRoles } = require("../midlewares/auth.midleware");
+const {
+  protect,
+  protectAdmin,
+  authorizeRoles,
+} = require("../midlewares/auth.midleware");
 const upload = require("../midlewares/upload.midleware");
 
 // tìm kiếm bài hát
@@ -13,8 +17,6 @@ router.get("/search", songController.searchSongs);
 router.get("/", songController.getSongList);
 // tăng view
 router.post("/:songId/view", protect, songController.increaseView);
-// ghi lại thời gian user nghe bài hát trước khi chuyển bài
-// router.post("/:songId/activity", protect, songController.logSongActivity);
 
 /* --- ROUTES FOR ADMIN --- */
 

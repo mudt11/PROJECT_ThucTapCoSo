@@ -126,65 +126,6 @@ const getSongById = async (req, res, next) => {
   }
 };
 
-// const logSongActivity = async (req, res) => {
-//   try {
-//     const { songId } = req.params;
-//     const { action, duration_listened } = req.body;
-//     const userId = req.user.userId;
-
-//     const validActions = ["play", "skip", "complete"];
-//     if (!action || !validActions.includes(action)) {
-//       return res.status(400).json({
-//         success: false,
-//         message: `Action phải là một trong: ${validActions.join(", ")}`,
-//       });
-//     }
-
-//     const listenedSeconds = Number(duration_listened);
-//     if (Number.isNaN(listenedSeconds) || listenedSeconds < 0) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "duration_listened phải là số hợp lệ lớn hơn hoặc bằng 0",
-//       });
-//     }
-
-//     const song = await Song.findByPk(songId);
-//     if (!song) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "Không tìm thấy bài hát",
-//       });
-//     }
-
-//     const completionRate = song.duration
-//       ? Math.min(1, listenedSeconds / song.duration)
-//       : 0;
-//     const isView = listenedSeconds >= 20;
-
-//     const activity = new UserActivity({
-//       user_id: userId,
-//       song_id: parseInt(songId, 10),
-//       action,
-//       duration_listened: listenedSeconds,
-//       completion_rate: completionRate,
-//       is_view: isView,
-//     });
-//     await activity.save();
-
-//     return res.status(201).json({
-//       success: true,
-//       message: "Đã lưu hành vi nghe nhạc",
-//       data: activity,
-//     });
-//   } catch (error) {
-//     console.error("Lỗi logSongActivity:", error);
-//     return res.status(500).json({
-//       success: false,
-//       message: "Lưu hành vi thất bại",
-//     });
-//   }
-// };
-
 async function getSongList(req, res) {
   try {
     const page = Number(req.query.page) || 1;

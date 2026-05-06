@@ -310,32 +310,6 @@ const getSongById = async (songId) => {
   return song;
 };
 
-// let cachedSongs = null;
-// let cacheExpiredAt = 0;
-// async function getSongs({ limit = 20 }) {
-//   if (cachedSongs && Date.now() < cacheExpiredAt) {
-//     return cachedSongs;
-//   }
-
-//   const songs = await Song.findAll({
-//     where: {
-//       is_visible: true,
-//     },
-//     order: Sequelize.literal("RAND()"),
-//     limit: Number(limit),
-//   });
-
-//   cachedSongs = {
-//     limit: Number(limit),
-//     total: songs.length,
-//     songs,
-//   };
-
-//   cacheExpiredAt = Date.now() + 1000 * 60 * 30;
-
-//   return cachedSongs;
-// }
-
 async function getSongs({ page = 1, limit = 20 }) {
   const offset = (page - 1) * limit;
 
@@ -510,10 +484,6 @@ module.exports = {
   deleteSongById,
   toggleSongVisibility,
   getSongs,
-  // likeSong,
-  // unlikeSong,
-  // getLikeStatus,
-  // getLikedSongs,
   incrementSongView,
   searchSongs,
 };
