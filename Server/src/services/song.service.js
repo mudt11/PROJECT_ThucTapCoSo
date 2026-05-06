@@ -406,24 +406,34 @@ const updateSongById = async (songId, updateData) => {
 
 const deleteSongById = async (songId) => {
   return sequelize.transaction(async (t) => {
-    const song = await Song.findOne({
-      where: { song_id: songId },
-      transaction: t,
-    });
+    const song = await Song.findByPk(songId, { transaction: t });
 
     if (!song) {
-      throw new Error("Không tìm thấy bài hát.");
+      const error = new Error("Không tìm thấy bài hát.");
+      error.status = 404;
+      throw error;
     }
 
-    await Favorites.destroy({
+    await SongArtist.destroy({
       where: { song_id: songId },
       transaction: t,
     });
 
-    await PlaylistSongs.destroy({
+    await SongGenre.destroy({
       where: { song_id: songId },
       transaction: t,
     });
+
+    await Rating.destroy({
+      where: { song_id: songId },
+      transaction: t,
+    });
+
+    // Nếu sau này bạn mở lại tính năng Playlist, hãy uncomment đoạn dưới
+    // await PlaylistSong.destroy({
+    //   where: { song_id: songId },
+    //   transaction: t,
+    // });
 
     await song.destroy({ transaction: t });
 

@@ -213,6 +213,13 @@ const deleteSongById = async (req, res, next) => {
 
     res.status(200).json(result);
   } catch (error) {
+    if (error.status === 404) {
+      return res.status(404).json({
+        message: error.message,
+      });
+    }
+
+    // Các lỗi khác (ví dụ lỗi DB) đẩy cho middleware xử lý lỗi tổng của Express
     next(error);
   }
 };
