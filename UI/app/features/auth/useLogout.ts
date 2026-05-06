@@ -17,7 +17,7 @@ export const useLogout = () => {
 
     router.refresh();
 
-    router.push("/explore");
+    router.push("/Home");
   };
 
   return { logout };
