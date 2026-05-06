@@ -80,8 +80,6 @@ const PlayerContent: React.FC = () => {
     if (!duration) return;
     const newTime = (prog / 100) * duration;
     seek(newTime);
-    // Ghi chú: Không cần gọi sendSeekLog ở đây nữa vì gọi hàm seek() bên trên
-    // đã làm kích hoạt Event "seeked" dưới HTMLAudioElement -> tracking tự nhận!
   };
 
   // ── Volume ──
@@ -198,6 +196,19 @@ const PlayerContent: React.FC = () => {
 
       {/* ── Playback controls ── */}
       <div className="player-center">
+        <div className="run">
+          <span className="current-time">{formatTime(currentTime)}</span>
+          <input
+            type="range"
+            className="seek-bar"
+            value={progress}
+            min={0}
+            max={100}
+            onChange={handleSeek}
+          />
+          <span className="music-time">{formatTime(duration)}</span>
+        </div>
+
         <div className="control">
           <button className="play">
             <i className="fa-solid fa-shuffle" />
@@ -214,19 +225,6 @@ const PlayerContent: React.FC = () => {
           <button className="play">
             <i className="fa-solid fa-repeat" />
           </button>
-        </div>
-
-        <div className="run">
-          <span className="current-time">{formatTime(currentTime)}</span>
-          <input
-            type="range"
-            className="seek-bar"
-            value={progress}
-            min={0}
-            max={100}
-            onChange={handleSeek}
-          />
-          <span className="music-time">{formatTime(duration)}</span>
         </div>
       </div>
 

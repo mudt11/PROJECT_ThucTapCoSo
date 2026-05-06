@@ -195,7 +195,7 @@
   transform: scale(0.95);
 }
 .run {
-  margin-top: 10px;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
   font-size: 12px;
@@ -228,6 +228,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  /* justify-content: flex-end; */
 }
 .volume {
   background: none;
@@ -236,13 +237,13 @@
   cursor: pointer;
 }
 .vol .seek-volume {
-  flex: 1;
+  /* flex: 1; */
+  width: 150px;
   height: 4px;
   cursor: pointer;
   overflow: hidden;
   -webkit-appearance: none;
   border-radius: 10px;
-  /* border: 1px solid red; */
   background: var(--tt-bg);
 }
 .vol .seek-volume::-webkit-slider-thumb {
