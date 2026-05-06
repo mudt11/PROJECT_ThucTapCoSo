@@ -4,9 +4,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styles from "@/app/styles/Auth.module.css";
 import { useModal } from "@/app/context/ModalContext";
-import { useUser } from "@/app/context/UserContext";
+import { useUser } from "@/app/features/user/context/UserContext";
 import { loginService } from "@/app/features/auth/service";
-import Logo from "@/app/components/Logo";
+import Logo from "@/app/components/ui/Logo";
 
 export default function SignInPage() {
   const router = useRouter();

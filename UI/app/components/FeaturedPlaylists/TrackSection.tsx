@@ -3,7 +3,7 @@ import { FaPlay, FaPause } from "react-icons/fa";
 
 import { fetchDailySongs } from "@/app/features/song/song.api";
 import type { Track } from "@/app/types/music";
-import { usePlayer } from "@/app/context/PlayerContext";
+import { usePlayer } from "@/app/features/player/context/PlayerContext";
 
 const TrackSection = () => {
   const [tracks, setTracks] = useState<Track[]>([]);

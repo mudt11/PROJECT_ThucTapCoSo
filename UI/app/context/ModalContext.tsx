@@ -1,10 +1,10 @@
 "use client";
 import { createContext, useContext, useState, ReactNode } from "react";
-import Modal from "@/app/components/Modal";
-import Profile from "@/app/components/Profile";
-import EditUserProfile from "../components/EditUserProfile";
-import ChangePassword from "../components/ChangePassword";
-import SongFormModal from "../components/AdminPage/SongFormModal";
+import Modal from "@/app/components/ui/Modal";
+import Profile from "@/app/features/user/components/Profile";
+import EditUserProfile from "../features/user/components/EditUserProfile";
+import ChangePassword from "../features/auth/components/ChangePassword";
+import SongFormModal from "../features/admin/components/SongFormModal";
 
 import dynamic from "next/dynamic";
 
@@ -18,11 +18,11 @@ const SignInAdminPage = dynamic(
 );
 
 const AddNewAdmin = dynamic(
-  () => import("@/app/components/AdminPage/AddAdmin"),
+  () => import("@/app/features/admin/components/AddAdmin"),
 );
 
 const ResetAdminPassword = dynamic(
-  () => import("@/app/components/AdminPage/ResetAdminPassword"),
+  () => import("@/app/features/admin/components/ResetAdminPassword"),
 );
 
 type ModalType =

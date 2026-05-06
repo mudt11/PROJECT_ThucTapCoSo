@@ -1,7 +1,7 @@
 "use client";
 
-import Header from "@/app/components/AdminPage/Header";
-import { AdminUserProvider } from "@/app/context/AdminUserContext";
+import Header from "@/app/components/layout/Header/AdminPage/Header";
+import { AdminUserProvider } from "@/app/features/admin/context/AdminUserContext";
 
 export default function AdminLayout({
   children,

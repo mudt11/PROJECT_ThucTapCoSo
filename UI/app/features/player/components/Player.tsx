@@ -3,10 +3,10 @@
 import React, { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import "@/app/styles/PlayerBar.css";
-import { usePlayer } from "@/app/context/PlayerContext";
-import { useLikeContext } from "@/app/context/LikeContext";
-import PopUp from "../../../components/PopUp";
+import "@/app/features/player/components/Player.css";
+import { usePlayer } from "@/app/features/player/context/PlayerContext";
+import { useLikeContext } from "@/app/features/like/context/LikeContext";
+import PopUp from "../../../components/ui/PopUp";
 
 const mockQueue = [
   {
@@ -45,6 +45,8 @@ const PlayerContent: React.FC = () => {
   const [volumeUI, setVolumeUI] = useState(50);
   const [isMuted, setIsMuted] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  // state khóa nút like chống spam click
+  const [isLiking, setIsLiking] = useState(false);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -115,6 +117,23 @@ const PlayerContent: React.FC = () => {
     return "fa-volume-high";
   };
 
+  // HÀM XỬ LÝ TRÁNH SPAM CLICK
+  const handleLikeClick = async () => {
+    if (!currentTrack || isLiking) return; // Đang xử lý thì bỏ qua
+
+    setIsLiking(true); // Khóa nút
+    try {
+      await toggleLike(currentTrack.trackId);
+    } catch (error) {
+      console.error("Lỗi khi like:", error);
+    } finally {
+      // Mở khóa nút sau 500ms (Debounce nhẹ)
+      setTimeout(() => {
+        setIsLiking(false);
+      }, 500);
+    }
+  };
+
   return (
     <footer className="info">
       {/* ── Track info ── */}
@@ -137,8 +156,12 @@ const PlayerContent: React.FC = () => {
           <div className="song-actions">
             <button
               className={`icon-btn like-icon ${liked ? "liked" : ""}`}
-              onClick={() => currentTrack && toggleLike(currentTrack.trackId)}
-              disabled={!currentTrack}
+              onClick={handleLikeClick}
+              disabled={!currentTrack || isLiking}
+              style={{
+                opacity: isLiking ? 0.5 : 1,
+                cursor: isLiking ? "wait" : "pointer",
+              }}
             >
               <i
                 className={liked ? "fa-solid fa-heart" : "fa-regular fa-heart"}

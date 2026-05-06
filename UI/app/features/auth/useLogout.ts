@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { logoutService } from "./service";
-import { useUser } from "@/app/context/UserContext";
+import { useUser } from "@/app/features/user/context/UserContext";
 
 export const useLogout = () => {
   const { setUser } = useUser();

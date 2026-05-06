@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { logoutAdminService } from "./service";
-import { useAdminUser } from "@/app/context/AdminUserContext";
+import { useAdminUser } from "@/app/features/admin/context/AdminUserContext";
 
 export const useLogoutAdmin = () => {
   const { setAdmin } = useAdminUser();

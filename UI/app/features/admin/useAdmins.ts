@@ -1,8 +1,8 @@
 "use client";
 
 import useSWR, { mutate } from "swr";
-import { getAdmins, AcceptOrReject } from "@/app/utils/authApi";
-import { deleteAccount } from "@/app/utils/accountApi";
+import { getAdmins, AcceptOrReject } from "@/app/features/auth/authApi";
+import { deleteAccount } from "@/app/features/user/accountApi";
 import { User } from "../../types/music";
 
 // Fetcher dùng chung

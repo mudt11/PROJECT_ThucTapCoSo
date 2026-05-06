@@ -3,7 +3,7 @@
 import React from "react";
 import { useEffect } from "react";
 import type { DetailViewData } from "@/app/types/music";
-import { usePlayer } from "@/app/context/PlayerContext";
+import { usePlayer } from "@/app/features/player/context/PlayerContext";
 import PlaylistCover from "@/app/components/FeaturedPlaylists/PlaylistCover";
 import { formatDuration } from "@/app/utils/dateHelper";
 

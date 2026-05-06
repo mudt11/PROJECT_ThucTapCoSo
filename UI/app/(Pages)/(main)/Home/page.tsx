@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Banner from "@/app/components/Banner";
+import Banner from "@/app/components/ui/Banner";
 import FeaturedPlaylists from "@/app/components/FeaturedPlaylists/FeaturedPlaylists";
 import type { Playlist, DetailViewData } from "@/app/types/music";
 

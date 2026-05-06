@@ -1,6 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
-import { updateProfile, adminUpdateUserProfile } from "../utils/accountApi";
+import {
+  updateProfile,
+  adminUpdateUserProfile,
+} from "../features/user/accountApi";
 import { getCurrentUserService } from "../features/user/service";
 import { UserProfileData } from "../types/music";
 

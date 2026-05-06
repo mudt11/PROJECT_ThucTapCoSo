@@ -3,9 +3,9 @@
 import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
 import styles from "@/app/styles/Auth.module.css";
-import { useAdminUser } from "@/app/context/AdminUserContext";
+import { useAdminUser } from "@/app/features/admin/context/AdminUserContext";
 import { loginAdminService } from "@/app/features/admin/service";
-import Logo from "@/app/components/Logo";
+import Logo from "@/app/components/ui/Logo";
 
 export default function SignInAdminPage() {
   const router = useRouter();

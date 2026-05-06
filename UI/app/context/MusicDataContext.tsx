@@ -1,9 +1,5 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
-import {
-  fetchArtists,
-  // fetchPopularTracks,
-} from "@/app/utils/jamendo";
 import type { Track, Playlist, Artist } from "@/app/types/music";
 
 interface MusicDataContextType {
@@ -16,7 +12,7 @@ interface MusicDataContextType {
 }
 
 const MusicDataContext = createContext<MusicDataContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export function MusicDataProvider({ children }: { children: React.ReactNode }) {
@@ -30,17 +26,6 @@ export function MusicDataProvider({ children }: { children: React.ReactNode }) {
     async function loadAllData() {
       try {
         setIsLoading(true);
-
-        // const [tracksData, playlistsData, artistsData] = await Promise.all([
-        // const [playlistsData] = await Promise.all([
-        // fetchPopularTracks(),
-        // fetchPlaylists(),
-        // fetchArtists(),
-        // ]);
-
-        // setTracks(tracksData);
-        // setPlaylists(playlistsData);
-        // setArtists(artistsData);
       } catch (err) {
         setError(err);
       } finally {

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAdminUser } from "@/app/context/AdminUserContext";
+import { useAdminUser } from "@/app/features/admin/context/AdminUserContext";
 
 export default function AdminPage() {
   const { admin, loading } = useAdminUser();

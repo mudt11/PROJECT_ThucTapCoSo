@@ -1,0 +1,29 @@
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.new-playlist-btn {
+  font-size: 14px;
+  color: var(--tt-orange);
+  background-color: transparent;
+  border: 1px solid var(--tt-orange);
+  padding: 12px 30px;
+  display: inline-block;
+  border-radius: 25px;
+  font-weight: 400;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.new-playlist-btn:hover {
+  background-color: var(--tt-orange);
+  color: var(--color-text-third);
+  transition: 0.3s;
+}
+

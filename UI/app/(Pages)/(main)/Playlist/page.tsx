@@ -1,7 +1,7 @@
 "use client";
 
-import "@/app/styles/myplaylists.css";
-import MyPlaylistGrid from "../../../components/MusicContainer/MyPlaylistGrid";
+import "@/app/(Pages)/(main)/Playlist/Playlist.css";
+import MyPlaylistGrid from "../../../features/song/components/MyPlaylistGrid/MyPlaylistGrid";
 
 export default function PlaylistsPage() {
   return (

@@ -1,9 +1,9 @@
 import React from "react";
 import { useState, useEffect } from "react";
 
-import { fetchDailyMixes, fetchDailyMixDetail } from "@/app/utils/mixApi";
+import { fetchDailyMixes, fetchDailyMixDetail } from "@/app/features/mix/mixApi";
 import type { Playlist, SelectedItem } from "@/app/types/music";
-import HorizontalScroll from "@/app/components/HorizontalScroll";
+import HorizontalScroll from "@/app/components/ui/HorizontalScroll";
 import PlaylistCover from "@/app/components/FeaturedPlaylists/PlaylistCover";
 
 interface Props {

@@ -2,18 +2,17 @@
 
 import { useState } from "react";
 import "@/app/styles/feature-playlists.css";
-import "@/app/styles/library.css";
-import { useUser } from "@/app/context/UserContext";
+import { useUser } from "@/app/features/user/context/UserContext";
 
 import DetailView from "./DetailView";
 import TrackSection from "./TrackSection";
 import PlaylistSection from "./PlaylistSection";
-import ArtistSection from "./ArtistSection";
-import MyPlaylistGrid from "../MusicContainer/MyPlaylistGrid";
+import ArtistSection from "../../features/artist/components/ArtistSection";
+import MyPlaylistGrid from "../../features/song/components/MyPlaylistGrid/MyPlaylistGrid";
 import { SelectedItem } from "@/app/types/music";
 
 import { RiResetRightLine } from "react-icons/ri";
-import HorizontalScroll from "../HorizontalScroll";
+import HorizontalScroll from "../ui/HorizontalScroll";
 
 const mockTracks = [
   {

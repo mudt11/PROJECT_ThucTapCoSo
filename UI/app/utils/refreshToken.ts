@@ -1,4 +1,4 @@
-import { URL } from "./authApi";
+import { URL } from "../features/auth/authApi";
 
 // API refresh access token admin
 export async function refreshTokenByAdmin() {
@@ -23,7 +23,7 @@ export async function fetchWithAutoRefresh(
   url: string,
   options: RequestInit = {},
   context: { role: Role },
-  retry: boolean = true
+  retry: boolean = true,
 ) {
   let res = await fetch(url, {
     ...options,

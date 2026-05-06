@@ -6,7 +6,7 @@ import { useModal } from "@/app/context/ModalContext";
 import { registerService } from "@/app/features/auth/service";
 import { validatePassword } from "@/app/utils/passwordValidator";
 import styles from "@/app/styles/Auth.module.css";
-import Logo from "@/app/components/Logo";
+import Logo from "@/app/components/ui/Logo";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");

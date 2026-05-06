@@ -11,7 +11,7 @@ import {
   toggleSongVisibility,
   createSong,
 } from "@/app/features/song/song.api";
-import Pagination from "@/app/components/Pagination";
+import Pagination from "@/app/components/ui/Pagination";
 import { formatDuration, formatDate } from "@/app/utils/dateHelper";
 
 function SongManagement() {

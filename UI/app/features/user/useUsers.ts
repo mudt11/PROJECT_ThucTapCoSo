@@ -1,6 +1,6 @@
 import useSWR, { mutate } from "swr";
-import { getUsers } from "@/app/utils/authApi";
-import { deleteAccount } from "@/app/utils/accountApi";
+import { getUsers } from "@/app/features/auth/authApi";
+import { deleteAccount } from "@/app/features/user/accountApi";
 import { User } from "../../types/music";
 
 interface UsersResponse {
