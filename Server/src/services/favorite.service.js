@@ -20,16 +20,28 @@ const toggleLikeSong = async (userId, songId) => {
     };
   }
 
-  await Favorite.create({
-    user_id: userId,
-    song_id: songId,
-  });
+  try {
+    await Favorite.create({
+      user_id: userId,
+      song_id: songId,
+    });
 
-  return {
-    liked: true,
-    song_id: songId,
-    message: "Đã thích bài hát.",
-  };
+    return {
+      liked: true,
+      song_id: songId,
+      message: "Đã thích bài hát.",
+    };
+  } catch (error) {
+    // Nếu lỗi là do click đúp tạo ra bản ghi trùng, ta bỏ qua và coi như thành công
+    if (error.name === "SequelizeUniqueConstraintError") {
+      return {
+        liked: true,
+        song_id: songId,
+        message: "Đã thích bài hát.",
+      };
+    }
+    throw error;
+  }
 };
 
 const getLikeStatus = async (userId, songId) => {

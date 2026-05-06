@@ -32,7 +32,7 @@ const upsertUserActivity = async (activityData) => {
     },
     {
       upsert: true,
-      new: true,
+      returnDocument: "after",
       setDefaultsOnInsert: true,
     },
   );
