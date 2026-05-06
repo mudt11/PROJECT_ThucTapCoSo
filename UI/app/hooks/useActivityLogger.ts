@@ -29,63 +29,73 @@ export function useActivityLogger(source: ActivitySource = "playlist") {
   }, [source]);
 
   // HÀM CHỐT SỔ VÀ GỬI API 1 LẦN DUY NHẤT
-  const flushSession = useCallback(async (reason: ExitReason, isBeacon = false) => {
-    const t = trackRef.current;
-    if (!t || !sessionIdRef.current) return;
+  const flushSession = useCallback(
+    async (reason: ExitReason, isBeacon = false) => {
+      const t = trackRef.current;
+      if (!t || !sessionIdRef.current) return;
 
-    // 1. Chốt thời gian nghe cuối cùng trước khi đóng session
-    let finalListenedTime = sessionDataRef.current.totalListenedTime;
-    if (lastPlayTimestampRef.current > 0) {
-      finalListenedTime += (Date.now() - lastPlayTimestampRef.current) / 1000;
-      lastPlayTimestampRef.current = 0; // Đặt lại 0 để không bị tính đúp
-    }
-
-    // Nếu thời gian nghe < 1s (chỉ bấm nhầm rồi next luôn), có thể bỏ qua không gửi để tiết kiệm DB
-    if (finalListenedTime < 1 && reason !== "ended") return;
-
-    const payload = {
-      song_id: t.trackId,
-      session_id: sessionIdRef.current,
-      total_listened_time: Number(finalListenedTime.toFixed(2)),
-      song_duration: t.duration,
-      max_position_reached: Number(sessionDataRef.current.maxPositionReached.toFixed(2)),
-      play_pause_count: sessionDataRef.current.playPauseCount,
-      seek_count: sessionDataRef.current.seekCount,
-      exit_reason: reason,
-      source: sourceRef.current,
-    };
-
-    console.log("Đã chốt sổ và gửi Session:", payload);
-
-    try {
-      if (isBeacon) {
-        const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
-        navigator.sendBeacon(API_URL, blob);
-      } else {
-        await axios.post(API_URL, payload, { withCredentials: true });
+      // 1. Chốt thời gian nghe cuối cùng trước khi đóng session
+      let finalListenedTime = sessionDataRef.current.totalListenedTime;
+      if (lastPlayTimestampRef.current > 0) {
+        finalListenedTime += (Date.now() - lastPlayTimestampRef.current) / 1000;
+        lastPlayTimestampRef.current = 0; // Đặt lại 0 để không bị tính đúp
       }
-    } catch (err) {
-      console.error("[ActivityLogger] flush failed:", err);
-    }
-  }, []);
 
-  // NATIVE EVENT HANDLERS (Gắn vào thẻ <audio>) 
-  const initTrack = useCallback((trackId: number, duration: number) => {
-    // 1. Chốt sổ bài cũ (nếu có) với lý do "skipped" (vì người dùng chuyển bài)
-    flushSession("skipped");
+      // Nếu thời gian nghe < 1s (chỉ bấm nhầm rồi next luôn), có thể bỏ qua không gửi để tiết kiệm DB
+      if (finalListenedTime < 1 && reason !== "ended") return;
 
-    // 2. Khởi tạo Giỏ dữ liệu mới cho bài này
-    trackRef.current = { trackId, duration };
-    sessionIdRef.current = crypto.randomUUID();
-    sessionDataRef.current = {
-      totalListenedTime: 0,
-      maxPositionReached: 0,
-      playPauseCount: 0,
-      seekCount: 0,
-    };
-    lastPlayTimestampRef.current = 0;
-    hasViewedRef.current = false;
-  }, [flushSession]);
+      const payload = {
+        song_id: t.trackId,
+        session_id: sessionIdRef.current,
+        total_listened_time: Number(finalListenedTime.toFixed(2)),
+        song_duration: t.duration,
+        max_position_reached: Number(
+          sessionDataRef.current.maxPositionReached.toFixed(2),
+        ),
+        play_pause_count: sessionDataRef.current.playPauseCount,
+        seek_count: sessionDataRef.current.seekCount,
+        exit_reason: reason,
+        source: sourceRef.current,
+      };
+
+      console.log("Đã chốt sổ và gửi Session:", payload);
+
+      try {
+        if (isBeacon) {
+          const blob = new Blob([JSON.stringify(payload)], {
+            type: "application/json",
+          });
+          navigator.sendBeacon(API_URL, blob);
+        } else {
+          await axios.post(API_URL, payload, { withCredentials: true });
+        }
+      } catch (err) {
+        console.error("[ActivityLogger] flush failed:", err);
+      }
+    },
+    [],
+  );
+
+  // NATIVE EVENT HANDLERS (Gắn vào thẻ <audio>)
+  const initTrack = useCallback(
+    (trackId: number, duration: number) => {
+      // 1. Chốt sổ bài cũ (nếu có) với lý do "skipped" (vì người dùng chuyển bài)
+      flushSession("skipped");
+
+      // 2. Khởi tạo Giỏ dữ liệu mới cho bài này
+      trackRef.current = { trackId, duration };
+      sessionIdRef.current = crypto.randomUUID();
+      sessionDataRef.current = {
+        totalListenedTime: 0,
+        maxPositionReached: 0,
+        playPauseCount: 0,
+        seekCount: 0,
+      };
+      lastPlayTimestampRef.current = 0;
+      hasViewedRef.current = false;
+    },
+    [flushSession],
+  );
 
   const handlePlay = useCallback(() => {
     if (!trackRef.current) return;
@@ -116,7 +126,7 @@ export function useActivityLogger(source: ActivitySource = "playlist") {
     if (lastPlayTimestampRef.current > 0) {
       currentTotal += (Date.now() - lastPlayTimestampRef.current) / 1000;
     }
-    
+
     if (currentTotal >= 20 && !hasViewedRef.current) {
       increaseSongView(trackRef.current.trackId);
       hasViewedRef.current = true;
@@ -126,7 +136,7 @@ export function useActivityLogger(source: ActivitySource = "playlist") {
   const handleSeek = useCallback((newPosition: number) => {
     if (!trackRef.current) return;
     sessionDataRef.current.seekCount += 1;
-    
+
     if (newPosition > sessionDataRef.current.maxPositionReached) {
       sessionDataRef.current.maxPositionReached = newPosition;
     }
@@ -135,25 +145,33 @@ export function useActivityLogger(source: ActivitySource = "playlist") {
   const handleEnded = useCallback(() => {
     // Chốt sổ với lý do "ended"
     flushSession("ended");
-    
+
     // Xóa session để không bị gửi lại
-    sessionIdRef.current = null; 
+    sessionIdRef.current = null;
     trackRef.current = null;
   }, [flushSession]);
 
   // Handle tắt tab/ứng dụng đột ngột
   useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "hidden") {
-        flushSession("tab_closed", true); // Dùng Beacon
-      }
+    // pagehide hoạt động tốt và đáng tin cậy trên cả Desktop và Mobile
+    // Nó chỉ chạy khi user thực sự rời khỏi hẳn trang web (đóng tab, reload, back lại)
+    const handleUnload = () => {
+      flushSession("tab_closed", true); // Dùng Beacon để đảm bảo gửi được khi tab đang đóng
     };
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    window.addEventListener("pagehide", handleUnload);
     return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      flushSession("tab_closed", true);
+      window.removeEventListener("pagehide", handleUnload);
+      // Xóa flushSession ở đây đi để tránh gửi 2 lần khi component unmount bình thường
     };
   }, [flushSession]);
 
-  return { initTrack, handlePlay, handlePause, handleTimeUpdate, handleSeek, handleEnded };
+  return {
+    initTrack,
+    handlePlay,
+    handlePause,
+    handleTimeUpdate,
+    handleSeek,
+    handleEnded,
+  };
 }

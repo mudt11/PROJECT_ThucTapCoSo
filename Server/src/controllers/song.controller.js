@@ -2,6 +2,7 @@ const songService = require("../services/song.service");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs-extra");
 const { Song, User } = require("../models");
+const UserActivity = require("../models/mongo/UserActivity");
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -125,6 +126,65 @@ const getSongById = async (req, res, next) => {
   }
 };
 
+// const logSongActivity = async (req, res) => {
+//   try {
+//     const { songId } = req.params;
+//     const { action, duration_listened } = req.body;
+//     const userId = req.user.userId;
+
+//     const validActions = ["play", "skip", "complete"];
+//     if (!action || !validActions.includes(action)) {
+//       return res.status(400).json({
+//         success: false,
+//         message: `Action phải là một trong: ${validActions.join(", ")}`,
+//       });
+//     }
+
+//     const listenedSeconds = Number(duration_listened);
+//     if (Number.isNaN(listenedSeconds) || listenedSeconds < 0) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "duration_listened phải là số hợp lệ lớn hơn hoặc bằng 0",
+//       });
+//     }
+
+//     const song = await Song.findByPk(songId);
+//     if (!song) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Không tìm thấy bài hát",
+//       });
+//     }
+
+//     const completionRate = song.duration
+//       ? Math.min(1, listenedSeconds / song.duration)
+//       : 0;
+//     const isView = listenedSeconds >= 20;
+
+//     const activity = new UserActivity({
+//       user_id: userId,
+//       song_id: parseInt(songId, 10),
+//       action,
+//       duration_listened: listenedSeconds,
+//       completion_rate: completionRate,
+//       is_view: isView,
+//     });
+//     await activity.save();
+
+//     return res.status(201).json({
+//       success: true,
+//       message: "Đã lưu hành vi nghe nhạc",
+//       data: activity,
+//     });
+//   } catch (error) {
+//     console.error("Lỗi logSongActivity:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Lưu hành vi thất bại",
+//     });
+//   }
+// };
+
 async function getSongList(req, res) {
   try {
     const page = Number(req.query.page) || 1;
@@ -142,8 +202,20 @@ async function getSongList(req, res) {
 const increaseView = async (req, res) => {
   try {
     const { songId } = req.params;
+    const userId = req.user.userId;
 
     const result = await songService.incrementSongView(songId);
+
+    // Lưu lịch sử hành vi vào UserActivity
+    const activity = new UserActivity({
+      user_id: userId,
+      song_id: parseInt(songId, 10),
+      action: "play",
+      duration_listened: 0,
+      completion_rate: 0,
+      is_view: false,
+    });
+    await activity.save();
 
     return res.status(200).json({
       success: true,
@@ -244,5 +316,6 @@ module.exports = {
   // getLikeStatus,
   // getLikedSongs,
   increaseView,
+  // logSongActivity,
   searchSongs,
 };

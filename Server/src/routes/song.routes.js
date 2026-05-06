@@ -12,7 +12,9 @@ router.get("/search", songController.searchSongs);
 // track list hằng ngày
 router.get("/", songController.getSongList);
 // tăng view
-router.post("/:songId/view", songController.increaseView);
+router.post("/:songId/view", protect, songController.increaseView);
+// ghi lại thời gian user nghe bài hát trước khi chuyển bài
+// router.post("/:songId/activity", protect, songController.logSongActivity);
 
 /* --- ROUTES FOR ADMIN --- */
 

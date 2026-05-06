@@ -9,6 +9,7 @@ const artistRoutes = require("./artist.routes");
 const playlistRoutes = require("./playlist.routes");
 const ratingRoutes = require("./rating.routes");
 const favoriteRoutes = require("./favorite.route");
+const userActivityRoutes = require("./userActivity.routes");
 
 router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
@@ -19,5 +20,6 @@ router.use("/artists", artistRoutes);
 router.use("/playlists", playlistRoutes);
 router.use("/ratings", ratingRoutes);
 router.use("/favorites", favoriteRoutes);
+router.use("/activity", userActivityRoutes);
 
 module.exports = router;

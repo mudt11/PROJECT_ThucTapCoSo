@@ -80,3 +80,35 @@ def prepare_data_for_ncf(self, final_df):
     ncf_input_df = final_df[['user_index', 'song_index', 'rating']]
     
     return ncf_input_df, num_users, num_songs, user_mapping, song_mapping
+
+# def process_mongo_data(self, df):
+#     # 1. Group lại theo user-song
+#     grouped = df.groupby(['user_id', 'song_id']).agg(
+#         avg_completion=('completion_rate', 'mean'),
+#         play_count=('completion_rate', 'count'),
+#         last_timestamp=('timestamp', 'max')
+#     ).reset_index()
+
+#     # 2. Replay score (nghe lại nhiều lần)
+#     def replay_score(count):
+#         if count >= 5: return 1
+#         if count >= 3: return 0.7
+#         if count >= 2: return 0.4
+#         return 0
+
+#     grouped['replay_score'] = grouped['play_count'].apply(replay_score)
+
+#     # 3. Recency score (gần đây nghe)
+#     max_time = grouped['last_timestamp'].max()
+#     grouped['recency_score'] = grouped['last_timestamp'].apply(
+#         lambda t: 1 - (max_time - t).days / 30 if t else 0
+#     ).clip(0, 1)
+
+#     # 4. Final rating
+#     grouped['rating'] = (
+#         0.7 * grouped['avg_completion'] +
+#         0.2 * grouped['replay_score'] +
+#         0.1 * grouped['recency_score']
+#     ) * 5
+
+#     return grouped[['user_id', 'song_id', 'rating']]

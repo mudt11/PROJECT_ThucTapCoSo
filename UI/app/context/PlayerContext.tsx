@@ -6,11 +6,13 @@ import React, {
   useRef,
   useState,
   useEffect,
+  useCallback,
 } from "react";
 import { useAudioEngine } from "@/app/features/player/useAudioEngine";
 import { PlayerService } from "@/app/features/player/playerService";
 import type { Track } from "@/app/types/music";
 import { fetchDailySongs } from "@/app/features/song/song.api";
+import { useActivityLogger } from "@/app/hooks/useActivityLogger";
 
 type PlayerContextType = {
   currentTrack: Track | null;
@@ -19,13 +21,9 @@ type PlayerContextType = {
   pause: () => void;
   togglePlay: () => void;
   setPlaylist: (tracks: Track[], index: number) => void;
-  next: () => void;
+  next: () => Promise<void>;
   prev: () => void;
-
-  audioState: {
-    currentTime: number;
-    duration: number;
-  };
+  audioState: { currentTime: number; duration: number };
   seek: (time: number) => void;
   setVolume: (volume: number) => void;
 };
@@ -34,150 +32,151 @@ const PlayerContext = createContext<PlayerContextType | null>(null);
 
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const playerServiceRef = useRef(new PlayerService());
-  const audio = useAudioEngine();
 
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
-
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
 
-  // ===== RESTORE PLAYER STATE =====
-  useEffect(() => {
-    const raw = localStorage.getItem("player_state_v2");
-    if (!raw) return;
+  const loadMoreRef = useRef<() => Promise<void>>();
+  const nextRef = useRef<() => Promise<void>>();
+  const loadTrackRef =
+    useRef<(track: Track | null, autoPlay?: boolean) => void>();
 
-    try {
-      const data = JSON.parse(raw);
+  // Khởi tạo Logger độc lập với Context State
+  const logger = useActivityLogger("playlist");
 
-      if (!data.playlist?.length) return;
+  // Kết nối Audio Engine với Logger qua Native Events
+  const audio = useAudioEngine({
+    onEndedNative: (time) => {
+      logger.handleEnded(time); // Tracking
+      nextRef.current?.(); // Gọi bài tiếp theo (fix lỗi Auto-Play)
+    },
+    onPlayNative: logger.handlePlay,
+    onPauseNative: logger.handlePause,
+    onTimeUpdateNative: logger.handleTimeUpdate,
+    onSeekedNative: logger.handleSeek,
+  });
 
-      playerServiceRef.current.setPlaylist(data.playlist, data.index);
+  const loadTrack = useCallback(
+    (track: Track | null, autoPlay = true) => {
+      if (!track?.audioUrl) return;
 
-      const track = playerServiceRef.current.getCurrentTrack();
-      if (track?.audioUrl) {
-        audio.load(track.audioUrl);
+      // Báo cho Logger biết đã có track mới
+      logger.initTrack(track.trackId, track.duration || 0);
 
-        setTimeout(() => {
-          audio.seek(data.currentTime || 0);
-
-          if (data.isPlaying) {
-            audio.play();
-          }
-        }, 200);
-      }
-
+      audio.load(track.audioUrl);
       setCurrentTrack(track);
-    } catch (e) {
-      console.error("restore failed", e);
-    }
-  }, []);
-
-  // ===== SAVE PLAYER STATE =====
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const data = {
-        playlist: playerServiceRef.current.getPlaylist(),
-        index: playerServiceRef.current.getIndex(),
-        currentTime: audio.state.currentTime,
-        isPlaying: audio.state.isPlaying,
-      };
-
-      localStorage.setItem("player_state_v2", JSON.stringify(data));
-    }, 2000);
-
-    return () => clearInterval(interval);
-  }, [audio.state]);
-
-  // ===== AUTO NEXT =====
-  useEffect(() => {
-    const audioEl = audio.audioRef.current;
-    if (!audioEl) return;
-
-    const handleEnded = () => {
-      const track = playerServiceRef.current.next();
-
-      if (!track) {
-        loadMore();
-        return;
+      if (autoPlay) {
+        setTimeout(() => audio.play(), 50);
       }
-
-      loadTrack(track);
-    };
-
-    audioEl.addEventListener("ended", handleEnded);
-
-    return () => {
-      audioEl.removeEventListener("ended", handleEnded);
-    };
-  }, []);
+    },
+    [audio, logger],
+  );
 
   useEffect(() => {
-    const remaining = playerServiceRef.current.remaining();
+    loadTrackRef.current = loadTrack;
+  }, [loadTrack]);
 
-    // nếu còn <= 2 bài → load thêm
-    if (remaining <= 2) {
-      loadMore();
-    }
-  }, [currentTrack]);
-
-  const loadTrack = (track: Track | null) => {
-    if (!track?.audioUrl) return;
-    audio.load(track.audioUrl);
-    audio.play();
-    setCurrentTrack(track);
-  };
-
-  const setPlaylist = (tracks: Track[], index: number) => {
-    playerServiceRef.current.setPlaylist(tracks, index);
-    loadTrack(playerServiceRef.current.getCurrentTrack());
-  };
-
-  const loadMore = async () => {
+  const loadMore = useCallback(async () => {
     if (loadingMore || !hasMore) return;
-
     setLoadingMore(true);
-
     try {
       const res = await fetchDailySongs(20, page + 1);
-
       playerServiceRef.current.appendTracks(res.songs);
-
       setPage(res.page);
-
       if (playerServiceRef.current.getPlaylist().length >= res.total) {
         setHasMore(false);
       }
     } catch (e) {
-      console.error("loadMore failed", e);
+      console.error("[PlayerContext] loadMore failed:", e);
     } finally {
       setLoadingMore(false);
     }
-  };
+  }, [loadingMore, hasMore, page]);
 
-  const next = async () => {
+  useEffect(() => {
+    loadMoreRef.current = loadMore;
+  }, [loadMore]);
+
+  const next = useCallback(async () => {
     let track = playerServiceRef.current.next();
-
     if (!track && hasMore) {
-      await loadMore();
+      await loadMoreRef.current?.();
       track = playerServiceRef.current.next();
     }
-
     if (track) {
-      loadTrack(track);
+      loadTrackRef.current?.(track, true);
     }
-  };
+  }, [hasMore]);
 
-  const prev = () => {
+  useEffect(() => {
+    nextRef.current = next;
+  }, [next]);
+
+  const prev = useCallback(() => {
     const track = playerServiceRef.current.prev();
-    loadTrack(track);
-  };
+    loadTrack(track, true);
+  }, [loadTrack]);
 
-  const play = () => audio.play();
-  const pause = () => audio.pause();
-  const togglePlay = () => {
-    audio.state.isPlaying ? pause() : play();
-  };
+  useEffect(() => {
+    if (playerServiceRef.current.remaining() <= 2) {
+      loadMore();
+    }
+  }, [currentTrack, loadMore]);
+
+  useEffect(() => {
+    const raw = localStorage.getItem("player_state_v2");
+    if (!raw) return;
+    try {
+      const data = JSON.parse(raw);
+      if (!data.playlist?.length) return;
+
+      playerServiceRef.current.setPlaylist(data.playlist, data.index);
+      const track = playerServiceRef.current.getCurrentTrack();
+
+      if (track?.audioUrl) {
+        logger.initTrack(track.trackId, track.duration || 0);
+        audio.load(track.audioUrl);
+        setTimeout(() => {
+          audio.seek(data.currentTime || 0);
+          if (data.isPlaying) audio.play();
+        }, 200);
+      }
+      setCurrentTrack(track);
+    } catch (e) {
+      console.error("[PlayerContext] restore failed:", e);
+    }
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      localStorage.setItem(
+        "player_state_v2",
+        JSON.stringify({
+          playlist: playerServiceRef.current.getPlaylist(),
+          index: playerServiceRef.current.getIndex(),
+          currentTime: audio.state.currentTime,
+          isPlaying: audio.state.isPlaying,
+        }),
+      );
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [audio.state]);
+
+  const setPlaylist = useCallback(
+    (tracks: Track[], index: number) => {
+      playerServiceRef.current.setPlaylist(tracks, index);
+      loadTrack(playerServiceRef.current.getCurrentTrack(), true);
+    },
+    [loadTrack],
+  );
+
+  const play = useCallback(() => audio.play(), [audio]);
+  const pause = useCallback(() => audio.pause(), [audio]);
+  const togglePlay = useCallback(() => {
+    audio.state.isPlaying ? audio.pause() : audio.play();
+  }, [audio]);
 
   return (
     <PlayerContext.Provider
@@ -195,11 +194,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
           duration: audio.state.duration,
         },
         seek: audio.seek,
-        setVolume: (v) => {
-          if (audio.audioRef.current) {
-            audio.audioRef.current.volume = v;
-          }
-        },
+        setVolume: audio.setVolume,
       }}
     >
       {children}
