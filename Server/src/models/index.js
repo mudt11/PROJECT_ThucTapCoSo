@@ -10,8 +10,8 @@ const Favorite = require("./favorite.model");
 const SongArtist = require("./song_artist.model");
 const Genre = require("./genres.model");
 const SongGenre = require("./song_genres.model");
-// const Playlist = require("./playlist.model");
-// const PlaylistSong = require("./playlist_song.model");
+const Playlist = require("./playlist.model");
+const PlaylistSong = require("./playlist_song.model");
 
 // 1. User - RefreshToken (Quan hệ 1-N)
 // Một User có nhiều Token
@@ -81,6 +81,33 @@ Song.hasMany(Favorite, {
   foreignKey: "song_id",
 });
 
+// Playlist - Song: Quan hệ N-N qua bảng PlaylistSong
+Song.belongsToMany(Playlist, {
+  through: PlaylistSong,
+  foreignKey: "song_id",
+  otherKey: "playlist_id",
+  as: "playlists",
+});
+
+Playlist.belongsToMany(Song, {
+  through: PlaylistSong,
+  foreignKey: "playlist_id",
+  otherKey: "song_id",
+  as: "songs",
+});
+
+// Playlist - User: Quan hệ N-1
+User.hasMany(Playlist, {
+  foreignKey: "user_id",
+  as: "playlists",
+});
+
+Playlist.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "owner",
+  onDelete: "CASCADE",
+});
+
 // HÀM ĐỒNG BỘ DATABASE
 
 const syncDatabase = async () => {
@@ -104,4 +131,6 @@ module.exports = {
   Rating,
   Favorite,
   SongArtist,
+  Playlist,
+  PlaylistSong,
 };
