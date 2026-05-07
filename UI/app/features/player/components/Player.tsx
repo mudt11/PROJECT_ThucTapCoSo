@@ -7,6 +7,7 @@ import "@/app/features/player/components/Player.css";
 import { usePlayer } from "@/app/features/player/context/PlayerContext";
 import { useLikeContext } from "@/app/features/like/context/LikeContext";
 import PopUp from "../../../components/ui/PopUp";
+import AddToPlaylistModal from "@/app/features/playlist/components/AddToPlaylistModal";
 
 const mockQueue = [
   {
@@ -49,6 +50,7 @@ const PlayerContent: React.FC = () => {
   const [volumeUI, setVolumeUI] = useState(50);
   const [isMuted, setIsMuted] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showAddToPlaylist, setShowAddToPlaylist] = useState(false);
   // state khóa nút like chống spam click
   const [isLiking, setIsLiking] = useState(false);
 
@@ -185,7 +187,7 @@ const PlayerContent: React.FC = () => {
                 <i className="fa-regular fa-heart" />
                 <span>Thêm vào yêu thích</span>
               </button>
-              <button>
+              <button onClick={() => setShowAddToPlaylist(true)}>
                 <i className="fa-solid fa-circle-plus" />
                 <span>Thêm vào playlist</span>
               </button>
@@ -197,6 +199,21 @@ const PlayerContent: React.FC = () => {
           </PopUp>
         )}
       </div>
+
+      {/* ── Add to Playlist Modal ── */}
+      {showAddToPlaylist && currentTrack && (
+        <AddToPlaylistModal
+          trackId={currentTrack.trackId}
+          trackTitle={currentTrack.title || "Bài hát"}
+          onClose={() => {
+            setShowAddToPlaylist(false);
+            setShowUserMenu(false);
+          }}
+          onSuccess={() => {
+            // Optional: refresh something if needed
+          }}
+        />
+      )}
 
       {/* ── Playback controls ── */}
       <div className="player-center">

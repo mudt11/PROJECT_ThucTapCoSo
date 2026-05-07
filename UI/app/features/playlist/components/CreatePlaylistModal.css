@@ -1,0 +1,259 @@
+/* Standard Modal */
+.create-playlist-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+}
+
+.create-playlist-content {
+  background: var(--tt-surface-2);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 450px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.create-playlist-content .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid var(--tt-orange);
+}
+
+.create-playlist-content .header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--tt-text-primary);
+}
+
+.create-playlist-content .close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--tt-text-muted);
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.create-playlist-content .close-btn:hover {
+  color: var(--tt-text-primary);
+}
+
+.create-playlist-content .form {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.input-field,
+.textarea-field {
+  background: var(--tt-surface);
+  border: 1px solid var(--tt-border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: var(--tt-text-primary);
+  font-family: inherit;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  resize: vertical;
+}
+
+.input-field:focus,
+.textarea-field:focus {
+  outline: none;
+  border-color: var(--tt-orange);
+  background: var(--tt-orange-pale);
+}
+
+.input-field::placeholder,
+.textarea-field::placeholder {
+  color: var(--tt-text-muted);
+}
+
+.input-field:disabled,
+.textarea-field:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.create-playlist-content .actions {
+  display: flex;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--tt-orange);
+}
+
+.cancel-btn,
+.submit-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn {
+  background: transparent;
+  border: 2px solid var(--tt-orange);
+  color: var(--tt-orange);
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background: var(--tt-orange-light);
+}
+
+.submit-btn {
+  border: none;
+  background: var(--tt-orange);
+  color: white;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: var(--tt-orange);
+  opacity: 0.9;
+}
+
+.cancel-btn:disabled,
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background: #e74c3c;
+  color: white;
+  padding: 12px 20px;
+  margin: 0;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+/* Nested Modal (inside AddToPlaylistModal) */
+.create-playlist-nested-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+}
+
+.create-playlist-nested-content {
+  background: var(--tt-surface-2);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.nested-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--tt-orange);
+}
+
+.nested-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--tt-text-primary);
+}
+
+.nested-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  color: var(--tt-text-muted);
+  cursor: pointer;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.nested-close-btn:hover {
+  color: var(--tt-text-primary);
+}
+
+.nested-form {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nested-actions {
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--tt-orange);
+}
+
+.nested-actions .cancel-btn,
+.nested-actions .submit-btn {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nested-actions .cancel-btn {
+  background: transparent;
+  border: 2px solid var(--tt-orange);
+  color: var(--tt-orange);
+}
+
+.nested-actions .cancel-btn:hover:not(:disabled) {
+  background: var(--tt-orange-light);
+}
+
+.nested-actions .submit-btn {
+  border: none;
+  background: var(--tt-orange);
+  color: white;
+}
+
+.nested-actions .submit-btn:hover:not(:disabled) {
+  background: var(--tt-orange);
+  opacity: 0.9;
+}
+
+.nested-actions .cancel-btn:disabled,
+.nested-actions .submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

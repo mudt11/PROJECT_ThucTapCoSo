@@ -15,6 +15,9 @@ const { route } = require("./auth.routes");
 // 1. Tao Playlist
 router.post("/", protect, playlistController.createPlaylist);
 
+// 2. Lay tat ca playlist (MUST be before /:playlistId route)
+router.get("/me", protect, playlistController.getMyPlaylists);
+
 // 4. Them bai hat vao playlist
 router.post(
   "/:playlistId/songs",
@@ -31,9 +34,6 @@ router.delete(
   protect,
   playlistController.removeSongFromPlaylist,
 );
-
-// 2. Lay tat ca playlist
-router.get("/me", protect, playlistController.getMyPlaylists);
 
 // 3. Xoa playlist
 router.delete("/:playlistId", protect, playlistController.deletePlaylist);

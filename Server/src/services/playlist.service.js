@@ -101,7 +101,8 @@ const getMyPlaylists = async (userId) => {
     include: [
       {
         model: Song,
-        through: { attributes: [] }, // Khong lay t.tin bang trung gian
+        as: "songs",
+        through: { attributes: [] }, 
         attributes: ["song_id", "title", "audio_url", "duration"],
       },
     ],
@@ -135,6 +136,7 @@ async function getTodayDailyMix() {
     include: [
       {
         model: Song,
+        as: "songs",
         through: {
           attributes: [],
         },
