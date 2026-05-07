@@ -1,0 +1,14 @@
+1. Lệnh xuất file JSON của collection và lưu file tạm vào thư mục /tmp:
+docker exec -it music_web_mongo mongoexport --db=music_app --collection=useractivities --out=/tmp/useractivities_export.json
+
+2. Copy file đó từ container ra thư mục project hiện tại
+docker cp music_web_mongo:/tmp/useractivities_export.json ./db/useractivities_export.json
+
+3. Lấy file init.sql
+docker exec music_web_db mysqldump -u root -p123456 Recommend_music_web > init.sql
+
+4. Nạp dữ liệu từ db_tmp sang db chính cùng cấu trúc, chỉ khác data
+docker exec music_web_db mysqldump -u root -p<mật_khẩu> db_temp_1 --no-create-info --insert-ignore > merged_data.sql
+
+# Sau đó nạp file này vào database chính
+cat merged_data.sql | docker exec -i music_web_db mysql -u root -p<mật_khẩu> Recommend_music_web

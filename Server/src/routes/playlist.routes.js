@@ -8,9 +8,9 @@ const { route } = require("./auth.routes");
 // 6. Lay daily mix hom nay
 // router.get("/daily-mix/today", playlistController.getDailyMix);
 // lấy danh sách playlist
-router.get("/daily-mixes", dailyMixController.getDailyMixList);
+// router.get("/daily-mixes", dailyMixController.getDailyMixList);
 //lấy danh sách bài hát trong playlist
-router.get("/daily-mix/:playlistId", dailyMixController.getDailyMixDetail);
+// router.get("/daily-mix/:playlistId", dailyMixController.getDailyMixDetail);
 
 // 1. Tao Playlist
 router.post("/", protect, playlistController.createPlaylist);
