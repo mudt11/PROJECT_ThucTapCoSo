@@ -39,6 +39,10 @@ const PlayerContent: React.FC = () => {
     audioState,
     seek,
     setVolume,
+    isShuffle,
+    toggleShuffle,
+    isRepeat,
+    toggleRepeat,
   } = usePlayer();
   const { likedMap, toggleLike, fetchLikeStatus } = useLikeContext();
 
@@ -210,7 +214,14 @@ const PlayerContent: React.FC = () => {
         </div>
 
         <div className="control">
-          <button className="play">
+          {/* NÚT SHUFFLE ĐÃ ĐƯỢC CẬP NHẬT */}
+          <button
+            className="play"
+            onClick={toggleShuffle}
+            style={{
+              color: isShuffle ? "var(--tt-orange)" : "var(--tt-text-muted)",
+            }}
+          >
             <i className="fa-solid fa-shuffle" />
           </button>
           <button id="prevBtn" className="play" onClick={() => prev()}>
@@ -222,7 +233,15 @@ const PlayerContent: React.FC = () => {
           <button id="nextBtn" className="play" onClick={() => next()}>
             <i className="fa-solid fa-forward-step" />
           </button>
-          <button className="play">
+
+          {/* NÚT REPEAT ĐÃ ĐƯỢC GẮN LOGIC */}
+          <button
+            className="play"
+            onClick={toggleRepeat}
+            style={{
+              color: isRepeat ? "var(--tt-orange)" : "var(--tt-text-muted)",
+            }}
+          >
             <i className="fa-solid fa-repeat" />
           </button>
         </div>
