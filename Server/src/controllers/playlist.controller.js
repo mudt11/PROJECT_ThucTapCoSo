@@ -2,19 +2,44 @@ const playlistService = require("../services/playlist.service");
 
 const createPlaylist = async (req, res, next) => {
   try {
-    const userId = req.user.userId; // Lay ID nguoi dung tu token
-    const playlistData = req.body;
+    const userId = req.user.userId;
+    const { name, description } = req.body;
 
     const newPlaylist = await playlistService.createPlaylist(
       userId,
-      playlistData
+      name,
+      description,
     );
     res.status(201).json({
-      message: "Tạo playlist thành công.",
+      success: true,
       data: newPlaylist,
     });
   } catch (error) {
-    next(error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const addSongToPlaylist = async (req, res, next) => {
+  try {
+    const userId = req.user.userId;
+    const { playlistId } = req.params; // ID Playlist
+    const { songId } = req.body; // ID bai hat muon them
+
+    const result = await playlistService.addSongToPlaylist(
+      userId,
+      playlistId,
+      songId,
+    );
+
+    res.status(200).json({ success: true, data: result });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
@@ -29,41 +54,47 @@ const getMyPlaylists = async (req, res, next) => {
   }
 };
 
-const addSongToPlaylist = async (req, res, next) => {
+const getPlaylistDetail = async (req, res, next) => {
   try {
-    const userId = req.user.userId;
-    const { id } = req.params; // ID Playlist
-    const { songId } = req.body; // ID bai hat muon them
+    const { playlistId } = req.params;
 
-    const result = await playlistService.addSongToPlaylist(userId, id, songId);
-    res.status(200).json(result);
+    const playlist = await playlistService.getPlaylistDetail(playlistId);
+
+    res.status(200).json({ success: true, data: playlist });
   } catch (error) {
-    next(error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
 const removeSongFromPlaylist = async (req, res, next) => {
   try {
+    const { playlistId, songId } = req.params;
     const userId = req.user.userId;
-    const { id, songId } = req.params;
 
-    const result = await playlistService.removeSongFromPlaylist(
-      userId,
-      id,
-      songId
-    );
-    res.status(200).json(result);
+    await playlistService.removeSongFromPlaylist(userId, playlistId, songId);
+    res.status(200).json({
+      success: true,
+      message: "Xóa bài hát khỏi danh sách phát thành công",
+    });
   } catch (error) {
-    next(error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
+
+// ================================
 
 const deletePlaylist = async (req, res, next) => {
   try {
     const userId = req.user.userId;
-    const { id } = req.params;
+    const { playlistId } = req.params;
 
-    const result = await playlistService.deletePlaylist(userId, id);
+    const result = await playlistService.deletePlaylist(userId, playlistId);
     res.status(200).json(result);
   } catch (error) {
     next(error);
@@ -86,4 +117,5 @@ module.exports = {
   removeSongFromPlaylist,
   deletePlaylist,
   getDailyMix,
+  getPlaylistDetail,
 };

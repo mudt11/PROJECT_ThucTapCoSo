@@ -8,8 +8,8 @@ const getAllArtists = async () => {
         model: Song,
         as: "songs",
         attributes: ["image_url"],
-        required: false, // artist không có bài vẫn hiện
-        limit: 1, // chỉ cần 1 bài
+        required: false,
+        through: { attributes: [] },
       },
     ],
     order: [["name", "ASC"]],

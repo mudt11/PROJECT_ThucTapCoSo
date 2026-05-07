@@ -25,7 +25,7 @@ async function getDailyMixList(req, res) {
     const result = playlists.map((pl) => ({
       playlist_id: pl.playlist_id,
       name: pl.name,
-      tracks: pl.Songs.slice(0, 4).map((s) => ({
+      tracks: pl.songs.slice(0, 4).map((s) => ({
         song_id: s.song_id,
         image_url: s.image_url,
       })),

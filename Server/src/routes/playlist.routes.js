@@ -12,21 +12,30 @@ router.get("/daily-mixes", dailyMixController.getDailyMixList);
 //lấy danh sách bài hát trong playlist
 router.get("/daily-mix/:playlistId", dailyMixController.getDailyMixDetail);
 
-router.use(protect);
-
 // 1. Tao Playlist
-router.post("/", playlistController.createPlaylist);
-
-// 2. Lay tat ca playlist
-router.get("/me", playlistController.getMyPlaylists);
-
-// 3. Xoa playlist
-router.delete("/:id", playlistController.deletePlaylist);
+router.post("/", protect, playlistController.createPlaylist);
 
 // 4. Them bai hat vao playlist
-router.post("/:id/songs", playlistController.addSongToPlaylist);
+router.post(
+  "/:playlistId/songs",
+  protect,
+  playlistController.addSongToPlaylist,
+);
+
+// Lấy danh sách phát của playlist
+router.get("/:playlistId", playlistController.getPlaylistDetail);
 
 // 5. Xoa bai hat khoi playlist
-router.delete("/:id/songs/:songId", playlistController.removeSongFromPlaylist);
+router.delete(
+  "/:playlistId/songs/:songId",
+  protect,
+  playlistController.removeSongFromPlaylist,
+);
+
+// 2. Lay tat ca playlist
+router.get("/me", protect, playlistController.getMyPlaylists);
+
+// 3. Xoa playlist
+router.delete("/:playlistId", protect, playlistController.deletePlaylist);
 
 module.exports = router;
