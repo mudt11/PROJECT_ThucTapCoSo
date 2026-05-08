@@ -6,7 +6,7 @@ import Banner from "@/app/components/ui/Banner";
 import FeaturedPlaylists from "@/app/components/FeaturedPlaylists/FeaturedPlaylists";
 import type { Playlist, DetailViewData } from "@/app/types/music";
 
-import DetailView from "@/app/components/FeaturedPlaylists/DetailView";
+import DetailView from "@/app/features/playlist/components/DetailView";
 
 export default function ExplorePage() {
   const [selected, setSelected] = useState<DetailViewData | null>(null);

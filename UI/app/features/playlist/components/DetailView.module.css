@@ -1,0 +1,294 @@
+/* Premium DetailView Styles */
+.playlistDetail {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  color: #ffffff;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: #0a0a0a;
+  border-radius: 20px;
+}
+
+/* Background & Overlay */
+.playlistBg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.playlistBg > div,
+.playlistBg > img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  filter: blur(10px) brightness(0.9);
+  transform: scale(1.1);
+}
+
+.playlistBgOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 10, 10, 0.4) 0%,
+    rgba(10, 10, 10, 0.8) 50%,
+    rgba(10, 10, 10, 1) 100%
+  );
+  z-index: 1;
+}
+
+/* Ensure content floats above background */
+.playlistHeader,
+.detailView,
+.backButton {
+  position: relative;
+  z-index: 2;
+}
+
+/* Floating Back Button */
+.backButton {
+  position: absolute;
+  top: 20px;
+  left: 40px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  height: 50px;
+  padding: 10px 15px;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 100;
+}
+
+.backButton:hover {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  color: var(--tt-orange, #ff6b00);
+}
+
+/* Header Section */
+.playlistHeader {
+  padding: 100px 60px 40px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.playlistInfo {
+  display: flex;
+  align-items: flex-end;
+  gap: 32px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.playlistHeader .playlistCover {
+  width: 260px;
+  height: 260px;
+  border-radius: 16px;
+  object-fit: cover;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+  transition: transform 0.4s ease;
+}
+
+.playlistHeader .playlistCover:hover {
+  transform: scale(1.02);
+}
+
+.playlistContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.playlistType {
+  font-size: 14px;
+  font-weight: 600;
+  color: #a0a0a0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.playlistTitle {
+  font-size: clamp(40px, 6vw, 80px);
+  font-weight: 900;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.playlistActions {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-top: 16px;
+}
+
+.playPlaylists {
+  background: var(--button-2);
+  border: none;
+  color: white;
+  font-size: 16px;
+  padding: 14px 36px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 8px 20px rgba(229, 46, 113, 0.3);
+}
+
+.playPlaylists:hover {
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: 0 12px 25px rgba(229, 46, 113, 0.5);
+  filter: brightness(1.1);
+}
+
+.playlistIcons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #a0a0a0;
+}
+
+.playlistIcons .icon {
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.playlistIcons .icon:hover {
+  color: #ffffff;
+  transform: scale(1.15);
+}
+
+.playlistIcons .count {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.playlistIcons .more {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 5px 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Detail View (Song List) */
+.detailView {
+  padding: 0 60px 80px;
+  width: 100%;
+  max-width: 1520px;
+  margin: 0 auto;
+}
+
+.table {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 50px 2fr 1fr 80px;
+  padding: 12px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 16px;
+  color: #a0a0a0;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 50px 2fr 1fr 80px;
+  align-items: center;
+  padding: 12px 24px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.row:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.activeRow {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.activeRow .colTitle span {
+  color: var(--tt-orange, #ff6b00);
+  font-weight: 600;
+}
+
+.colIndex {
+  color: #a0a0a0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.activeRow .colIndex {
+  color: var(--tt-orange, #ff6b00);
+}
+
+.colTitle {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-right: 20px;
+}
+
+.colTitle img {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.colTitle span {
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.colArtist {
+  color: #a0a0a0;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 20px;
+  transition: color 0.2s ease;
+}
+
+.row:hover .colArtist {
+  color: #ffffff;
+}
+
+.colDuration {
+  color: #a0a0a0;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}

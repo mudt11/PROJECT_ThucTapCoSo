@@ -84,9 +84,9 @@ export default function AddToPlaylistModal({
           ) : playlists.length > 0 ? (
             <div className="playlist-list">
               {playlists.map((playlist: any) => (
-                <div key={playlist.playlist_id} className="playlist-item">
+                <div key={playlist.playlistId} className="playlist-item">
                   <div className="playlist-info">
-                    <p className="playlist-name">{playlist.name}</p>
+                     <p className="playlist-name">{playlist.name}</p>
                     {playlist.description && (
                       <p className="playlist-description">
                         {playlist.description}
@@ -95,10 +95,10 @@ export default function AddToPlaylistModal({
                   </div>
                   <button
                     className="add-btn"
-                    onClick={() => handleAddSong(playlist.playlist_id)}
+                    onClick={() => handleAddSong(playlist.playlistId)}
                     disabled={adding}
                   >
-                    {adding && selectedPlaylistId === playlist.playlist_id
+                    {adding && selectedPlaylistId === playlist.playlistId
                       ? "Đang thêm..."
                       : "Thêm"}
                   </button>

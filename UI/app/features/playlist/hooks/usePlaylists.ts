@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Playlist } from "../types";
 import { getMyPlaylistsService } from "../service";
+import { mapToPlaylist } from "../playlist.mapper";
 
 export function usePlaylists() {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
@@ -16,11 +17,13 @@ export function usePlaylists() {
 
       const response = await getMyPlaylistsService();
       
-      const playlistData = Array.isArray(response)
+      const rawData = Array.isArray(response)
         ? response
         : Array.isArray(response?.data)
         ? response.data
         : [];
+
+      const playlistData: Playlist[] = rawData.map(mapToPlaylist);
 
       setPlaylists(playlistData);
     } catch (error: any) {

@@ -15,7 +15,7 @@ const { route } = require("./auth.routes");
 // 1. Tao Playlist
 router.post("/", protect, playlistController.createPlaylist);
 
-// 2. Lay tat ca playlist (MUST be before /:playlistId route)
+// 2. Lay tat ca playlist
 router.get("/me", protect, playlistController.getMyPlaylists);
 
 // 4. Them bai hat vao playlist

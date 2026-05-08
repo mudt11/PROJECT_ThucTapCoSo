@@ -1,22 +1,22 @@
 export interface PlaylistSong {
-  song_id: number;
+  songId: number;
   title: string;
-  image_url?: string;
-  audio_url: string;
+  imageUrl?: string;
+  audioUrl: string;
   duration: number;
+  viewCount: number;
+  artistName?: string;
 }
 
 export interface Playlist {
-  playlist_id: number;
-  user_id: number;
+  playlistId: number;
+  userId: number;
   name: string;
   description?: string;
-  cover_image_url?: string;
-  is_public: boolean;
-  created_at?: string;
-  updated_at?: string;
+  coverImageUrl?: string;
+  isPublic: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 
   songs?: PlaylistSong[];
 }
-
-

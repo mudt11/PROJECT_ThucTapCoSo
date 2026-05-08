@@ -4,11 +4,11 @@ import { useState } from "react";
 import "@/app/styles/feature-playlists.css";
 import { useUser } from "@/app/features/user/context/UserContext";
 
-import DetailView from "./DetailView";
+import DetailView from "../../features/playlist/components/DetailView";
 import TrackSection from "./TrackSection";
 import PlaylistSection from "./PlaylistSection";
 import ArtistSection from "../../features/artist/components/ArtistSection";
-import MyPlaylistGrid from "../../features/song/components/MyPlaylistGrid/MyPlaylistGrid";
+import MyPlaylistGrid from "../../features/playlist/components/MyPlaylistGrid/MyPlaylistGrid";
 import { SelectedItem } from "@/app/types/music";
 
 import { RiResetRightLine } from "react-icons/ri";

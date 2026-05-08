@@ -38,6 +38,7 @@
 
   /* Main colors */
   --button: var(--tt-orange);
+  --button-2: linear-gradient(135deg, #ff8a00, #e52e71);
   --color-text-select: var(--tt-orange);
   --color-text-not-select: var(--tt-text-muted);
 

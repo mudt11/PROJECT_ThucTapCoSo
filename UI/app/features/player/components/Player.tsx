@@ -8,6 +8,7 @@ import { usePlayer } from "@/app/features/player/context/PlayerContext";
 import { useLikeContext } from "@/app/features/like/context/LikeContext";
 import PopUp from "../../../components/ui/PopUp";
 import AddToPlaylistModal from "@/app/features/playlist/components/AddToPlaylistModal";
+import { IoHeart, IoHeartOutline } from "react-icons/io5";
 
 const mockQueue = [
   {
@@ -167,9 +168,11 @@ const PlayerContent: React.FC = () => {
                 cursor: isLiking ? "wait" : "pointer",
               }}
             >
-              <i
-                className={liked ? "fa-solid fa-heart" : "fa-regular fa-heart"}
-              />
+              {liked ? (
+                <IoHeart className="fa-solid fa-heart" />
+              ) : (
+                <IoHeartOutline className="fa-regular fa-heart" />
+              )}
             </button>
             <button
               className="icon-btn expand-icon"

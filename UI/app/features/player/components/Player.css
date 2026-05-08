@@ -86,19 +86,20 @@
     color 0.2s ease,
     transform 0.2s ease;
 } /* Nút trái tim (like) */
-.like-icon i {
+.like-icon {
   font-size: 22px;
   color: #bdbdbd;
   transition:
     color 0.2s ease,
     transform 0.2s ease;
 }
-.like-icon.liked i {
+.like-icon.liked {
   color: #e74c3c;
 }
-.like-icon:active i {
+.like-icon:active {
   transform: scale(0.9);
-} /* Nút 3 chấm ngang */
+} 
+/* Nút 3 chấm ngang */
 .expand-icon i {
   font-size: 22px;
 }

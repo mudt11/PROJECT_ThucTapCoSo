@@ -1,5 +1,5 @@
 const { where } = require("sequelize");
-const { Playlist, Song, User, PlaylistSong } = require("../models");
+const { Playlist, Song, User, PlaylistSong, Artist } = require("../models");
 
 // Tao playlist moi
 const createPlaylist = async (userId, name, description) => {
@@ -63,7 +63,13 @@ const getPlaylistDetail = async (playlistId) => {
       {
         model: Song,
         as: "songs",
-
+        include: [
+          {
+            model: Artist,
+            as: "artists",
+            through: { attributes: [] },
+          },
+        ],
         through: { attributes: ["position"] },
       },
     ],
@@ -103,7 +109,7 @@ const getMyPlaylists = async (userId) => {
         model: Song,
         as: "songs",
         through: { attributes: [] }, 
-        attributes: ["song_id", "title", "audio_url", "duration"],
+        attributes: ["song_id", "title", "audio_url", "duration", "image_url"],
       },
     ],
   });
