@@ -7,15 +7,16 @@ import PlaylistCover from "@/app/components/FeaturedPlaylists/PlaylistCover";
 import { formatDuration } from "@/app/utils/dateHelper";
 import styles from "./DetailView.module.css";
 import { MdArrowBackIosNew } from "react-icons/md";
-import { IoShareOutline } from "react-icons/io5";
+import { IoShareOutline, IoTrashOutline } from "react-icons/io5";
 import { IoHeart } from "react-icons/io5";
 
 interface Props {
   data: DetailViewData;
   onBack: () => void;
+  onRemoveSong?: (songId: number) => void;
 }
 
-const DetailView: React.FC<Props> = ({ data, onBack }) => {
+const DetailView: React.FC<Props> = ({ data, onBack, onRemoveSong }) => {
   const { currentTrack, setPlaylist } = usePlayer();
 
   const tracks = data.tracks;
@@ -82,6 +83,7 @@ const DetailView: React.FC<Props> = ({ data, onBack }) => {
             <div className={styles.colTitle}>Title</div>
             <div className={styles.colArtist}>Artist</div>
             <div className={styles.colDuration}>Duration</div>
+            <div className={styles.colAction}></div>
           </div>
 
           {tracks.map((song, index) => {
@@ -103,6 +105,20 @@ const DetailView: React.FC<Props> = ({ data, onBack }) => {
                 <div className={styles.colArtist}>{song.artistName}</div>
                 <div className={styles.colDuration}>
                   {formatDuration(song.duration)}
+                </div>
+                <div className={styles.colAction}>
+                  {onRemoveSong && (
+                    <button
+                      className={styles.removeBtn}
+                      title="Xóa bài hát"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onRemoveSong(song.trackId);
+                      }}
+                    >
+                      <IoTrashOutline />
+                    </button>
+                  )}
                 </div>
               </div>
             );

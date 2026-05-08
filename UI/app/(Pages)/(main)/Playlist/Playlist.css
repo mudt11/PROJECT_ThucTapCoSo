@@ -46,6 +46,26 @@
   color: var(--tt-orange);
 }
 
+.playlist-page-header .create-btn{
+  padding: 10px 20px; 
+  border-radius: 50px;
+  background: var(--button-2);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(229, 46, 113, 0.3);
+}
+
+.playlist-page-header .create-btn:hover{
+  background: var(--tt-orange);
+  transform: translateY(-1px);
+  box-shadow: var(--tt-shadow-sm);
+}
+
 .playlist-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));

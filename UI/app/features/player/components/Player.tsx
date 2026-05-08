@@ -190,7 +190,12 @@ const PlayerContent: React.FC = () => {
                 <i className="fa-regular fa-heart" />
                 <span>Thêm vào yêu thích</span>
               </button>
-              <button onClick={() => setShowAddToPlaylist(true)}>
+              <button
+                onClick={() => {
+                  setShowAddToPlaylist(true);
+                  setShowUserMenu(false);
+                }}
+              >
                 <i className="fa-solid fa-circle-plus" />
                 <span>Thêm vào playlist</span>
               </button>

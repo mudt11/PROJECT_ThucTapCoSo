@@ -3,16 +3,34 @@
 import { useState } from "react";
 import { usePlaylists } from "@/app/features/playlist/hooks/usePlaylists";
 import { usePlaylistDetail } from "@/app/features/playlist/hooks/usePlaylistDetail";
+import { removeSongFromPlaylistService } from "@/app/features/playlist/service";
 import DetailView from "@/app/features/playlist/components/DetailView";
 import PlaylistCover from "@/app/components/FeaturedPlaylists/PlaylistCover";
+import CreatePlaylistModal from "@/app/features/playlist/components/CreatePlaylistModal";
 import type { DetailViewData } from "@/app/types/music";
 import "./Playlist.css";
 
 export default function PlaylistsPage() {
-  const { playlists, loading: playlistsLoading, error } = usePlaylists();
+  const { playlists, loading: playlistsLoading, error, fetchPlaylists } = usePlaylists();
   const [selectedPlaylistId, setSelectedPlaylistId] = useState<number | null>(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
-  const { playlist: playlistDetail, loading: detailLoading } = usePlaylistDetail(selectedPlaylistId);
+  const { playlist: playlistDetail, loading: detailLoading, fetchPlaylistDetail } = usePlaylistDetail(selectedPlaylistId);
+
+  const handleRemoveSong = async (songId: number) => {
+    if (!selectedPlaylistId) return;
+
+    const isConfirm = window.confirm("Bạn có chắc chắn muốn xóa bài hát này khỏi playlist không?");
+    if (!isConfirm) return;
+
+    try {
+      await removeSongFromPlaylistService(selectedPlaylistId, songId);
+      fetchPlaylistDetail();
+      fetchPlaylists();
+    } catch (err: any) {
+      alert("Lỗi khi xóa bài hát: " + err.message);
+    }
+  };
 
   if (selectedPlaylistId) {
     if (detailLoading) return <div>Đang tải chi tiết playlist...</div>;
@@ -35,14 +53,30 @@ export default function PlaylistsPage() {
       }))
     };
 
-    return <DetailView data={detailData} onBack={() => setSelectedPlaylistId(null)} />;
+    return <DetailView data={detailData} onBack={() => setSelectedPlaylistId(null)} onRemoveSong={handleRemoveSong} />;
   }
 
   return (
     <div className="playlist-page">
-      <div className="playlist-page-header">
+      <div className="playlist-page-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <h1> Danh sách Playlist</h1>
+        <button 
+          className="create-btn"
+          onClick={() => setShowCreateModal(true)} 
+        >
+          <i className="fa-solid fa-plus"></i> Tạo playlist mới
+        </button>
       </div>
+
+      {showCreateModal && (
+        <CreatePlaylistModal 
+          onClose={() => setShowCreateModal(false)} 
+          onCreated={() => {
+            fetchPlaylists();
+            setShowCreateModal(false);
+          }} 
+        />
+      )}
 
       {playlistsLoading ? (
         <div>Đang tải playlists...</div>
