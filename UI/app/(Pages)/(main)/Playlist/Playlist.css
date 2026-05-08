@@ -31,19 +31,18 @@
 
 /* Playlist Grid Styles */
 .playlist-page {
-  padding: 24px;
-  background: white;
-  border-radius: 20px;
+  /* padding: 24px; */
 }
 
 .playlist-page-header {
   margin-bottom: 24px;
 }
 
-.playlist-page-header h1 {
-  font-size: 30px;
-  font-weight: 900;
-  color: var(--tt-orange);
+.playlist-page-header .main-title {
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 32px;
+  color: var(--button);
 }
 
 .playlist-page-header .create-btn{
@@ -70,6 +69,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 24px;
+  padding: 30px;
+  background: white;
+  border-radius: 20px;
 }
 
 .playlist-card {
@@ -96,13 +98,6 @@
   overflow: hidden;
   box-shadow: var(--tt-shadow-sm);
   position: relative;
-}
-
-.playlist-card-cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
 }
 
 .playlist-play-btn {

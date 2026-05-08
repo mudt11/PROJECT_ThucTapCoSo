@@ -4,6 +4,7 @@ import {
   getPlaylistDetailApi,
   addSongToPlaylistApi,
   removeSongFromPlaylistApi,
+  deletePlaylistApi,
 } from "./api";
 
 export const createPlaylistService = async (
@@ -33,4 +34,8 @@ export const removeSongFromPlaylistService = async (
   songId: number,
 ) => {
   return await removeSongFromPlaylistApi(playlistId, songId);
+};
+
+export const deletePlaylistService = async (playlistId: number) => {
+  return await deletePlaylistApi(playlistId);
 };

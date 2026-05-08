@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { usePlaylists } from "@/app/features/playlist/hooks/usePlaylists";
 import { usePlaylistDetail } from "@/app/features/playlist/hooks/usePlaylistDetail";
-import { removeSongFromPlaylistService } from "@/app/features/playlist/service";
+import { removeSongFromPlaylistService, deletePlaylistService } from "@/app/features/playlist/service";
 import DetailView from "@/app/features/playlist/components/DetailView";
 import PlaylistCover from "@/app/components/FeaturedPlaylists/PlaylistCover";
 import CreatePlaylistModal from "@/app/features/playlist/components/CreatePlaylistModal";
@@ -32,6 +32,21 @@ export default function PlaylistsPage() {
     }
   };
 
+  const handleDeletePlaylist = async () => {
+    if (!selectedPlaylistId) return;
+
+    const isConfirm = window.confirm("Bạn có chắc chắn muốn xóa toàn bộ playlist này không? Hành động này không thể hoàn tác.");
+    if (!isConfirm) return;
+
+    try {
+      await deletePlaylistService(selectedPlaylistId);
+      setSelectedPlaylistId(null);
+      fetchPlaylists();
+    } catch (err: any) {
+      alert("Lỗi khi xóa playlist: " + err.message);
+    }
+  };
+
   if (selectedPlaylistId) {
     if (detailLoading) return <div>Đang tải chi tiết playlist...</div>;
     if (!playlistDetail) return <div>Không tìm thấy chi tiết playlist. <button onClick={() => setSelectedPlaylistId(null)}>Quay lại</button></div>;
@@ -53,13 +68,13 @@ export default function PlaylistsPage() {
       }))
     };
 
-    return <DetailView data={detailData} onBack={() => setSelectedPlaylistId(null)} onRemoveSong={handleRemoveSong} />;
+    return <DetailView data={detailData} onBack={() => setSelectedPlaylistId(null)} onRemoveSong={handleRemoveSong} onDeletePlaylist={handleDeletePlaylist} />;
   }
 
   return (
     <div className="playlist-page">
       <div className="playlist-page-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <h1> Danh sách Playlist</h1>
+        <h1 className="main-title"> Danh sách Playlist</h1>
         <button 
           className="create-btn"
           onClick={() => setShowCreateModal(true)} 
@@ -98,7 +113,8 @@ export default function PlaylistsPage() {
                 <button
                   className="playlist-play-btn"
                   onClick={(e) => {
-                    e.stopPropagation();
+                    // e.stopPropagation();
+                    setSelectedPlaylistId(playlist.playlistId)
                   }}
                 >
                   <i className="fa-solid fa-play" />

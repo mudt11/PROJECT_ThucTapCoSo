@@ -43,3 +43,7 @@ export const removeSongFromPlaylistApi = async (
   return response.data;
 };
 
+export const deletePlaylistApi = async (playlistId: number) => {
+  const response = await http.delete(`/playlists/${playlistId}`);
+  return response.data;
+};

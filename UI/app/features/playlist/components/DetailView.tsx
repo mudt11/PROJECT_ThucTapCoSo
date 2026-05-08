@@ -9,15 +9,21 @@ import styles from "./DetailView.module.css";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { IoShareOutline, IoTrashOutline } from "react-icons/io5";
 import { IoHeart } from "react-icons/io5";
+import { FaPlay } from "react-icons/fa";
+import { FaPause } from "react-icons/fa";
+
 
 interface Props {
   data: DetailViewData;
   onBack: () => void;
   onRemoveSong?: (songId: number) => void;
+  onDeletePlaylist?: () => void;
 }
 
-const DetailView: React.FC<Props> = ({ data, onBack, onRemoveSong }) => {
-  const { currentTrack, setPlaylist } = usePlayer();
+const DetailView: React.FC<Props> = ({ data, onBack, onRemoveSong, onDeletePlaylist }) => {
+  const { currentTrack, setPlaylist, isPlaying, togglePlay } = usePlayer();
+
+  const isCurrentPlaylistActive = currentTrack && data.tracks.some(t => t.trackId === currentTrack.trackId);
 
   const tracks = data.tracks;
   const title = data.title;
@@ -58,18 +64,47 @@ const DetailView: React.FC<Props> = ({ data, onBack, onRemoveSong }) => {
               <div className={styles.playlistIcons}>
                 <IoHeart className={styles.icon} />
                 <span className={styles.count}>999K</span>
-                <IoShareOutline className={styles.icon} />
+                <IoShareOutline className={styles.icon}/>
                 <span className={styles.count}>0</span>
+                {onDeletePlaylist && data.type === "playlist" && (
+                  <button
+                    onClick={onDeletePlaylist}
+                    title="Xóa playlist"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      display: "flex",
+                      alignItems: "center",
+                      cursor: "pointer",
+                      marginLeft: "10px"
+                    }}
+                  >
+                    <IoTrashOutline className={styles.icon} style={{ color: "#ff4b4b" }} />
+                  </button>
+                )}
                 <span className={`${styles.icon} ${styles.more}`}>⋯</span>
               </div>
 
               <button
                 className={styles.playPlaylists}
                 onClick={() => {
-                  if (tracks.length > 0) setPlaylist(tracks, 0);
+                  if (tracks.length === 0) return;
+                  if (isCurrentPlaylistActive) {
+                    togglePlay();
+                  } else {
+                    setPlaylist(tracks, 0);
+                  }
                 }}
               >
-                ▶ Phát tất cả
+                {isCurrentPlaylistActive && isPlaying ? (
+                  <>
+                    <FaPause /> Tạm dừng
+                  </>
+                ) : (
+                  <>
+                    <FaPlay /> Phát tất cả
+                  </>
+                )}
               </button>
             </div>
           </div>

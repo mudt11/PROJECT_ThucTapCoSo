@@ -1,6 +1,12 @@
+.banner-section {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
 .banner-container {
-  position: relative;
   width: 100%;
+  height: 30vh;
 }
 
 .banner-row {
@@ -20,7 +26,7 @@
 
 .banner-item {
   flex: 0 0 auto;
-  width: 50%;
+  width: 100%;
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
@@ -29,7 +35,7 @@
 
 .banner-item img {
   width: 100%;
-  height: 150px;
+  height: 300px;
   object-fit: cover;
 }
 

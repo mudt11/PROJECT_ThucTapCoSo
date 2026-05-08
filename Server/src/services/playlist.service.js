@@ -126,6 +126,13 @@ const deletePlaylist = async (userId, playlistId) => {
     throw new Error("Bạn không có quyền xóa playlist này.");
   }
 
+  // Xóa các bản ghi liên kết trong bảng PlaylistSong trước
+  await PlaylistSong.destroy({
+    where: {
+      playlist_id: playlistId,
+    },
+  });
+
   await playlist.destroy();
   return {
     message: "Đã xóa thành công playlist.",

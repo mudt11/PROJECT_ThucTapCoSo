@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import "./Home.css"
 import Banner from "@/app/components/ui/Banner";
 import FeaturedPlaylists from "@/app/components/FeaturedPlaylists/FeaturedPlaylists";
 import type { Playlist, DetailViewData } from "@/app/types/music";
@@ -19,9 +20,9 @@ export default function ExplorePage() {
   /* LIST VIEW */
   return (
     <div id="home" className="home-menu">
-      <h2 className="main-title">Discovery</h2>
+      <Banner />
 
-      {/* <Banner /> */}
+      <h1 className="main-title">Discovery</h1>     
 
       <FeaturedPlaylists onSelect={setSelected} />
     </div>
