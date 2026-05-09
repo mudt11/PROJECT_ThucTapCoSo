@@ -60,8 +60,28 @@ const createArtist = async (req, res, next) => {
   }
 };
 
+const getTopArtists = async (req, res, next) => {
+  try {
+    const limit = req.query.limit ? parseInt(req.query.limit, 10) : 10;
+    const topArtists = await artistService.getTopArtists(limit);
+
+    res.status(200).json({
+      success: true,
+      message: "Lấy top nghệ sĩ thành công.",
+      data: topArtists,
+    });
+  } catch (error) {
+    console.error("Get top artists error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch top artists",
+    });
+  }
+};
+
 module.exports = {
   getAllArtists,
   getArtistDetail,
   createArtist,
+  getTopArtists,
 };

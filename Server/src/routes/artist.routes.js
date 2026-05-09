@@ -14,9 +14,12 @@ router.post(
 );
 
 // API lấy tất cả nghệ sĩ
-// GET/api/artist
-
 router.get("/", artistController.getAllArtists);
+
+// API lấy top nghệ sĩ
+router.get("/top", artistController.getTopArtists);
+
+// API lấy chi tiết nghệ sĩ
 router.get("/:artistId", artistController.getArtistDetail);
 
 module.exports = router;

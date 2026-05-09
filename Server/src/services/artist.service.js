@@ -1,4 +1,5 @@
 const { Artist, Song } = require("../models");
+const sequelize = require("../config/db");
 
 const getAllArtists = async () => {
   const artists = await Artist.findAll({
@@ -62,8 +63,34 @@ const createArtist = async (artistData) => {
   return newArtist;
 };
 
+const getTopArtists = async (limit = 10) => {
+  const artists = await Artist.findAll({
+    attributes: [
+      "artist_id",
+      "name",
+      "image_url",
+      [sequelize.fn("COALESCE", sequelize.fn("SUM", sequelize.col("songs.view_count")), 0), "total_listens"],
+    ],
+    include: [
+      {
+        model: Song,
+        as: "songs",
+        attributes: [],
+        through: { attributes: [] },
+      },
+    ],
+    group: ["Artist.artist_id", "Artist.name", "Artist.image_url"],
+    order: [[sequelize.literal("total_listens"), "DESC"]],
+    limit: limit,
+    subQuery: false,
+  });
+
+  return artists.map((artist) => artist.toJSON());
+};
+
 module.exports = {
   getAllArtists,
   getArtistById,
   createArtist,
+  getTopArtists,
 };
