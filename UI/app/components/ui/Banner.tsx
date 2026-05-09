@@ -1,46 +1,73 @@
 "use client";
 
 import "@/app/styles/banner-category.css";
-import React from "react";
-import HorizontalScroll from "@/app/components/ui/HorizontalScroll";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+
+const BANNERS = [
+  { id: 1, src: "/images/Banner/banner_music_premium.png", alt: "Premium Music Stream" },
+  { id: 2, src: "/images/Banner/banner_music_chill.png", alt: "Chill Lo-Fi Vibes" },
+  { id: 3, src: "/images/Banner/banner_music_trending.png", alt: "Trending Pop Hits" },
+];
 
 function Banner() {
   const router = useRouter();
-  const handleClick = async () => {
-    // setLoading(true);
-    // Cho hiệu ứng có thời gian hiển thị nhẹ
-    // await new Promise((resolve) => setTimeout(resolve, 600));
-    router.push("/explore");
-  };
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % BANNERS.length);
+    }, 7000); // Tự động chuyển sau 5s
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <div className="banner-section">
       {/* Banner chính */}
 
-      <div className="banner-container">
-        <HorizontalScroll>
-          <div className="banner-row">
-            <div className="banner-item">
-              <img
-                src="/images/Banner/ngay_moi_nhac_moi.webp"
-                alt="Ngày mới nhạc mới"
-              />
-            </div>
-            <div className="banner-item">
-              <img
-                src="/images/Banner/nhac_chill_trieu_view.webp"
-                alt="Nhạc hot TikTok"
-              />
-            </div>
-            <div className="banner-item">
-              <img src="/images/Banner/nhac_pop.webp" alt="Nhạc pop" />
-            </div>
-            <div className="banner-item">
-              <img src="/images/Banner/quang_cao.webp" alt="Quảng cáo" />
-            </div>
+      <div className="banner-container" style={{ position: 'relative', overflow: 'hidden', borderRadius: '16px' }}>
+        {BANNERS.map((banner, index) => (
+          <div 
+            key={banner.id}
+            className="banner-item"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              opacity: index === currentSlide ? 1 : 0,
+              transition: 'opacity 0.8s ease-in-out, transform 4s ease-out',
+              transform: index === currentSlide ? 'scale(1)' : 'scale(1.05)',
+              zIndex: index === currentSlide ? 1 : 0,
+            }}
+          >
+            <img
+              src={banner.src}
+              alt={banner.alt}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
           </div>
-        </HorizontalScroll>
+        ))}
+        {/* Navigation Dots */}
+        <div style={{ position: 'absolute', bottom: '20px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px', zIndex: 2 }}>
+          {BANNERS.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              style={{
+                width: index === currentSlide ? '24px' : '8px',
+                height: '8px',
+                borderRadius: '4px',
+                backgroundColor: index === currentSlide ? '#fff' : 'rgba(255,255,255,0.4)',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              title={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Category Section */}
