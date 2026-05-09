@@ -1,4 +1,4 @@
-import { fetchArtistsApi, fetchArtistDetailApi } from "./artist.api";
+import { fetchArtistsApi, fetchArtistDetailApi, fetchTopArtistsApi } from "./artist.api";
 import type { DetailViewData } from "@/app/types/music";
 import type {Artist} from "./types/artist.types"
 
@@ -10,6 +10,17 @@ export const artistService = {
       artistId: a.artist_id,
       name: a.name,
       imageUrl: a.image_url ?? "/images/default-artist.png",
+    }));
+  },
+
+  getTopArtists: async (limit: number = 20): Promise<Artist[]> => {
+    const json = await fetchTopArtistsApi(limit);
+    
+    return json.data.map((a: any) => ({
+      artistId: a.artist_id,
+      name: a.name,
+      imageUrl: a.image_url ?? "/images/default-artist.png",
+      totalListens: a.total_listens, // dùng sau này
     }));
   },
 

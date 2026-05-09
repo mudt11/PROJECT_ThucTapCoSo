@@ -70,6 +70,7 @@ const getTopArtists = async (limit = 10) => {
       "name",
       "image_url",
       [sequelize.fn("COALESCE", sequelize.fn("SUM", sequelize.col("songs.view_count")), 0), "total_listens"],
+      [sequelize.fn("MAX", sequelize.col("songs.image_url")), "fallback_image"],
     ],
     include: [
       {
@@ -85,7 +86,15 @@ const getTopArtists = async (limit = 10) => {
     subQuery: false,
   });
 
-  return artists.map((artist) => artist.toJSON());
+  return artists.map((artist) => {
+    const artistJson = artist.toJSON();
+    return {
+      artist_id: artistJson.artist_id,
+      name: artistJson.name,
+      image_url: artistJson.image_url || artistJson.fallback_image || null,
+      total_listens: artistJson.total_listens,
+    };
+  });
 };
 
 module.exports = {

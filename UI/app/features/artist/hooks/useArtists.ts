@@ -7,7 +7,7 @@ export const useArtists = (onSelect: (item: SelectedItem) => void) => {
   const [artists, setArtists] = useState<Artist[]>([]);
 
   useEffect(() => {
-    artistService.getArtists()
+    artistService.getTopArtists(20)
       .then(setArtists)
       .catch(console.error);
   }, []);

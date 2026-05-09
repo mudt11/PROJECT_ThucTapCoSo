@@ -5,6 +5,11 @@ export const fetchArtistsApi = async () => {
   return res.data;
 };
 
+export const fetchTopArtistsApi = async (limit: number = 20) => {
+  const res = await http.get(`/artists/top?limit=${limit}`);
+  return res.data;
+};
+
 export const fetchArtistDetailApi = async (artistId: number) => {
   const res = await http.get(`/artists/${artistId}`);
   return res.data;

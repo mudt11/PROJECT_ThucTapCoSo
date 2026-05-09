@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import type { DetailViewData } from "@/app/types/music";
 import { usePlayer } from "@/app/features/player/context/PlayerContext";
 import PlaylistCover from "@/app/components/FeaturedPlaylists/PlaylistCover";
@@ -12,7 +12,6 @@ import { IoHeart } from "react-icons/io5";
 import { FaPlay } from "react-icons/fa";
 import { FaPause } from "react-icons/fa";
 
-
 interface Props {
   data: DetailViewData;
   onBack: () => void;
@@ -22,6 +21,12 @@ interface Props {
 
 const DetailView: React.FC<Props> = ({ data, onBack, onRemoveSong, onDeletePlaylist }) => {
   const { currentTrack, setPlaylist, isPlaying, togglePlay } = usePlayer();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Khi component mount, lập tức cuộn container về đầu trang
+    containerRef.current?.scrollIntoView({ behavior: "auto", block: "start" });
+  }, []);
 
   const isCurrentPlaylistActive = currentTrack && data.tracks.some(t => t.trackId === currentTrack.trackId);
 
@@ -36,7 +41,7 @@ const DetailView: React.FC<Props> = ({ data, onBack, onRemoveSong, onDeletePlayl
   };
 
   return (
-    <div className={styles.playlistDetail}>
+    <div ref={containerRef} className={styles.playlistDetail}>
       {/* BACKGROUND */}
       <div className={styles.playlistBg}>
         <PlaylistCover images={cover ?? []} size={800} />
