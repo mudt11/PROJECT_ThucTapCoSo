@@ -49,8 +49,6 @@ const TrackSection = () => {
     loadSongs();
   }, []);
 
-  // console.log("DEBUG RENDER TRACKS: ", tracks);
-
   if (!tracks.length && loading) return <div>Loading...</div>;
   if (!tracks.length) return <div>No songs found</div>;
 

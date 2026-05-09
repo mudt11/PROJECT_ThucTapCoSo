@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 const BANNERS = [
+  { id: 0, src: "/images/Banner/bringmusictolife.jpg", alt: "Bring Music To Life" },
   { id: 1, src: "/images/Banner/banner_music_premium.png", alt: "Premium Music Stream" },
   { id: 2, src: "/images/Banner/banner_music_chill.png", alt: "Chill Lo-Fi Vibes" },
   { id: 3, src: "/images/Banner/banner_music_trending.png", alt: "Trending Pop Hits" },

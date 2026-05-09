@@ -20,7 +20,7 @@ export default function ExplorePage() {
   /* LIST VIEW */
   return (
     <div id="home" className="home-menu">
-      <Banner />
+      {/* <Banner /> */}
 
       <h1 className="main-title">Discovery</h1>     
 

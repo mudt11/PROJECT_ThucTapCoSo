@@ -12,7 +12,7 @@ import { useAudioEngine } from "@/app/features/player/hook/useAudioEngine";
 import { PlayerService } from "@/app/features/player/playerService";
 import type { Track } from "@/app/types/music";
 import { fetchDailySongs } from "@/app/features/song/song.api";
-import { useActivityLogger } from "@/app/features/player/hook/useActivityLogger";
+import { useActivityLogger, ActivitySource } from "@/app/features/player/hook/useActivityLogger";
 
 type PlayerContextType = {
   currentTrack: Track | null;
@@ -20,7 +20,7 @@ type PlayerContextType = {
   play: () => void;
   pause: () => void;
   togglePlay: () => void;
-  setPlaylist: (tracks: Track[], index: number) => void;
+  setPlaylist: (tracks: Track[], index: number, source?: ActivitySource) => void;
   next: () => Promise<void>;
   prev: () => void;
   audioState: { currentTime: number; duration: number };
@@ -45,8 +45,11 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const loadMoreRef = useRef<(() => Promise<void>) | null>(null);
   const nextRef = useRef<(() => Promise<void>) | null>(null);
   const loadTrackRef = useRef<
-    ((track: Track | null, autoPlay?: boolean) => void) | null
+    ((track: Track | null, autoPlay?: boolean, source?: ActivitySource) => void) | null
   >(null);
+
+  // --- ACTIVITY SOURCE STATE ---
+  const activitySourceRef = useRef<ActivitySource>("playlist");
 
   // --- SHUFFLE STATE ---
   const [isShuffle, setIsShuffle] = useState(false);
@@ -57,7 +60,11 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   }, [isShuffle]);
 
   const toggleShuffle = useCallback(() => {
-    setIsShuffle((prev) => !prev);
+    setIsShuffle((prev) => {
+      const nextShuffle = !prev;
+      playerServiceRef.current.setShuffle(nextShuffle);
+      return nextShuffle;
+    });
   }, []);
 
   // --- REPEAT STATE ---
@@ -93,9 +100,9 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   });
 
   const loadTrack = useCallback(
-    (track: Track | null, autoPlay = true) => {
+    (track: Track | null, autoPlay = true, source?: ActivitySource) => {
       if (!track?.audioUrl) return;
-      logger.initTrack(track.trackId, track.duration || 0);
+      logger.initTrack(track.trackId, track.duration || 0, source);
       audio.load(track.audioUrl);
       setCurrentTrack(track);
       if (autoPlay) {
@@ -131,24 +138,6 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   }, [loadMore]);
 
   const next = useCallback(async () => {
-    const playlist = playerServiceRef.current.getPlaylist();
-    const currentIndex = playerServiceRef.current.getIndex();
-
-    if (isShuffleRef.current && playlist.length > 1) {
-      let randomIndex;
-      do {
-        randomIndex = Math.floor(Math.random() * playlist.length);
-      } while (randomIndex === currentIndex);
-
-      playerServiceRef.current.setPlaylist(playlist, randomIndex);
-      const track = playerServiceRef.current.getCurrentTrack();
-
-      if (track) {
-        loadTrackRef.current?.(track, true);
-      }
-      return;
-    }
-
     let track = playerServiceRef.current.next();
     if (!track && hasMore) {
       await loadMoreRef.current?.();
@@ -156,7 +145,10 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     }
 
     if (track) {
-      loadTrackRef.current?.(track, true);
+      if (activitySourceRef.current === "search") {
+        activitySourceRef.current = "recommendation";
+      }
+      loadTrackRef.current?.(track, true, activitySourceRef.current);
     }
   }, [hasMore]);
 
@@ -167,7 +159,11 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const prev = useCallback(() => {
     let track = playerServiceRef.current.prev();
 
-    loadTrack(track, true);
+    if (activitySourceRef.current === "search") {
+      activitySourceRef.current = "recommendation";
+    }
+
+    loadTrack(track, true, activitySourceRef.current);
   }, [loadTrack]);
 
   useEffect(() => {
@@ -183,7 +179,10 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
       const data = JSON.parse(raw);
       if (!data.playlist?.length) return;
 
-      if (data.isShuffle !== undefined) setIsShuffle(data.isShuffle);
+      if (data.isShuffle !== undefined) {
+        setIsShuffle(data.isShuffle);
+        playerServiceRef.current.setShuffle(data.isShuffle);
+      }
       if (data.isRepeat !== undefined) setIsRepeat(data.isRepeat);
 
       playerServiceRef.current.setPlaylist(data.playlist, data.index);
@@ -203,27 +202,56 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  // --- SYNC LOCALSTORAGE THÔNG MINH ---
+  // Dùng ref để giữ state mới nhất mà không gây re-render hay reset interval
+  const playerStateRef = useRef({
+    playlist: [] as Track[],
+    index: 0,
+    currentTime: 0,
+    isPlaying: false,
+    isShuffle: false,
+    isRepeat: false,
+  });
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      localStorage.setItem(
-        "player_state_v2",
-        JSON.stringify({
-          playlist: playerServiceRef.current.getPlaylist(),
-          index: playerServiceRef.current.getIndex(),
-          currentTime: audio.state.currentTime,
-          isPlaying: audio.state.isPlaying,
-          isShuffle: isShuffleRef.current,
-          isRepeat: isRepeatRef.current, // Lưu lại trạng thái repeat
-        }),
-      );
-    }, 2000);
-    return () => clearInterval(interval);
-  }, [audio.state]);
+    playerStateRef.current = {
+      playlist: playerServiceRef.current.getPlaylist(),
+      index: playerServiceRef.current.getOriginalIndex(),
+      currentTime: audio.state.currentTime,
+      isPlaying: audio.state.isPlaying,
+      isShuffle: isShuffleRef.current,
+      isRepeat: isRepeatRef.current,
+    };
+  }, [audio.state, isShuffle, isRepeat, currentTrack]);
+
+  useEffect(() => {
+    const saveState = () => {
+      // Chỉ lưu nếu có dữ liệu để tránh lưu đè lúc mới mở trang
+      if (playerStateRef.current.playlist.length > 0) {
+        localStorage.setItem(
+          "player_state_v2",
+          JSON.stringify(playerStateRef.current),
+        );
+      }
+    };
+
+    // Lưu định kỳ mỗi 5 giây (giảm tải I/O so với 2 giây)
+    const interval = setInterval(saveState, 5000);
+
+    // Bắt buộc lưu ngay lập tức khi người dùng đóng trang / reload (đột ngột)
+    window.addEventListener("beforeunload", saveState);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("beforeunload", saveState);
+    };
+  }, []);
 
   const setPlaylist = useCallback(
-    (tracks: Track[], index: number) => {
+    (tracks: Track[], index: number, source?: ActivitySource) => {
+      activitySourceRef.current = source || "playlist";
       playerServiceRef.current.setPlaylist(tracks, index);
-      loadTrack(playerServiceRef.current.getCurrentTrack(), true);
+      loadTrack(playerServiceRef.current.getCurrentTrack(), true, activitySourceRef.current);
     },
     [loadTrack],
   );

@@ -78,7 +78,12 @@ export function useActivityLogger(source: ActivitySource = "playlist") {
 
   // NATIVE EVENT HANDLERS (Gắn vào thẻ <audio>)
   const initTrack = useCallback(
-    (trackId: number, duration: number) => {
+    (trackId: number, duration: number, newSource?: ActivitySource) => {
+      // Cập nhật nguồn ngay lập tức nếu được truyền vào
+      if (newSource) {
+        sourceRef.current = newSource;
+      }
+
       // 1. Chốt sổ bài cũ (nếu có) với lý do "skipped" (vì người dùng chuyển bài)
       flushSession("skipped");
 

@@ -35,7 +35,7 @@ const SearchResult = ({ result, searchTerm }: SearchResultProps) => {
     <div
       className={styles.resultItem}
       onMouseDown={() => {
-        setPlaylist([{ ...result }], 0);
+        setPlaylist([{ ...result }], 0, "search");
       }}
     >
       <img

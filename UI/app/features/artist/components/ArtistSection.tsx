@@ -1,45 +1,35 @@
-import { useEffect, useState } from "react";
-import {
-  fetchArtists,
-  fetchArtistDetail,
-} from "@/app/features/artist/artistApi";
-import type { Artist } from "@/app/types/music";
-import HorizontalScroll from "@/app/components/ui/HorizontalScroll";
+import "./ArtistSection.css"
 import type { SelectedItem } from "@/app/types/music";
+import { useArtists } from "../hooks/useArtists";
 
 interface Props {
   onSelect: (item: SelectedItem) => void;
 }
 
 const ArtistSection: React.FC<Props> = ({ onSelect }) => {
-  const [artists, setArtists] = useState<Artist[]>([]);
-
-  useEffect(() => {
-    fetchArtists().then(setArtists).catch(console.error);
-  }, []);
-
-  const handleSelect = async (artist: Artist) => {
-    const detail = await fetchArtistDetail(artist.id);
-    onSelect(detail);
-  };
+  const { artists, handleSelect } = useArtists(onSelect);
 
   return (
-    <HorizontalScroll>
-      <section>
-        <div className="scroll-row">
-          {artists.map((artist) => (
-            <div
-              key={artist.id}
-              className="card card_artist"
-              onClick={() => handleSelect(artist)}
-            >
-              <img src={artist.image} alt={artist.name} />
-              <h3>{artist.name}</h3>
-            </div>
-          ))}
-        </div>
-      </section>
-    </HorizontalScroll>
+    <section className="artist-section">
+      <div className="artist-grid">
+        {artists.map((artist) => (
+          <div
+            key={artist.artistId  }
+            className="card card_artist"
+            onClick={() => handleSelect(artist)}
+          >
+            <img src={artist.imageUrl} alt={artist.name} />
+            <button
+                  className="artist-play-btn"
+                  onClick={() => handleSelect(artist)}
+                >
+                  <i className="fa-solid fa-play" />
+                </button>
+            <h3>{artist.name}</h3>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 };
 

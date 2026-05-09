@@ -3,12 +3,9 @@
 import { useState } from "react";
 import "@/app/styles/feature-playlists.css";
 import { useUser } from "@/app/features/user/context/UserContext";
-
-import DetailView from "../../features/playlist/components/DetailView";
 import TrackSection from "./TrackSection";
 import PlaylistSection from "./PlaylistSection";
 import ArtistSection from "../../features/artist/components/ArtistSection";
-import MyPlaylistGrid from "../../features/playlist/components/MyPlaylistGrid/MyPlaylistGrid";
 import { SelectedItem } from "@/app/types/music";
 
 import { RiResetRightLine } from "react-icons/ri";
@@ -104,6 +101,23 @@ const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
             </div>
           ))}
         </HorizontalScroll>
+
+        <div className="make-for-header">
+          <h2 className="title revisit">Có thể bạn muốn nghe lại</h2>
+          <button id="refresh-recommendList">
+            <RiResetRightLine /> Làm mới
+          </button>
+        </div>
+
+        <HorizontalScroll>
+          {dataToRender.map((track) => (
+            <div key={track.id} className="card">
+              <img src={track.cover} alt={track.title} />
+              <h3>{track.title}</h3>
+              <p>{track.artist}</p>
+            </div>
+          ))}
+        </HorizontalScroll>
       </div>
 
       {/* TAB */}
@@ -133,9 +147,15 @@ const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
 
         {/* CONTENT */}
         <div className="tab-content">
-          {activeTab === "tracks" && <TrackSection />}
-          {activeTab === "playlist" && <PlaylistSection onSelect={onSelect} />}
-          {activeTab === "artist" && <ArtistSection onSelect={onSelect} />}
+          <div style={{ display: activeTab === "tracks" ? "block" : "none" }}>
+            <TrackSection />
+          </div>
+          <div style={{ display: activeTab === "playlist" ? "block" : "none" }}>
+            <PlaylistSection onSelect={onSelect} />
+          </div>
+          <div style={{ display: activeTab === "artist" ? "block" : "none" }}>
+            <ArtistSection onSelect={onSelect} />
+          </div>
         </div>
       </div>
     </div>
