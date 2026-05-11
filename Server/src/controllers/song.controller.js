@@ -222,28 +222,18 @@ async function getSongList(req, res) {
 const increaseView = async (req, res) => {
   try {
     const { songId } = req.params;
-    const userId = req.user.userId;
 
+    // Chỉ tăng view trong MySQL
     const result = await songService.incrementSongView(songId);
-
-    // Lưu lịch sử hành vi vào UserActivity
-    const activity = new UserActivity({
-      user_id: userId,
-      song_id: parseInt(songId, 10),
-      action: "play",
-      duration_listened: 0,
-      completion_rate: 0,
-      is_view: false,
-    });
-    await activity.save();
 
     return res.status(200).json({
       success: true,
-      message: "View increased",
+      message: "View increased in MySQL",
       data: result,
     });
   } catch (error) {
-    return res.status(404).json({
+    console.error("IncreaseView Error:", error);
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
