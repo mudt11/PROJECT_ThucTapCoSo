@@ -12,14 +12,16 @@ export default function RegisterPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const { openModal } = useModal();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    setPasswordError("");
 
-    const passwordError = validatePassword(password);
-    if (passwordError) {
-      alert(passwordError);
+    const error = validatePassword(password);
+    if (error) {
+      setPasswordError(error);
       return;
     }
 
@@ -98,6 +100,7 @@ export default function RegisterPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+            {passwordError && <span className={styles.errorText}>{passwordError}</span>}
           </div>
 
           <button type="submit" className={styles.submitButton}>

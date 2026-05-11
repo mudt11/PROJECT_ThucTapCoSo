@@ -1,4 +1,4 @@
-export function validatePassword(password: string): string | null {
+const validatePassword = (password) => {
   if (!password) {
     return "Mật khẩu là bắt buộc";
   }
@@ -24,4 +24,8 @@ export function validatePassword(password: string): string | null {
   }
 
   return null;
-}
+};
+
+module.exports = {
+  validatePassword,
+};

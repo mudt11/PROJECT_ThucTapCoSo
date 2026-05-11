@@ -1,16 +1,6 @@
 /* Nhúng Font chữ */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
-.authWrapper {
-  font-family: "Inter", sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background-color: var(--tt-bg);
-  padding: 20px;
-}
-
 .authContainer {
   font-family: "Inter", sans-serif;
   background-color: var(--tt-surface);
@@ -203,4 +193,10 @@
   .title {
     font-size: 28px;
   }
+}
+
+.errorText {
+  color: #ff4d4f;
+  font-size: 13px;
+  margin-top: 4px;
 }
