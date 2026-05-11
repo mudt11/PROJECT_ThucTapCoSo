@@ -8,8 +8,11 @@ import { useState } from "react";
 import PopUp from "@/app/components/ui/PopUp";
 import { useRating } from "@/app/features/rating/useRating";
 import { useLikeContext } from "@/app/features/like/context/LikeContext";
+import { useRouter } from "next/navigation";
+import { IoIosArrowBack } from "react-icons/io";
 
 const DetailSong = () => {
+  const router = useRouter();
   const { currentTrack } = usePlayer();
 
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -62,6 +65,10 @@ const DetailSong = () => {
 
   return (
     <div className="detail-container">
+      <button className="back-btn-detail" onClick={() => router.back()}>
+        <IoIosArrowBack />
+      </button>
+
       <div
         className="background-blur"
         style={{ backgroundImage: `url(${currentTrack.imageUrl})` }}

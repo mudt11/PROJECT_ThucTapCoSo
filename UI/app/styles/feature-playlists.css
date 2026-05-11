@@ -72,7 +72,7 @@
 
 #refresh-recommendList:hover {
   color: white;
-  background: var(--tt-orange)
+  background: var(--tt-orange);
 }
 
 .explore-tabs {
