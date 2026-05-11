@@ -91,6 +91,85 @@ const createSong = async (req, res, next) => {
   }
 };
 
+const userUploadSong = async (req, res, next) => {
+  try {
+    const userId = req.user.userId;
+
+    // Kiểm tra user đã cập nhật thông tin cá nhân chưa
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ message: "Không tìm thấy người dùng." });
+    }
+
+    if (!user.first_name || !user.last_name) {
+      return res.status(403).json({
+        message:
+          "Bạn cần cập nhật thông tin cá nhân trước khi đăng bài hát. Vui lòng vào trang Hồ sơ để cập nhật.",
+      });
+    }
+
+    const { title, genre, duration, artist } = req.body;
+
+    if (!title) {
+      return res.status(400).json({ message: "Thiếu tên bài hát." });
+    }
+
+    const audioFile = req.files?.audioFile?.[0];
+    const imageFile = req.files?.imageFile?.[0];
+
+    if (!audioFile) {
+      return res.status(400).json({ message: "Thiếu file nhạc." });
+    }
+
+    // Upload audio lên Cloudinary
+    const audioUpload = await cloudinary.uploader.upload(audioFile.path, {
+      folder: "music/audio",
+      resource_type: "video",
+    });
+
+    // Upload image (optional)
+    let imageUrl = null;
+    if (imageFile) {
+      const imageUpload = await cloudinary.uploader.upload(imageFile.path, {
+        folder: "music/image",
+      });
+      imageUrl = imageUpload.secure_url;
+    }
+
+    // Xóa file tạm
+    await fs.unlink(audioFile.path);
+    if (imageFile) await fs.unlink(imageFile.path);
+
+    // Artist: dùng input của user, fallback về username
+    const artistName = (artist && artist.trim()) ? artist.trim() : user.username;
+
+    const newSong = await songService.createSong({
+      title,
+      artist: artistName,
+      genre: genre || "",
+      duration: duration || 0,
+      audio_url: audioUpload.secure_url,
+      image_url: imageUrl,
+      status: "pending",
+      uploaded_by: userId,
+    });
+
+    res.status(201).json({
+      message: "Bài hát đã được gửi và đang chờ quản trị viên duyệt!",
+      data: newSong,
+    });
+  } catch (err) {
+    // Cleanup files nếu có lỗi
+    if (req.files?.audioFile?.[0]?.path) {
+      try { await fs.unlink(req.files.audioFile[0].path); } catch {}
+    }
+    if (req.files?.imageFile?.[0]?.path) {
+      try { await fs.unlink(req.files.imageFile[0].path); } catch {}
+    }
+    next(err);
+  }
+};
+
 const getAllSongs = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -251,19 +330,66 @@ const searchSongs = async (req, res) => {
   }
 };
 
+/* --- DUYỆT BÀI HÁT (ADMIN) --- */
+
+const getPendingSongs = async (req, res, next) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+
+    const result = await songService.getPendingSongs({ page, limit });
+
+    res.status(200).json({
+      success: true,
+      ...result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getPendingSongsCount = async (req, res, next) => {
+  try {
+    const count = await songService.getPendingSongsCount();
+    res.status(200).json({ count });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const approveSong = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await songService.approveSong(id);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const rejectSong = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await songService.rejectSong(id);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createSong,
+  userUploadSong,
   getAllSongs,
   getSongById,
   updateSongById,
   deleteSongById,
   toggleSongVisibility,
   getSongList,
-  // likeSong,
-  // unlikeSong,
-  // getLikeStatus,
-  // getLikedSongs,
   increaseView,
-  // logSongActivity,
   searchSongs,
+  getPendingSongs,
+  getPendingSongsCount,
+  approveSong,
+  rejectSong,
 };

@@ -35,6 +35,15 @@ const Song = sequelize.define(
       allowNull: false,
       defaultValue: true,
     },
+    status: {
+      type: DataTypes.ENUM("pending", "approved", "rejected"),
+      allowNull: false,
+      defaultValue: "approved",
+    },
+    uploaded_by: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
   },
   {
     tableName: "songs",

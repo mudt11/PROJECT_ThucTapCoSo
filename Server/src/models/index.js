@@ -81,6 +81,17 @@ Song.hasMany(Favorite, {
   foreignKey: "song_id",
 });
 
+// Song - User: Người đăng (uploaded_by)
+Song.belongsTo(User, {
+  foreignKey: "uploaded_by",
+  as: "uploader",
+});
+
+User.hasMany(Song, {
+  foreignKey: "uploaded_by",
+  as: "uploadedSongs",
+});
+
 // Playlist - Song: Quan hệ N-N qua bảng PlaylistSong
 Song.belongsToMany(Playlist, {
   through: PlaylistSong,

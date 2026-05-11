@@ -92,7 +92,7 @@ const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
           </button>
         </div>
 
-        <HorizontalScroll>
+        {/* <HorizontalScroll>
           {dataToRender.map((track) => (
             <div key={track.id} className="card">
               <img src={track.cover} alt={track.title} />
@@ -100,7 +100,8 @@ const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
               <p>{track.artist}</p>
             </div>
           ))}
-        </HorizontalScroll>
+        </HorizontalScroll> */}
+        <p>Tính năng sẽ sớm được cập nhật!</p>
 
         <div className="make-for-header">
           <h2 className="title revisit">Có thể bạn muốn nghe lại</h2>
@@ -109,7 +110,7 @@ const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
           </button>
         </div>
 
-        <HorizontalScroll>
+        {/* <HorizontalScroll>
           {dataToRender.map((track) => (
             <div key={track.id} className="card">
               <img src={track.cover} alt={track.title} />
@@ -117,7 +118,8 @@ const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
               <p>{track.artist}</p>
             </div>
           ))}
-        </HorizontalScroll>
+        </HorizontalScroll> */}
+        <p>Tính năng sẽ sớm được cập nhật!</p>
       </div>
 
       {/* TAB */}
@@ -150,9 +152,9 @@ const FeaturedPlaylists: React.FC<Props> = ({ onSelect }) => {
           <div style={{ display: activeTab === "tracks" ? "block" : "none" }}>
             <TrackSection />
           </div>
-          <div style={{ display: activeTab === "playlist" ? "block" : "none" }}>
+          {/* <div style={{ display: activeTab === "playlist" ? "block" : "none" }}>
             <PlaylistSection onSelect={onSelect} />
-          </div>
+          </div> */}
           <div style={{ display: activeTab === "artist" ? "block" : "none" }}>
             <ArtistSection onSelect={onSelect} />
           </div>

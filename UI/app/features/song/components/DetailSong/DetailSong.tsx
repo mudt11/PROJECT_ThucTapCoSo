@@ -113,14 +113,15 @@ const DetailSong = () => {
                   onClick={() => submitRating(currentTrack.trackId, star)}
                 />
               ))}
-              <p>{`( ${summary.totalRatings} )`}</p>
+              
             </div>
 
             <p className="rating-text">
               {userRating
                 ? `Bạn đã đánh giá ${userRating} / 5`
-                : "Chưa đánh giá"}
+                : "Chưa đánh giá"} ({summary.totalRatings})
             </p>
+            {/* <p>{`( ${summary.totalRatings} )`}</p> */}
 
             {/* <p className="rating-text">
               {summary.averageRating.toFixed(1)} / 5 ({summary.totalRatings})

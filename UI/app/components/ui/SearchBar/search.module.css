@@ -22,7 +22,7 @@
 
 .inputWrapper:hover,
 .inputWrapper:focus-within {
-  box-shadow: 0 0 12px var(--color-text-select);
+  box-shadow: var(--border-shadow);
 }
 
 .inputContainer {

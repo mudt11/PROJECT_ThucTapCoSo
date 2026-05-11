@@ -25,8 +25,16 @@ export default function SongFormModal({
   useEffect(() => {
     if (song) {
       setTitle(song.title ?? "");
-      setArtist(song.artist_name ?? "");
-      setGenre(song.genre ?? "");
+      
+      // Chuyển mảng artists thành chuỗi ngăn cách bởi dấu phẩy
+      const artistStr = song.artists?.map((a: any) => a.name).join(", ") || "";
+      setArtist(artistStr);
+
+      // Chuyển mảng genres thành chuỗi ngăn cách bởi dấu phẩy
+      const genreStr = song.genres?.map((g: any) => g.name).join(", ") || "";
+      setGenre(genreStr);
+      
+      setDuration(song.duration?.toString() ?? "");
     }
   }, [song]);
 
@@ -64,6 +72,7 @@ export default function SongFormModal({
           title,
           artist,
           genre,
+          duration: parseInt(duration) || 0,
         });
       }
       closeModal();

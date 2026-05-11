@@ -15,6 +15,18 @@ router.get("/search", songController.searchSongs);
 
 // track list hằng ngày
 router.get("/", songController.getSongList);
+
+// user upload nhạc (phải đặt TRƯỚC /:songId/view)
+router.post(
+  "/upload",
+  protect,
+  upload.fields([
+    { name: "audioFile", maxCount: 1 },
+    { name: "imageFile", maxCount: 1 },
+  ]),
+  songController.userUploadSong,
+);
+
 // tăng view
 router.post("/:songId/view", protect, songController.increaseView);
 
@@ -27,7 +39,35 @@ router.get(
   authorizeRoles("admin", "super_admin"),
   songController.getAllSongs,
 );
-// router.get("/:id", songController.getSongById);
+
+// duyệt bài hát
+router.get(
+  "/pending",
+  protectAdmin,
+  authorizeRoles("admin", "super_admin"),
+  songController.getPendingSongs,
+);
+
+router.get(
+  "/pending/count",
+  protectAdmin,
+  authorizeRoles("admin", "super_admin"),
+  songController.getPendingSongsCount,
+);
+
+router.patch(
+  "/:id/approve",
+  protectAdmin,
+  authorizeRoles("admin", "super_admin"),
+  songController.approveSong,
+);
+
+router.patch(
+  "/:id/reject",
+  protectAdmin,
+  authorizeRoles("admin", "super_admin"),
+  songController.rejectSong,
+);
 
 // sửa
 router.put(
@@ -63,8 +103,5 @@ router.post(
   ]),
   songController.createSong,
 );
-
-// gọi 1 lần để lấy 200 bài
-// router.post("/sync", jamendoController.fetchRandomJamendoTracks);
 
 module.exports = router;

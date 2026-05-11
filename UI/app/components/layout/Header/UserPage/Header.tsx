@@ -30,6 +30,31 @@ export default function Header() {
       </div>
 
       <div className={styles.right}>
+        {/* Nút upload nhạc - chỉ hiện khi đã đăng nhập */}
+        {user && (
+          <button
+            className={styles.uploadBtn}
+            onClick={() => openModal("upload-song")}
+            title="Đăng bài hát"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            <span>Đăng nhạc</span>
+          </button>
+        )}
+
         <div className={styles.userArea}>
           {loading ? null : user ? (
             <div className={styles.userGreeting}>
@@ -45,11 +70,10 @@ export default function Header() {
 
                 <div className={styles.userMeta}>
                   <span className={styles.username}>{user?.username}</span>
-                  <span className={styles.plan}>Premium</span>
                 </div>
 
                 <i
-                  className={`${styles.arrow} ${
+                  className={`fa-solid fa-chevron-down ${styles.arrow} ${
                     showUserMenu ? styles.arrowActive : ""
                   }`}
                 ></i>

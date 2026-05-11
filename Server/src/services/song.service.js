@@ -8,12 +8,13 @@ const {
   PlaylistSongs,
   Genre,
   SongGenre,
+  Rating,
   sequelize,
 } = require("../models");
-const { Op, fn, col, where } = require("sequelize");
-const cloudinary = require("cloudinary").v2;
-const { Sequelize } = require("sequelize");
-const { v4: uuidv4 } = require("uuid");
+const { Op } = require("sequelize");
+// const cloudinary = require("cloudinary").v2;
+// const { Sequelize } = require("sequelize");
+// const { v4: uuidv4 } = require("uuid");
 
 /* --- CHỨC NĂNG CHO USER --- */
 
@@ -102,6 +103,8 @@ const createSong = async ({
   duration,
   audio_url,
   image_url,
+  status,
+  uploaded_by,
 }) => {
   const t = await sequelize.transaction();
 
@@ -114,7 +117,9 @@ const createSong = async ({
         audio_url,
         image_url,
         view_count: 0,
-        is_visible: true,
+        is_visible: status === "pending" ? false : true,
+        status: status || "approved",
+        uploaded_by: uploaded_by || null,
       },
       { transaction: t },
     );
@@ -355,53 +360,162 @@ const incrementSongView = async (songId) => {
 /* --- CHỨC NĂNG CHO ADMIN */
 
 const updateSongById = async (songId, updateData) => {
-  const { title, artist, genre } = updateData;
+  const { title, artist, genre, is_visible, status, duration } = updateData;
 
-  // 1. CHỈ UPDATE KHI SONG ĐÃ TỒN TẠI
-  const song = await Song.findByPk(songId);
-  if (!song) {
-    throw new Error("Bài hát không tồn tại trong hệ thống.");
-  }
+  const t = await sequelize.transaction();
 
-  let artistId = song.artist_id;
-
-  // 2. Nếu admin đổi tên nghệ sĩ
-  if (artist && artist.trim() !== "") {
-    const artistName = artist.trim();
-
-    let artistRecord = await Artist.findOne({
-      where: { name: artistName },
-    });
-
-    // 3. Artist chưa có → tạo mới (CHO PHÉP)
-    if (!artistRecord) {
-      artistRecord = await Artist.create({
-        name: artistName,
-        jamendo_id: `manual_${Date.now()}`, // bắt buộc vì schema
-        image_url: null,
-      });
+  try {
+    const song = await Song.findByPk(songId, { transaction: t });
+    if (!song) {
+      throw new Error("Bài hát không tồn tại.");
     }
 
-    artistId = artistRecord.artist_id;
-  }
-
-  // 4. UPDATE SONG (KHÔNG TẠO MỚI)
-  await song.update({
-    title: title ?? song.title,
-    genre: genre ?? song.genre,
-    artist_id: artistId,
-  });
-
-  // 5. Trả về dữ liệu đầy đủ (đúng alias)
-  return await Song.findByPk(song.song_id, {
-    include: [
+    // 1. Cập nhật thông tin cơ bản
+    await song.update(
       {
-        model: Artist,
-        as: "artists",
-        attributes: ["artist_id", "name", "image_url"],
+        title: title ?? song.title,
+        duration: duration !== undefined ? duration : song.duration,
+        is_visible: is_visible !== undefined ? is_visible : song.is_visible,
+        status: status ?? song.status,
       },
-    ],
-  });
+      { transaction: t },
+    );
+
+    // 2. Đồng bộ Artist (Many-to-Many)
+    if (artist !== undefined) {
+      // Xóa các liên kết cũ
+      await SongArtist.destroy({ where: { song_id: songId }, transaction: t });
+
+      const list = [
+        ...new Set(
+          artist
+            .split(",")
+            .map((v) => v.trim())
+            .filter(Boolean),
+        ),
+      ];
+
+      if (list.length > 0) {
+        const normalized = list.map((name) => ({
+          original: name,
+          normalized: normalizeName(name),
+        }));
+
+        const existing = await Artist.findAll({
+          where: { normalized_name: normalized.map((x) => x.normalized) },
+          transaction: t,
+        });
+
+        const map = new Map(existing.map((a) => [a.normalized_name, a]));
+
+        const toCreate = normalized
+          .filter((x) => !map.has(x.normalized))
+          .map((x) => ({
+            name: x.original,
+            normalized_name: x.normalized,
+          }));
+
+        if (toCreate.length) {
+          await Artist.bulkCreate(toCreate, {
+            transaction: t,
+            ignoreDuplicates: true,
+          });
+        }
+
+        const finalArtists = await Artist.findAll({
+          where: { normalized_name: normalized.map((x) => x.normalized) },
+          transaction: t,
+        });
+
+        await SongArtist.bulkCreate(
+          finalArtists.map((a) => ({
+            song_id: songId,
+            artist_id: a.artist_id,
+          })),
+          { transaction: t },
+        );
+      }
+    }
+
+    // 3. Đồng bộ Genre (Many-to-Many)
+    if (genre !== undefined) {
+      // Xóa các liên kết cũ
+      await SongGenre.destroy({ where: { song_id: songId }, transaction: t });
+
+      const list = [
+        ...new Set(
+          genre
+            .split(",")
+            .map((v) => v.trim())
+            .filter(Boolean),
+        ),
+      ];
+
+      if (list.length > 0) {
+        const normalized = list.map((name) => ({
+          original: name,
+          normalized: normalizeName(name),
+        }));
+
+        const existing = await Genre.findAll({
+          where: { normalized_name: normalized.map((x) => x.normalized) },
+          transaction: t,
+        });
+
+        const map = new Map(existing.map((g) => [g.normalized_name, g]));
+
+        const toCreate = normalized
+          .filter((x) => !map.has(x.normalized))
+          .map((x) => ({
+            name: x.original,
+            normalized_name: x.normalized,
+          }));
+
+        if (toCreate.length) {
+          await Genre.bulkCreate(toCreate, {
+            transaction: t,
+            ignoreDuplicates: true,
+          });
+        }
+
+        const finalGenres = await Genre.findAll({
+          where: { normalized_name: normalized.map((x) => x.normalized) },
+          transaction: t,
+        });
+
+        await SongGenre.bulkCreate(
+          finalGenres.map((g) => ({
+            song_id: songId,
+            genre_id: g.genre_id,
+          })),
+          { transaction: t },
+        );
+      }
+    }
+
+    await t.commit();
+
+    // 4. Trả về dữ liệu đầy đủ
+    return await Song.findByPk(songId, {
+      include: [
+        {
+          model: Artist,
+          as: "artists",
+          attributes: ["artist_id", "name"],
+          through: { attributes: [] },
+        },
+        {
+          model: Genre,
+          as: "genres",
+          attributes: ["genre_id", "name"],
+          through: { attributes: [] },
+        },
+      ],
+    });
+  } catch (error) {
+    await t.rollback();
+    throw error;
+  }
 };
 
 const deleteSongById = async (songId) => {
@@ -486,6 +600,82 @@ const searchSongs = async (keyword, limit) => {
   });
 };
 
+/* --- DUYỆT BÀI HÁT --- */
+
+const getPendingSongs = async ({ page = 1, limit = 20 }) => {
+  const offset = (page - 1) * limit;
+
+  const { rows, count } = await Song.findAndCountAll({
+    where: { status: "pending" },
+    include: [
+      {
+        model: Artist,
+        as: "artists",
+        attributes: ["artist_id", "name"],
+        through: { attributes: [] },
+      },
+      {
+        model: Genre,
+        as: "genres",
+        attributes: ["genre_id", "name"],
+        through: { attributes: [] },
+      },
+      {
+        model: User,
+        as: "uploader",
+        attributes: ["user_id", "username", "email"],
+      },
+    ],
+    order: [["created_at", "ASC"]],
+    limit: Number(limit),
+    offset,
+    distinct: true,
+  });
+
+  return {
+    data: rows,
+    pagination: {
+      totalItems: count,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+      limit,
+    },
+  };
+};
+
+const getPendingSongsCount = async () => {
+  const count = await Song.count({ where: { status: "pending" } });
+  return count;
+};
+
+const approveSong = async (songId) => {
+  const song = await Song.findByPk(songId);
+  if (!song) throw new Error("Không tìm thấy bài hát.");
+  if (song.status !== "pending") throw new Error("Bài hát không ở trạng thái chờ duyệt.");
+
+  await song.update({ status: "approved", is_visible: true });
+
+  return {
+    message: "Đã duyệt bài hát thành công.",
+    song_id: song.song_id,
+    title: song.title,
+  };
+};
+
+const rejectSong = async (songId) => {
+  const song = await Song.findByPk(songId);
+  if (!song) throw new Error("Không tìm thấy bài hát.");
+  if (song.status !== "pending") throw new Error("Bài hát không ở trạng thái chờ duyệt.");
+
+  await song.update({ status: "rejected", is_visible: false });
+
+  return {
+    message: "Đã từ chối bài hát.",
+    song_id: song.song_id,
+    title: song.title,
+  };
+};
+
 module.exports = {
   createSong,
   getAllSongs,
@@ -496,4 +686,8 @@ module.exports = {
   getSongs,
   incrementSongView,
   searchSongs,
+  getPendingSongs,
+  getPendingSongsCount,
+  approveSong,
+  rejectSong,
 };
