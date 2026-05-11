@@ -5,7 +5,8 @@ import { increaseSongView } from "@/app/features/song/song.api";
 export type ActivitySource = "search" | "playlist" | "recommendation" | "radio";
 type ExitReason = "ended" | "skipped" | "tab_closed";
 
-const API_URL = "http://localhost:5000/api/activity";
+// const API_URL = "http://localhost:5000/api/activity";
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000") + "/api/activity";
 
 export function useActivityLogger(source: ActivitySource = "playlist") {
   const sourceRef = useRef(source);
