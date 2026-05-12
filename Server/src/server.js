@@ -16,6 +16,7 @@ const allowedOrigins = [
   "http://localhost:3000", // Local dev
   "http://ui:3000", // Docker internal
   "https://project-web-gamma-neon.vercel.app",
+  "https://project-thuc-tap-co-so.vercel.app",
   // Thêm domain production ở đây nếu cần
 ];
 
