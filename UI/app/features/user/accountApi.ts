@@ -61,3 +61,4 @@ export async function changeAdminPassword(
     body: JSON.stringify({ newPassword }),
   });
 }
+

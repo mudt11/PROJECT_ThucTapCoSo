@@ -63,7 +63,7 @@ export default function Header() {
                 onClick={() => setShowUserMenu(!showUserMenu)}
               >
                 <img
-                  src="/images/Avatar/avt01.png"
+                  src={user?.avatar || "/images/Avatar/avt01.png"}
                   alt="Avatar"
                   className={styles.avatar}
                 />

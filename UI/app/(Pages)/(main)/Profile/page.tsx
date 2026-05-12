@@ -4,9 +4,11 @@ import { useState, useRef, useEffect } from "react";
 import Profile from "@/app/features/user/components/Profile";
 import styles from "./ProfilePage.module.css";
 import { useUser } from "@/app/features/user/context/UserContext";
+import { useProfile } from "@/app/features/user/hooks/useProfile";
 
 export default function ProfilePage() {
   const { user } = useUser();
+  const { uploadAvatar, isUploading } = useProfile();
 
   // State lưu URL ảnh preview tạm thời
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -36,18 +38,15 @@ export default function ProfilePage() {
       const objectUrl = URL.createObjectURL(file);
       setPreviewUrl(objectUrl);
 
-      // 2. KẾT NỐI BACKEND CỦA BẠN Ở ĐÂY
-      // Bạn có thể truyền `file` vào FormData và gọi API. Ví dụ:
-      /*
-        const formData = new FormData();
-        formData.append("avatar", file);
-        try {
-           await uploadAvatarAPI(formData);
-           // Thành công
-        } catch (error) {
-           // Thất bại: Bạn có thể setPreviewUrl(null) để trả lại ảnh cũ
-        }
-      */
+      // 2. Sử dụng hook để upload
+      try {
+        await uploadAvatar(file);
+        // Thành công: Xóa preview khi đã có ảnh thật từ DB (hook đã gọi refreshUser)
+        setPreviewUrl(null);
+      } catch (error) {
+        // Thất bại: Trả lại trạng thái cũ
+        setPreviewUrl(null);
+      }
     }
   };
 
