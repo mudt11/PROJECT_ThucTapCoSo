@@ -2,7 +2,6 @@ const songService = require("../services/song.service");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs-extra");
 const { Song, User } = require("../models");
-const UserActivity = require("../models/mongo/UserActivity");
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -321,7 +320,6 @@ const searchSongs = async (req, res) => {
 };
 
 /* --- DUYỆT BÀI HÁT (ADMIN) --- */
-
 const getPendingSongs = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;

@@ -44,6 +44,29 @@ const Song = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+
+    // metadata cho recommend
+    lyrics: {
+      type: DataTypes.TEXT("long"),
+      allowNull: true,
+    },
+
+    mood: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      defaultValue: [],
+    },
+    keywords: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      defaultValue: [],
+    },
+    vector_embedding: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      defaultValue: [],
+      comment: "Lưu mảng vector đặc trưng để tính độ tương đồng Cosine",
+    },
   },
   {
     tableName: "songs",
