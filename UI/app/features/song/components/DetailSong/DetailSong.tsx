@@ -8,8 +8,11 @@ import { useState } from "react";
 import PopUp from "@/app/components/ui/PopUp";
 import { useRating } from "@/app/features/rating/useRating";
 import { useLikeContext } from "@/app/features/like/context/LikeContext";
+import { useRouter } from "next/navigation";
+import { IoIosArrowBack } from "react-icons/io";
 
 const DetailSong = () => {
+  const router = useRouter();
   const { currentTrack } = usePlayer();
 
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -62,6 +65,10 @@ const DetailSong = () => {
 
   return (
     <div className="detail-container">
+      <button className="back-btn-detail" onClick={() => router.back()}>
+        <IoIosArrowBack />
+      </button>
+
       <div
         className="background-blur"
         style={{ backgroundImage: `url(${currentTrack.imageUrl})` }}
@@ -113,14 +120,15 @@ const DetailSong = () => {
                   onClick={() => submitRating(currentTrack.trackId, star)}
                 />
               ))}
-              <p>{`( ${summary.totalRatings} )`}</p>
+              
             </div>
 
             <p className="rating-text">
               {userRating
                 ? `Bạn đã đánh giá ${userRating} / 5`
-                : "Chưa đánh giá"}
+                : "Chưa đánh giá"} ({summary.totalRatings})
             </p>
+            {/* <p>{`( ${summary.totalRatings} )`}</p> */}
 
             {/* <p className="rating-text">
               {summary.averageRating.toFixed(1)} / 5 ({summary.totalRatings})

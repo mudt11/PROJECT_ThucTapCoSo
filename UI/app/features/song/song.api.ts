@@ -210,3 +210,72 @@ export async function createSong(formData: FormData) {
 
   return res.json();
 }
+
+export async function uploadSongByUser(formData: FormData) {
+  const res = await userFetch(`${URL}/songs/upload`, {
+    method: "POST",
+    credentials: "include",
+    body: formData,
+  });
+
+  const json = await res.json();
+
+  if (!res.ok) {
+    throw new Error(json.message || "Upload bài hát thất bại");
+  }
+
+  return json;
+}
+
+/* --- DUYỆT BÀI HÁT (ADMIN) --- */
+
+export async function fetchPendingSongs({
+  page = 1,
+  limit = 20,
+} = {}) {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+  });
+
+  const res = await adminFetch(`${URL}/songs/pending?${params}`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if (!res.ok) throw new Error("Fetch pending songs failed");
+  return res.json();
+}
+
+export async function fetchPendingSongsCount() {
+  const res = await adminFetch(`${URL}/songs/pending/count`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if (!res.ok) return 0;
+  const json = await res.json();
+  return json.count || 0;
+}
+
+export async function approveSongApi(songId: number) {
+  const res = await adminFetch(`${URL}/songs/${songId}/approve`, {
+    method: "PATCH",
+    credentials: "include",
+  });
+
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.message || "Duyệt bài hát thất bại");
+  return json;
+}
+
+export async function rejectSongApi(songId: number) {
+  const res = await adminFetch(`${URL}/songs/${songId}/reject`, {
+    method: "PATCH",
+    credentials: "include",
+  });
+
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.message || "Từ chối bài hát thất bại");
+  return json;
+}

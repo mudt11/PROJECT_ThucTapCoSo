@@ -1,5 +1,6 @@
 const { User } = require("../models");
 const bcrypt = require("bcryptjs");
+const { validatePassword } = require("../utils/passwordValidator");
 
 /* --- CHỨC NĂNG DÀNH CHO USER --- */
 const getUserProfile = async (userId) => {
@@ -68,6 +69,12 @@ const changeUserPassword = async (userId, oldPassword, newPassword) => {
 
   if (oldPassword === newPassword) {
     throw new Error("Mật khẩu mới không được trùng với mật khẩu cũ.");
+  }
+
+  // Validate new password
+  const passwordError = validatePassword(newPassword);
+  if (passwordError) {
+    throw new Error(passwordError);
   }
 
   const salt = await bcrypt.genSalt(10);
@@ -277,6 +284,12 @@ const resetUserPassword = async (userId, newPassword, requester) => {
     throw new Error("Bạn không có quyền đặt lại mật khẩu.");
   }
 
+  // Validate new password
+  const passwordError = validatePassword(newPassword);
+  if (passwordError) {
+    throw new Error(passwordError);
+  }
+
   // ===== UPDATE PASSWORD =====
   const salt = await bcrypt.genSalt(10);
   targetUser.password = await bcrypt.hash(newPassword, salt);
@@ -296,6 +309,12 @@ const createAdminAccount = async ({ username, email, password }) => {
 
   if (existedUser) {
     throw new Error("Username đã tồn tại");
+  }
+
+  // Validate password
+  const passwordError = validatePassword(password);
+  if (passwordError) {
+    throw new Error(passwordError);
   }
 
   // 2. Tạo admin

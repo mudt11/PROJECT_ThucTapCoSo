@@ -53,6 +53,34 @@
   gap: 25px;
 }
 
+/* UPLOAD BUTTON */
+.uploadBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  background: linear-gradient(135deg, rgba(255, 152, 0, 0.15), rgba(168, 85, 247, 0.15));
+  border: 1px solid rgba(255, 152, 0, 0.3);
+  border-radius: 12px;
+  color: var(--tt-orange, #ff9800);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.uploadBtn:hover {
+  background: linear-gradient(135deg, rgba(255, 152, 0, 0.25), rgba(168, 85, 247, 0.25));
+  border-color: var(--tt-orange, #ff9800);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(255, 152, 0, 0.2);
+}
+
+.uploadBtn svg {
+  flex-shrink: 0;
+}
+
 /* AUTH BOX */
 .authBox {
   display: flex;
@@ -88,18 +116,22 @@
 /* USER */
 .userArea {
   position: relative;
+  
 }
 
 .userGreeting {
   display: flex;
   align-items: center;
-  background-color: var(--color-blur);
+  background: var(--button-3);
+  border: 1px solid rgba(255, 152, 0, 0.3);
   border-radius: 30px;
   transition: 0.3s;
 }
 
 .userGreeting:hover {
-  background-color: var(--color-text-select);
+  background: var(--button-3-hover);
+  border-color: var(--tt-orange, #ff9800);
+  box-shadow: 0 4px 15px rgba(255, 152, 0, 0.2);
 }
 
 .profileBtn {
@@ -144,6 +176,8 @@
 .arrow {
   margin-left: 8px;
   font-size: 12px;
+  display: inline-block;
+  vertical-align: middle;
   transition: transform 0.2s ease;
 }
 

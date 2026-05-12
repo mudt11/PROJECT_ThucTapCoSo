@@ -1,0 +1,119 @@
+/* Song title with thumbnail */
+.songTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.songThumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* Uploader name badge */
+.uploaderName {
+  display: inline-block;
+  padding: 3px 10px;
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Action buttons group */
+.actionGroup {
+  display: flex;
+  gap: 8px;
+}
+
+.approveBtn {
+  background: #22c55e;
+  color: white;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.approveBtn:hover:not(:disabled) {
+  background: #16a34a;
+  transform: scale(1.03);
+}
+
+.viewBtn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.viewBtn:hover {
+  background: #2563eb;
+  transform: scale(1.03);
+}
+
+.rejectBtn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.rejectBtn:hover:not(:disabled) {
+  background: #dc2626;
+  transform: scale(1.03);
+}
+
+.approveBtn:disabled,
+.rejectBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Empty state */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  text-align: center;
+}
+
+.emptyIcon {
+  font-size: 52px;
+  margin-bottom: 16px;
+}
+
+.emptyState h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 8px;
+}
+
+.emptyState p {
+  font-size: 14px;
+  color: #888;
+  margin: 0;
+}

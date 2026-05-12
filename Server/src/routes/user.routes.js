@@ -10,10 +10,12 @@ const {
 } = require("../midlewares/auth.midleware");
 
 /* --- ROUTES FOR USER --- */
-
 router.get("/me", protect, userController.getUserProfile);
+
 // Cập nhật thông tin user
 router.put("/me", protect, userController.updateUserProfile);
+
+// user upload avatar
 router.post(
   "/avatar",
   protect,
@@ -21,10 +23,10 @@ router.post(
   userController.uploadAvatar,
 );
 
+// user đổi password
 router.post("/change-password", protect, userController.changeUserPassword);
 
 /* --- ROUTES FOR ADMIN --- */
-
 router.get(
   "/admin/me",
   protectAdmin,

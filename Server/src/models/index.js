@@ -12,6 +12,7 @@ const Genre = require("./genres.model");
 const SongGenre = require("./song_genres.model");
 const Playlist = require("./playlist.model");
 const PlaylistSong = require("./playlist_song.model");
+const UserActivity = require("./user_activity.model")(sequelize, DataTypes);
 
 // 1. User - RefreshToken (Quan hệ 1-N)
 // Một User có nhiều Token
@@ -81,6 +82,17 @@ Song.hasMany(Favorite, {
   foreignKey: "song_id",
 });
 
+// Song - User: Người đăng (uploaded_by)
+Song.belongsTo(User, {
+  foreignKey: "uploaded_by",
+  as: "uploader",
+});
+
+User.hasMany(Song, {
+  foreignKey: "uploaded_by",
+  as: "uploadedSongs",
+});
+
 // Playlist - Song: Quan hệ N-N qua bảng PlaylistSong
 Song.belongsToMany(Playlist, {
   through: PlaylistSong,
@@ -108,8 +120,13 @@ Playlist.belongsTo(User, {
   onDelete: "CASCADE",
 });
 
-// HÀM ĐỒNG BỘ DATABASE
+// Chạy hàm associate cho UserActivity
+// Truyền object chứa các models mà UserActivity cần liên kết (User, Song)
+UserActivity.associate({ User, Song });
 
+/* =========================================
+   HÀM ĐỒNG BỘ
+========================================= */
 const syncDatabase = async () => {
   try {
     await sequelize.authenticate();
@@ -133,4 +150,5 @@ module.exports = {
   SongArtist,
   Playlist,
   PlaylistSong,
+  UserActivity,
 };

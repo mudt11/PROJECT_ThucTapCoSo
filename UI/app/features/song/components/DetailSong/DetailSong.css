@@ -20,6 +20,33 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.back-btn-detail {
+  position: absolute;
+  top: 40px;
+  left: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  height: 50px;
+  padding: 10px 15px;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 100;
+}
+
+.back-btn-detail:hover {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  color: var(--tt-orange, #ff6b00);
+}
+
 /* Hiệu ứng nền mờ ảo diệu */
 .background-blur {
   position: absolute;
@@ -81,23 +108,46 @@
 .song-actions-detail {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 12px;
   margin-top: 20px;
+  width: 100%;
 }
 
-.song-actions-detail button {
+.song-actions-detail .icon-btn {
+  flex: 1;
   display: flex;
-  justify-content: space-between;
-  gap: 10px;
+  justify-content: center;
   align-items: center;
-  border: 1px solid rgba(252, 250, 250, 0.1);
-  background: transparent;
+  gap: 10px;
+  padding: 10px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.05);
   color: white;
-  opacity: 0.7;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 0.95rem;
 }
 
-.song-row:hover .song-actions-detail button {
-  opacity: 1;
+.song-actions-detail .icon-btn i {
+  font-size: 1.1rem;
+}
+
+.song-actions-detail .icon-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.song-actions-detail .icon-btn.liked {
+  color: #ff4d4d;
+  background: rgba(255, 77, 77, 0.1);
+  border-color: rgba(255, 77, 77, 0.3);
+}
+
+.song-actions-detail .icon-btn p {
+  margin: 0;
 }
 
 .song-info {
@@ -245,7 +295,7 @@
   z-index: 2;
   width: 90%;
   max-width: 1100px;
-  margin-top: 20px;
+  /* margin-top: 20px; */
   padding: 30px;
   background: rgba(255, 255, 255, 0.03);
   border-radius: 12px;

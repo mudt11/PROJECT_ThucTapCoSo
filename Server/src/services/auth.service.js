@@ -1,5 +1,6 @@
 const { User } = require("../models");
 const { RefreshToken } = require("../models");
+const { validatePassword } = require("../utils/passwordValidator");
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -26,6 +27,12 @@ const generateTokens = (payLoad) => {
 
 const registerUser = async (userData) => {
   const { email, password, username } = userData;
+
+  // Validate password
+  const passwordError = validatePassword(password);
+  if (passwordError) {
+    throw new Error(passwordError);
+  }
 
   // Kiểm tra trùng username
   const existingUser = await User.findOne({

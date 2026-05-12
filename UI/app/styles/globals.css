@@ -39,6 +39,8 @@
   /* Main colors */
   --button: var(--tt-orange);
   --button-2: linear-gradient(135deg, #ff8a00, #e52e71);
+  --button-3: linear-gradient(135deg, rgba(255, 152, 0, 0.15), rgba(168, 85, 247, 0.15));
+  --button-3-hover: linear-gradient(135deg, rgba(255, 152, 0, 0.25), rgba(168, 85, 247, 0.25));
   --color-text-select: var(--tt-orange);
   --color-text-not-select: var(--tt-text-muted);
 
@@ -56,6 +58,8 @@
 
   /* Font */
   --font-primary: "Poppins", sans-serif;
+
+  --border-shadow: 0 4px 15px rgba(255, 152, 0, 0.2);
 }
 
 /* :root {

@@ -46,6 +46,24 @@ const uploadAvatar = async (req, res, next) => {
       return res.status(400).json({ message: "Vui lòng chọn ảnh!" });
     }
 
+    const userId = req.user.userId;
+    const user = await userService.getUserProfile(userId);
+
+    // Nếu đã có avatar trên cloudinary thì xóa cái cũ đi để tránh rác
+    if (user.avatar && user.avatar.includes("cloudinary.com")) {
+      try {
+        // Extract public_id: avatars/randomid
+        const publicId = user.avatar
+          .split("/")
+          .slice(-2)
+          .join("/")
+          .split(".")[0];
+        await cloudinary.uploader.destroy(publicId);
+      } catch (error) {
+        console.error("Lỗi xóa ảnh cũ trên Cloudinary:", error);
+      }
+    }
+
     const result = await cloudinary.uploader.upload(req.file.path, {
       folder: "avatars",
       resource_type: "image",
@@ -55,7 +73,6 @@ const uploadAvatar = async (req, res, next) => {
       fs.unlinkSync(req.file.path);
     }
 
-    const userId = req.user.userId;
     const avatarUrl = result.secure_url;
 
     await userService.updateUserAvatar(userId, avatarUrl);

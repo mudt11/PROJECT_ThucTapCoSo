@@ -62,7 +62,7 @@
   color: #333;
   background-color: rgba(88, 175, 223, 0.1);
   white-space: nowrap;
-  /* overflow: hidden; */
+  overflow: hidden;
   text-overflow: ellipsis;
 }
 

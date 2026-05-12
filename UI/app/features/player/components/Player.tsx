@@ -298,12 +298,13 @@ const PlayerContent: React.FC = () => {
               key={song.id}
               className={`queue-item ${index === 0 ? "next" : ""}`}
             >
-              <img src={song.cover} alt={song.title} />
+              <p>Update soon</p>
+              {/* <img src={song.cover} alt={song.title} />
               <div className="queue-info">
                 <p className="queue-title">{song.title}</p>
                 <p className="queue-artist">{song.artist}</p>
               </div>
-              {index === 0 && <span className="playing-dot" />}
+              {index === 0 && <span className="playing-dot" />} */}
             </div>
           ))}
         </div>

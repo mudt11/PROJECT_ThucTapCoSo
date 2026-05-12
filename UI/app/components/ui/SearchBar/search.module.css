@@ -16,13 +16,16 @@
   padding: 0 15px;
   display: flex;
   align-items: center;
-  background-color: var(--tt-border);
+  background: var(--tt-surface-2);
   transition: 0.15s;
 }
 
-.inputWrapper:hover,
+.inputWrapper:hover {
+  background: var(--tt-border);
+}
+
 .inputWrapper:focus-within {
-  box-shadow: 0 0 12px var(--color-text-select);
+  border: 1px solid var(--tt-orange);
 }
 
 .inputContainer {

@@ -5,6 +5,7 @@ import styles from "@/app/styles/form.module.css";
 import { useModal } from "@/app/context/ModalContext";
 import { addNewAdmin } from "@/app/features/auth/authApi";
 import { mutate } from "swr";
+import { validatePassword } from "@/app/utils/passwordValidator";
 
 export default function AddNewAdmin() {
   const [username, setUsername] = useState("");
@@ -14,6 +15,13 @@ export default function AddNewAdmin() {
 
   const handleAddNewAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      alert(passwordError);
+      return;
+    }
+
     try {
       // Gửi dữ liệu này đến backend
       const res = await addNewAdmin(username, email, password);
