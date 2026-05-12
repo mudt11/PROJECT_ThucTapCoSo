@@ -7,7 +7,7 @@ require("dotenv").config();
 // Kéo cấu hình MySQL (Sequelize)
 const { sequelize, syncDatabase } = require("./models");
 // Import hàm kết nối MongoDB
-const connectMongoDB = require("./config/mongodb");
+// const connectMongoDB = require("./config/mongodb");
 
 const app = express();
 
@@ -60,7 +60,7 @@ app.listen(PORT, async () => {
     await syncDatabase();
 
     // 2. Kết nối MongoDB
-    await connectMongoDB();
+    // await connectMongoDB();
   } catch (error) {
     console.error(">>> Lỗi kết nối Database:", error);
   }
